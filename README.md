@@ -7,7 +7,7 @@ An online U-Fund system built in Java 17=> and ___ _replace with other platform 
 
 - Ethan Hartman
 - Albert Abaykhanov
-- MEMBER3
+- Ben Griffin
 - MEMBER4
 
 
