@@ -42,12 +42,6 @@ public class Need {
     }
 
     /**
-     * Sets the name of the need
-     * @param name The name of the need
-     */
-    public void setName(String name) {this.name = name;}
-
-    /**
      * Sets the cost of the need
      * @param cost The cost of the need
      */
