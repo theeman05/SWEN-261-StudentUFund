@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class User {
     static final String STRING_FORMAT = "User [name=%s, isAdmin=%s]";
-    static final String ADMIN_USERNAME = "admin";
+    public static final User ADMIN = new User("admin");
 
     @JsonProperty("username") protected String username;
 
@@ -36,7 +36,7 @@ public class User {
      * @return True if the user is an admin, false otherwise
      */
     public boolean isAdmin() {
-        return username.equals(ADMIN_USERNAME);
+        return this.equals(ADMIN);
     }
 
     /**
