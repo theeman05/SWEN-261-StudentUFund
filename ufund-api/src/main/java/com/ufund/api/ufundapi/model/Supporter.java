@@ -28,10 +28,18 @@ public class Supporter extends User{
     /**
      * Get the list of {@linkplain Need needs} in this user's funding basket
      * Note: This should probably only be used on initializding a supporter
-     * @return The arraylist of {@linkplain Need needs} in this user's funding basket
+     * @return The list of {@linkplain Need needs} in this user's funding basket
      */
     public Need[] getFundingBasket() {
         return fundingBasket;
+    }
+
+    /**
+     * Set the list of {@linkplain Need needs} in this user's funding basket
+     * @param fundingBasket The list of {@linkplain Need needs} in this user's funding basket
+     */
+    public void setFundingBasket(Need[] fundingBasket) {
+        this.fundingBasket = fundingBasket;
     }
 
     /**
