@@ -7,18 +7,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
-
-/**
- * Defines the exception thrown when a supporter is not signed in
- * 
- * @author Ethan Hartman
- */
-class SupporterNotSignedInException extends Exception {
-    private static final String MESSAGE = "No supporter signed in";
-    public SupporterNotSignedInException() {
-        super(MESSAGE);
-    }
-}
+import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
 /**
  * Defines the interface for User object persistence

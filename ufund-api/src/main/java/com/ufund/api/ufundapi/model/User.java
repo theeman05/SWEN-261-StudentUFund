@@ -8,15 +8,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Ethan Hartman
  */
 public class User {
+    static final String ADMIN_USERNAME = "admin";
     static final String STRING_FORMAT = "User [name=%s, isAdmin=%s]";
-    public static final User ADMIN = new User("admin");
+    public static final User ADMIN = new User(ADMIN_USERNAME);
 
     @JsonProperty("username") protected String username;
 
     /**
      * Create a user with the given username and type
      * Their funding basket will be empty
+     * 
      * @param username The username of the user
+     * 
      * @param type The type of the user
      */
     public User(@JsonProperty("username") String username) {
@@ -25,6 +28,7 @@ public class User {
 
     /**
      * Get the username of the user
+     * 
      * @return The username of the user
      */
     public String getUsername() {
@@ -33,10 +37,11 @@ public class User {
 
     /**
      * Check if the user is an admin
+     * 
      * @return True if the user is an admin, false otherwise
      */
     public boolean isAdmin() {
-        return this.equals(ADMIN);
+        return username.equals(ADMIN_USERNAME);
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
