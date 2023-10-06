@@ -10,12 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Ethan Hartman
  */
 public class Supporter extends User{
-    static final String STRING_FORMAT = "Supporter [name=%s,type=%s,fundingBasket=%s]";
+    static final String STRING_FORMAT = "Supporter [username=%s,isAdmin=%s,fundingBasket=%s]";
 
     @JsonProperty("funding_basket") private Need[] fundingBasket;
 
     /**
-     * Create a user with the given username and type
+     * Create a user with the given username and funding basket
      * Their funding basket will be empty
      * @param username The username of the user
      * @param fundingBasket The list of {@linkplain Need needs} in this user's funding basket
