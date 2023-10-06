@@ -1,6 +1,6 @@
 package com.ufund.api.ufundapi.model;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Supporter extends User{
     static final String STRING_FORMAT = "Supporter [name=%s,type=%s,fundingBasket=%s]";
 
-    @JsonProperty("funding_basket") private ArrayList<Need> fundingBasket;
+    @JsonProperty("funding_basket") private Need[] fundingBasket;
 
     /**
      * Create a user with the given username and type
@@ -20,7 +20,7 @@ public class Supporter extends User{
      * @param username The username of the user
      * @param fundingBasket The list of {@linkplain Need needs} in this user's funding basket
      */
-    public Supporter(@JsonProperty("username") String username, @JsonProperty("funding_basket") ArrayList<Need> fundingBasket) {
+    public Supporter(@JsonProperty("username") String username, @JsonProperty("funding_basket") Need[] fundingBasket) {
         super(username);
         this.fundingBasket = fundingBasket;
     }
@@ -30,7 +30,7 @@ public class Supporter extends User{
      * Note: This should probably only be used on initializding a supporter
      * @return The arraylist of {@linkplain Need needs} in this user's funding basket
      */
-    public ArrayList<Need> getFundingBasket() {
+    public Need[] getFundingBasket() {
         return fundingBasket;
     }
 
@@ -39,6 +39,6 @@ public class Supporter extends User{
      */
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, username, isAdmin(), fundingBasket);
+        return String.format(STRING_FORMAT, username, isAdmin(), Arrays.toString(fundingBasket));
     }
 }
