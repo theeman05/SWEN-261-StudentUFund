@@ -9,6 +9,18 @@ import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
 /**
+ * Defines the exception thrown when a supporter is not signed in
+ * 
+ * @author Ethan Hartman
+ */
+class SupporterNotSignedInException extends Exception {
+    private static final String MESSAGE = "No supporter signed in";
+    public SupporterNotSignedInException() {
+        super(MESSAGE);
+    }
+}
+
+/**
  * Defines the interface for User object persistence
  * 
  * @author Ethan Hartman
@@ -50,6 +62,17 @@ public interface UserDAO {
      * @return true if successful, false if user is not found
      */
     boolean loginUser(User user);
+
+    /**
+     * Gets the {@linkplain User user} with the given username
+     * 
+     * @param username The username of the {@linkplain User user} to get
+     * 
+     * @return The corresponding {@linkplain User user}
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    User getUser(String username) throws IOException;
 
     /**
      * Adds the given need to the current supporter's basket

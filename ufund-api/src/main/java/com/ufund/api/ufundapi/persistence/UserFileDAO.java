@@ -16,18 +16,6 @@ import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
 /**
- * Defines the exception thrown when a supporter is not signed in
- * 
- * @author Ethan Hartman
- */
-class SupporterNotSignedInException extends Exception {
-    private static final String MESSAGE = "No supporter signed in";
-    public SupporterNotSignedInException() {
-        super(MESSAGE);
-    }
-}
-
-/**
  * Implements the functionality for JSON file-based peristance for Users
  * 
  * {@literal @}Component Spring annotation instantiates a single instance of this
@@ -150,6 +138,15 @@ public class UserFileDAO implements UserDAO {
         }
         curUser = user;
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public User getUser(String username) throws IOException{
+        if (User.ADMIN.getUsername().equals(username))
+            return User.ADMIN;
+        return supporters.get(username);
     }
 
     /**
