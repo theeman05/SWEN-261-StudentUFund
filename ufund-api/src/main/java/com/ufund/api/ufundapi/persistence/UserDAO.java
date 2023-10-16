@@ -7,6 +7,8 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
+import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
+import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
 /**
@@ -27,7 +29,7 @@ public interface UserDAO {
     /**
      * Creates and saves a {@linkplain Supporter supporter}
      * 
-     * @param supporter {@linkplain Supporter supporter} object to be created and saved
+     * @param supporter {@link Supporter supporter} object to be created and saved
      *
      * @return new {@link Supporter supporter} if successful, false otherwise 
      * 
@@ -44,57 +46,63 @@ public interface UserDAO {
 
     /**
      * Logs in the {@linkplain User user}.
-     * If the {@linkplain User user} is a {@linkplain Supporter supporter}, their basket will be loaded
+     * If the {@link User user} is a {@link Supporter supporter}, their basket will be loaded
      * 
-     * @param user The {@linkplain User user} to log in
+     * @param user The {@link User user} to log in
      * 
      * @return true if successful, false if user is not found
+     * 
+     * @throws IOException if an issue with underlying storage
      */
-    boolean loginUser(User user);
+    boolean loginUser(User user) throws IOException;
 
     /**
      * Gets the {@linkplain User user} with the given username
      * 
-     * @param username The username of the {@linkplain User user} to get
+     * @param username The username of the {@link User user} to get
      * 
-     * @return The corresponding {@linkplain User user}
+     * @return The corresponding {@link User user}
      * 
      * @throws IOException if an issue with underlying storage
      */
     User getUser(String username) throws IOException;
 
     /**
-     * Adds the given need to the current supporter's basket
+     * Adds the given {@linkplain Need need} to the current supporter's basket
      * 
-     * @param need The {@linkPlain Need need} to add to the basket
+     * @param needKey The key of the {@link Need need} to add to the basket
      * 
-     * @return true if successful, false if the need is already in the basket
+     * @return The associated {@link Need need} if successful, null otherwise
+     * 
+     * @throws IOException if an issue with underlying storage
+     * 
+     * @throws SupporterNotSignedInException if no supporter is signed in
+     * 
+     * @throws NeedNotFoundException if the {@link Need need} is not found
+     * 
+     * @throws NeedAlreadyInCartException if the {@link Need need} is already in the basket
+     */
+    Need addNeedToCurBasket(String needName) throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException;
+
+    /**
+     * Removes the given {@linkplain Need need} from the current supporter's basket
+     * 
+     * @param needKey The key of the {@link Need need} to remove from the basket
+     * 
+     * @return true if successful, false if the {@link Need need} is not in the basket
      * 
      * @throws IOException if an issue with underlying storage
      * 
      * @throws SupporterNotSignedInException if no supporter is signed in
      */
-    boolean addNeedToCurBasket(Need need) throws IOException, SupporterNotSignedInException;
+    boolean removeNeedFromCurBasket(String needKey) throws IOException, SupporterNotSignedInException;
 
     /**
-     * Removes the given need from the current supporter's basket
+     * Gets the current Need's keys in the current {@linkplain Supporter supporter's} basket
      * 
-     * @param need The {@linkPlain Need need} to remove from the basket
+     * @return The {@link Need needs} in the current {@link Supporter supporter's} basket
      * 
-     * @return true if successful, false if the need is not in the basket
-     * 
-     * @throws IOException if an issue with underlying storage
-     * 
-     * @throws SupporterNotSignedInException if no supporter is signed in
+     * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is signed in
      */
-    boolean removeNeedFromCurBasket(Need need) throws IOException, SupporterNotSignedInException;
-
-    /**
-     * Gets the current supporter's basket
-     * 
-     * @return The {@link Need needs} in the current supporter's basket
-     * 
-     * @throws SupporterNotSignedInException if no supporter is signed in
-     */
-    Need[] getCurBasket() throws SupporterNotSignedInException;
+    String[] getCurBasket() throws SupporterNotSignedInException;
 }

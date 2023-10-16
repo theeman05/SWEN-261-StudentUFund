@@ -6,8 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+
+import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
+import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,19 +37,26 @@ public class UserFileDAO implements UserDAO {
     private String filename;    // Filename to read from and write to
 
     private User curUser; // The current user logged in
-    private Map<String, Need> supporterBasket; // The current supporter's basket of needs 
+    private Map<String, String> supporterBasket; // The current supporter's basket of needs 
+
+    private NeedDAO needDao;
 
     /**
      * Creates a Supporter File Data Access Object
      * 
      * @param filename Filename to read from and write to
+     * 
      * @param objectMapper Provides JSON Object to/from Java Object serialization and deserialization
+     * 
+     * @param needDao The {@link NeedDAO Need Data Access Object} to perform CRUD operations
      * 
      * @throws IOException when file cannot be accessed or read from
      */
-    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper) throws IOException {
+    @Autowired
+    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper, NeedDAO needDao) throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
+        this.needDao = needDao;
         load();  // load the supporters from the file
     }
     
@@ -88,7 +99,7 @@ public class UserFileDAO implements UserDAO {
     private void updateCurSupporter() throws IOException {
         Supporter supporter = (Supporter) curUser;
         synchronized(supporters) {
-            supporter.setFundingBasket(supporterBasket.values().toArray(new Need[supporterBasket.size()]));
+            supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
             save(); // may throw an IOException
         }
     }
@@ -124,7 +135,7 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public boolean loginUser(User user) {
+    public boolean loginUser(User user) throws IOException {
         if (curUser == user)
             return true;
         logoutCurUser();
@@ -132,8 +143,18 @@ public class UserFileDAO implements UserDAO {
             // Ensure the user is in the system.
             if (supporters.containsKey(user.getUsername())) {
                 supporterBasket = new HashMap<>();
-                for (Need need : ((Supporter) user).getFundingBasket())
-                    supporterBasket.put(need.getName(), need);
+                Supporter supporter = (Supporter) user;
+                boolean needRemoved = false;
+                for (String needKey : supporter.getFundingBasket()){
+                    if (needDao.getNeed(needKey) != null)
+                        supporterBasket.put(needKey, needKey);
+                    else
+                        needRemoved = true;
+                }
+
+                // If a need was removed, let's update the basket and save
+                if (needRemoved)
+                    supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
             }else
                 return false;
         }
@@ -153,15 +174,36 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public boolean addNeedToCurBasket(Need need) throws IOException, SupporterNotSignedInException{
+    public Need addNeedToCurBasket(String needKey) throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+        
+        Need locatedNeed = needDao.getNeed(needKey);
+        if (locatedNeed == null)
+            throw new NeedNotFoundException(needKey);
+
+        if (supporterBasket.containsKey(needKey))
+            throw new NeedAlreadyInCartException(needKey);
+
+        synchronized(supporterBasket){
+            supporterBasket.put(needKey, needKey);
+            updateCurSupporter();
+            return locatedNeed;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean removeNeedFromCurBasket(String needKey) throws IOException, SupporterNotSignedInException{
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
 
-        if (supporterBasket.containsKey(need.getName()))
+        if (!supporterBasket.containsKey(needKey))
             return false;
 
         synchronized(supporterBasket){
-            supporterBasket.put(need.getName(), need);
+            supporterBasket.remove(needKey);
             updateCurSupporter();
             return true;
         }
@@ -170,26 +212,9 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public boolean removeNeedFromCurBasket(Need need) throws IOException, SupporterNotSignedInException{
+    public String[] getCurBasket() throws SupporterNotSignedInException{
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
-
-        if (!supporterBasket.containsKey(need.getName()))
-            return false;
-
-        synchronized(supporterBasket){
-            supporterBasket.remove(need.getName());
-            updateCurSupporter();
-            return true;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Need[] getCurBasket() throws SupporterNotSignedInException{
-        if (supporterBasket == null)
-            throw new SupporterNotSignedInException();
-        return supporterBasket.values().toArray(new Need[supporterBasket.size()]);
+        return supporterBasket.values().toArray(new String[supporterBasket.size()]);
     }
 }
