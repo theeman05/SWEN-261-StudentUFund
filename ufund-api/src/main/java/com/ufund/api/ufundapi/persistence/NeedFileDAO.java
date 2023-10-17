@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class NeedFileDAO implements NeedDAO {
     private static String NeedNameExistsException = "Need with the name '%s' already exists";
     
-    private Map<String, Need> needs;   // Cupboard map of needs, keyed by need name
+    Map<String, Need> needs;   // Cupboard map of needs, keyed by need name
     private ObjectMapper objectMapper;  // Used to serialize/deserialize Java Objects to/from JSON objects
     private String filename;    // Filename to read from and write to
 
