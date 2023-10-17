@@ -3,25 +3,26 @@ package com.ufund.api.ufundapi.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents the type of need
- */
-enum NeedType {
-    FOOD,
-    WATER,
-    SHELTER,
-    CLOTHING,
-    MEDICAL,
-    TRANSPORTATION,
-    EDUCATION,
-    OTHER
-}
-
-/**
  * Represents a Need entity
  * 
  * @author Ethan Hartman
  */
 public class Need {
+
+    /**
+     * Represents the type of need
+     */
+    public enum NeedType {
+        FOOD,
+        WATER,
+        SHELTER,
+        CLOTHING,
+        MEDICAL,
+        TRANSPORTATION,
+        EDUCATION,
+        OTHER
+    }
+
     // Package private for tests
     static final String STRING_FORMAT = "Need [name=%s,cost=$%s,quantity=%s,type=%s]";
 
