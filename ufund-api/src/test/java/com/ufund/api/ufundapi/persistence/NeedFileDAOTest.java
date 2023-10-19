@@ -14,6 +14,8 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufund.api.ufundapi.model.Need;
 
@@ -116,6 +118,17 @@ public class NeedFileDAOTest {
         assertEquals(actual.getCost(), need.getCost());
         assertEquals(actual.getQuantity(), need.getQuantity());
         assertEquals(actual.getType(), need.getType());
+    }
+
+    @Test
+    public void testCreateNeedExists() {
+        // Setup
+        Need need = new Need("Test 0", 16, 25, Need.NeedType.MEDICAL);
+
+        // Invoke
+        assertThrows(KeyAlreadyExistsException.class,
+                () -> needFileDAO.createNeed(need),
+                "KeyAlreadyExistsException not thrown");
     }
 
     @Test
