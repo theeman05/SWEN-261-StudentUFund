@@ -288,10 +288,10 @@ public class NeedControllerTest {
         // Setup
         Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
         // When getNeedByType is called with the type, return the need created above
-        when(mockNeedDAO.getNeedByType(need.getType().toString())).thenReturn(need);
+        when(mockNeedDAO.getNeedByType(need.getType())).thenReturn(need);
 
         // Invoke
-        ResponseEntity<Need> response = needController.getNeedByType(need.getType().toString());
+        ResponseEntity<Need> response = needController.getNeedByType(need.getType());
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());

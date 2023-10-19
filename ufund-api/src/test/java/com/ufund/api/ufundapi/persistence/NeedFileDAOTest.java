@@ -35,6 +35,7 @@ public class NeedFileDAOTest {
     /**
      * Before each test, we will create and inject a Mock Object Mapper to
      * isolate the tests from the underlying file
+     * 
      * @throws IOException
      */
     @BeforeEach
@@ -48,9 +49,9 @@ public class NeedFileDAOTest {
         // When the object mapper is supposed to read from the file
         // the mock object mapper will return the need array above
         when(mockObjectMapper
-            .readValue(new File("doesnt_matter.txt"),Need[].class))
+                .readValue(new File("doesnt_matter.txt"), Need[].class))
                 .thenReturn(testNeeds);
-        needFileDAO = new NeedFileDAO("doesnt_matter.txt",mockObjectMapper);
+        needFileDAO = new NeedFileDAO("doesnt_matter.txt", mockObjectMapper);
     }
 
     @Test
@@ -59,9 +60,9 @@ public class NeedFileDAOTest {
         Need[] needs = needFileDAO.getNeeds();
 
         // Analyze
-        assertEquals(needs.length,testNeeds.length);
-        for (int i = 0; i < testNeeds.length;++i)
-            assertEquals(needs[i],testNeeds[i]);
+        assertEquals(needs.length, testNeeds.length);
+        for (int i = 0; i < testNeeds.length; ++i)
+            assertEquals(needs[i], testNeeds[i]);
     }
 
     @Test
@@ -70,9 +71,9 @@ public class NeedFileDAOTest {
         Need[] needs = needFileDAO.findNeeds("1");
 
         // Analyze
-        assertEquals(needs.length,2);
-        assertEquals(needs[0],testNeeds[1]);
-        assertEquals(needs[1],testNeeds[2]);
+        assertEquals(needs.length, 2);
+        assertEquals(needs[0], testNeeds[1]);
+        assertEquals(needs[1], testNeeds[2]);
     }
 
     @Test
@@ -81,22 +82,22 @@ public class NeedFileDAOTest {
         Need need = needFileDAO.getNeed(testNeeds[0].getName());
 
         // Analzye
-        assertEquals(need,testNeeds[0]);
+        assertEquals(need, testNeeds[0]);
     }
 
     @Test
     public void testDeleteNeed() {
         // Invoke
         boolean result = assertDoesNotThrow(() -> needFileDAO.deleteNeed(testNeeds[0].getName()),
-                            "Unexpected exception thrown");
+                "Unexpected exception thrown");
 
         // Analzye
-        assertEquals(result,true);
+        assertEquals(result, true);
         // We check the internal tree map size against the length
         // of the test needs array - 1 (because of the delete)
         // Because needs attribute of NeedFileDAO is package private
         // we can access it directly
-        assertEquals(needFileDAO.needs.size(), testNeeds.length-1);
+        assertEquals(needFileDAO.needs.size(), testNeeds.length - 1);
     }
 
     @Test
@@ -106,15 +107,15 @@ public class NeedFileDAOTest {
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.createNeed(need),
-                                "Unexpected exception thrown");
+                "Unexpected exception thrown");
 
         // Analyze
         assertNotNull(result);
         Need actual = needFileDAO.getNeed(need.getName());
-        assertEquals(actual.getName(),need.getName());
-        assertEquals(actual.getCost(),need.getCost());
-        assertEquals(actual.getQuantity(),need.getQuantity());
-        assertEquals(actual.getType(),need.getType());
+        assertEquals(actual.getName(), need.getName());
+        assertEquals(actual.getCost(), need.getCost());
+        assertEquals(actual.getQuantity(), need.getQuantity());
+        assertEquals(actual.getType(), need.getType());
     }
 
     @Test
@@ -124,25 +125,25 @@ public class NeedFileDAOTest {
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.updateNeed(need),
-                                "Unexpected exception thrown");
+                "Unexpected exception thrown");
 
         // Analyze
         assertNotNull(result);
         Need actual = needFileDAO.getNeed(need.getName());
-        assertEquals(actual,need);
+        assertEquals(actual, need);
     }
 
     @Test
-    public void testSaveException() throws IOException{
+    public void testSaveException() throws IOException {
         doThrow(new IOException())
-            .when(mockObjectMapper)
-                .writeValue(any(File.class),any(Need[].class));
+                .when(mockObjectMapper)
+                .writeValue(any(File.class), any(Need[].class));
 
         Need need = new Need("Test New", 16, 25, Need.NeedType.MEDICAL);
 
         assertThrows(IOException.class,
-                        () -> needFileDAO.createNeed(need),
-                        "IOException not thrown");
+                () -> needFileDAO.createNeed(need),
+                "IOException not thrown");
     }
 
     @Test
@@ -158,7 +159,7 @@ public class NeedFileDAOTest {
     public void testDeleteNeedNotFound() {
         // Invoke
         boolean result = assertDoesNotThrow(() -> needFileDAO.deleteNeed("Not real need"),
-                                                "Unexpected exception thrown");
+                "Unexpected exception thrown");
 
         // Analyze
         assertFalse(result);
@@ -172,7 +173,7 @@ public class NeedFileDAOTest {
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.updateNeed(need),
-                                                "Unexpected exception thrown");
+                "Unexpected exception thrown");
 
         // Analyze
         assertNull(result);
@@ -189,12 +190,30 @@ public class NeedFileDAOTest {
         // from the NeedFileDAO load method, an IOException is
         // raised
         doThrow(new IOException())
-            .when(mockObjectMapper)
-                .readValue(new File("doesnt_matter.txt"),Need[].class);
+                .when(mockObjectMapper)
+                .readValue(new File("doesnt_matter.txt"), Need[].class);
 
         // Invoke & Analyze
         assertThrows(IOException.class,
-                        () -> new NeedFileDAO("doesnt_matter.txt",mockObjectMapper),
-                        "IOException not thrown");
+                () -> new NeedFileDAO("doesnt_matter.txt", mockObjectMapper),
+                "IOException not thrown");
+    }
+
+    // get need by type
+    @Test
+    public void testGetNeedByType() {
+        // Invoke
+        Need need;
+        Need.NeedType needType = Need.NeedType.FOOD;
+        try {
+            need = needFileDAO.getNeedByType(needType);
+            assertEquals(need, testNeeds[0]);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // Analyze
+
     }
 }

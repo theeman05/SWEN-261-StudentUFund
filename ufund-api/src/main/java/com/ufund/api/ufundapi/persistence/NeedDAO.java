@@ -85,5 +85,5 @@ public interface NeedDAO {
      */
     boolean deleteNeed(String name) throws IOException;
 
-    Need getNeedByType(String type) throws IOException;
+    Need getNeedByType(Need.NeedType needType) throws IOException;
 }

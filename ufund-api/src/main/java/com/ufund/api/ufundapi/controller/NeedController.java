@@ -197,7 +197,7 @@ public class NeedController {
 
     // get need by type
     @GetMapping("/type/{type}")
-    public ResponseEntity<Need> getNeedByType(@PathVariable String type) {
+    public ResponseEntity<Need> getNeedByType(@PathVariable Need.NeedType type) {
         LOG.info("GET /needs/type/" + type);
         try {
             Need need = needDao.getNeedByType(type);
