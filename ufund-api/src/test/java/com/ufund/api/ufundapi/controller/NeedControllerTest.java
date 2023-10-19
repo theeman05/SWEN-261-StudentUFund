@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 import com.ufund.api.ufundapi.persistence.NeedDAO;
 import com.ufund.api.ufundapi.model.Need;
 
@@ -107,7 +109,7 @@ public class NeedControllerTest {
         Need need = new Need("Test 0", 3, 15, Need.NeedType.SHELTER);
         // when createNeed is called, return false simulating failed
         // creation and save
-        when(mockNeedDAO.createNeed(need)).thenReturn(null);
+        doThrow(new KeyAlreadyExistsException()).when(mockNeedDAO).createNeed(need);
 
         // Invoke
         ResponseEntity<Need> response = needController.createNeed(need);
