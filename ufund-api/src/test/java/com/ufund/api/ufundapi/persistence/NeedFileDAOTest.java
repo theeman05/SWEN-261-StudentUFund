@@ -211,4 +211,17 @@ public class NeedFileDAOTest {
         // Analyze
         assertEquals(need, testNeeds[0]);
     }
+
+    @Test
+    public void testGetNeedByTypeNotFound() throws IOException {
+        // Setup
+        NeedFileDAO needFileDAO = new NeedFileDAO("doesnt_matter.txt", mockObjectMapper);
+
+        // Invoke
+        Need need = needFileDAO.getNeedByType(Need.NeedType.OTHER);
+
+        // Analyze
+        assertNull(need);
+    }
+
 }
