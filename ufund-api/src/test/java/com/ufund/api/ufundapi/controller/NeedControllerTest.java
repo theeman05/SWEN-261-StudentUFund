@@ -298,4 +298,19 @@ public class NeedControllerTest {
         assertEquals(need, response.getBody());
 
     }
+
+    @Test
+    public void testGetNeedByTypeNotFound() throws IOException { // getNeedByType may throw IOException
+        // Setup
+        Need.NeedType needType = Need.NeedType.FOOD;
+        // When getNeedByType is called with the type, return null, simulating no need
+        // found
+        when(mockNeedDAO.getNeedByType(needType)).thenReturn(null);
+
+        // Invoke
+        ResponseEntity<Need> response = needController.getNeedByType(needType);
+
+        // Analyze
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }
