@@ -201,19 +201,14 @@ public class NeedFileDAOTest {
 
     // get need by type
     @Test
-    public void testGetNeedByType() {
+    public void testGetNeedByType() throws IOException {
+        // Setup
+        NeedFileDAO needFileDAO = new NeedFileDAO("doesnt_matter.txt", mockObjectMapper);
+
         // Invoke
-        Need need;
-        Need.NeedType needType = Need.NeedType.FOOD;
-        try {
-            need = needFileDAO.getNeedByType(needType);
-            assertEquals(need, testNeeds[0]);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Need need = needFileDAO.getNeedByType(Need.NeedType.FOOD);
 
         // Analyze
-
+        assertEquals(need, testNeeds[0]);
     }
 }
