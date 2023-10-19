@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * Test the Need Controller class
  * 
- * @author Ethan Hartman
+ * @author Ethan Hartman, Bevan Neiberg
  */
 @Tag("Controller-tier")
 public class NeedControllerTest {
@@ -37,7 +37,7 @@ public class NeedControllerTest {
     }
 
     @Test
-    public void testGetNeed() throws IOException {  // getNeed may throw IOException
+    public void testGetNeed() throws IOException { // getNeed may throw IOException
         // Setup
         Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
         // When the same id is passed in, our mock Need DAO will return the Need object
@@ -47,8 +47,8 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.getNeed(need.getName());
 
         // Analyze
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(need,response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(need, response.getBody());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.getNeed(needName);
 
         // Analyze
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.getNeed(needName);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     /*****************************************************************
@@ -86,7 +86,7 @@ public class NeedControllerTest {
      ****************************************************************/
 
     @Test
-    public void testCreateNeed() throws IOException {  // createNeed may throw IOException
+    public void testCreateNeed() throws IOException { // createNeed may throw IOException
         // Setup
         Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
         // when createNeed is called, return true simulating successful
@@ -97,12 +97,12 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.createNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.CREATED,response.getStatusCode());
-        assertEquals(need,response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(need, response.getBody());
     }
 
     @Test
-    public void testCreateNeedFailed() throws IOException {  // createNeed may throw IOException
+    public void testCreateNeedFailed() throws IOException { // createNeed may throw IOException
         // Setup
         Need need = new Need("Test 0", 3, 15, Need.NeedType.SHELTER);
         // when createNeed is called, return false simulating failed
@@ -113,11 +113,11 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.createNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.CONFLICT,response.getStatusCode());
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 
     @Test
-    public void testCreateNeedHandleException() throws IOException {  // createNeed may throw IOException
+    public void testCreateNeedHandleException() throws IOException { // createNeed may throw IOException
         // Setup
         Need need = new Need("Test 0", 3, 15, Need.NeedType.SHELTER);
 
@@ -128,7 +128,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.createNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -145,8 +145,8 @@ public class NeedControllerTest {
         response = needController.updateNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(need,response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(need, response.getBody());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.updateNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -175,7 +175,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.updateNeed(need);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -191,8 +191,8 @@ public class NeedControllerTest {
         ResponseEntity<Need[]> response = needController.getNeeds();
 
         // Analyze
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(needs,response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(needs, response.getBody());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class NeedControllerTest {
         ResponseEntity<Need[]> response = needController.getNeeds();
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -223,8 +223,8 @@ public class NeedControllerTest {
         ResponseEntity<Need[]> response = needController.searchNeeds(searchString);
 
         // Analyze
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(needs,response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(needs, response.getBody());
     }
 
     @Test
@@ -238,7 +238,7 @@ public class NeedControllerTest {
         ResponseEntity<Need[]> response = needController.searchNeeds(searchString);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -252,7 +252,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.deleteNeed(needName);
 
         // Analyze
-        assertEquals(HttpStatus.OK,response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -266,7 +266,7 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.deleteNeed(needName);
 
         // Analyze
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -280,6 +280,22 @@ public class NeedControllerTest {
         ResponseEntity<Need> response = needController.deleteNeed(needName);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetNeedByType() throws IOException { // getNeedByType may throw IOException
+        // Setup
+        Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
+        // When getNeedByType is called with the type, return the need created above
+        when(mockNeedDAO.getNeedByType(need.getType().toString())).thenReturn(need);
+
+        // Invoke
+        ResponseEntity<Need> response = needController.getNeedByType(need.getType().toString());
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(need, response.getBody());
+
     }
 }

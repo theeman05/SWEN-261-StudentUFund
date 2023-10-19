@@ -194,4 +194,20 @@ public class NeedController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // get need by type
+    @GetMapping("/type/{type}")
+    public ResponseEntity<Need> getNeedByType(@PathVariable String type) {
+        LOG.info("GET /needs/type/" + type);
+        try {
+            Need need = needDao.getNeedByType(type);
+            if (need != null)
+                return new ResponseEntity<Need>(need, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
