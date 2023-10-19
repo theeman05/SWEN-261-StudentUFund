@@ -313,4 +313,32 @@ public class NeedControllerTest {
         // Analyze
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    public void testGetNeedByTypeHandleException() throws IOException { // getNeedByType may throw IOException
+        // Setup
+        Need.NeedType needType = Need.NeedType.FOOD;
+        // When getNeedByType is called on the Mock Need DAO, throw an IOException
+        doThrow(new IOException()).when(mockNeedDAO).getNeedByType(needType);
+
+        // Invoke
+        ResponseEntity<Need> response = needController.getNeedByType(needType);
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetNeedByTypeNotFoundHandleException() throws IOException { // getNeedByType may throw IOException
+        // Setup
+        Need.NeedType needType = Need.NeedType.FOOD;
+        // When getNeedByType is called on the Mock Need DAO, throw an IOException
+        doThrow(new IOException()).when(mockNeedDAO).getNeedByType(needType);
+
+        // Invoke
+        ResponseEntity<Need> response = needController.getNeedByType(needType);
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }
