@@ -143,7 +143,7 @@ public class UserController {
     }
 
     /**
-     * Responds to the POST request for removing a {@linkplain Need need} from the
+     * Responds to the DELETE request for removing a {@linkplain Need need} from the
      * current user's basket based on the {@link Need need}'s name
      * 
      * @param needName The name of the {@link Need need} to remove from the basket
@@ -159,7 +159,7 @@ public class UserController {
      */
     @PostMapping("/basket/remove")
     public ResponseEntity<Need> removeFromBasket(@RequestBody String needKey) {
-        LOG.info("POST /basket/remove/" + needKey);
+        LOG.info("DELETE /basket/remove/" + needKey);
         try {
             boolean removed = userDAO.removeNeedFromCurBasket(needKey);
             return new ResponseEntity<>(removed ? HttpStatus.OK : HttpStatus.NOT_FOUND);
