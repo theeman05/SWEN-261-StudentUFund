@@ -77,6 +77,10 @@ public class UserFileDAO implements UserDAO {
         return true;
     }
 
+    public User getCurUser() {
+        return curUser;
+    }
+
     /**
      * Loads {@linkplain Supporter supporters} from the JSON file into the map
      * 
@@ -142,8 +146,9 @@ public class UserFileDAO implements UserDAO {
      * {@inheritDoc}
      */
     public boolean loginUser(User user) throws IOException {
-        if (curUser == user)
+        if (curUser == user) {
             return true;
+        }
         logoutCurUser();
         if (!user.isAdmin()) {
             // Ensure the user is in the system.

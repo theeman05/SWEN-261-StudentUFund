@@ -114,4 +114,24 @@ public interface UserDAO {
      *                                       signed in
      */
     String[] getCurBasket() throws SupporterNotSignedInException;
+
+    /**
+     * Gets the current {@linkplain Supporter supporter's} basket
+     * 
+     * @return The current {@link Supporter supporter's} basket
+     * 
+     * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
+     *                                       signed in
+     */
+
+    User getCurUser() throws SupporterNotSignedInException;
+
+    /**
+     * Gets the current {@linkplain Supporter supporter's} basket
+     * 
+     * @return The current {@link Supporter supporter's} basket
+     * 
+     * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
+     *                                       signed in
+     */
 }
