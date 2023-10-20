@@ -131,7 +131,11 @@ public class NeedController {
     public ResponseEntity<Need> createNeed(@RequestBody Need need) {
         LOG.info("POST /needs " + need);
         try {
-            return new ResponseEntity<Need>(needDao.createNeed(need), HttpStatus.CREATED);
+            Need createdNeed = needDao.createNeed(need);
+            if (createdNeed != null)
+                return new ResponseEntity<Need>(createdNeed, HttpStatus.CREATED);
+            else
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (KeyAlreadyExistsException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -183,30 +187,6 @@ public class NeedController {
             boolean wasDeleted = needDao.deleteNeed(name);
             if (wasDeleted)
                 return new ResponseEntity<>(HttpStatus.OK);
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * Gets a need {@linkplain Need need} with the given type
-     * 
-     * @param name The name of the {@link Need need} to deleted
-     * 
-     * @return ResponseEntity HTTP status of OK if the need is found<br>
-     *         ResponseEntity with HTTP status of NOT_FOUND if not found<br>
-     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
-     */
-    @GetMapping("/type/{type}")
-    public ResponseEntity<Need> getNeedByType(@PathVariable Need.NeedType type) {
-        LOG.info("GET /needs/type/" + type);
-        try {
-            Need need = needDao.getNeedByType(type);
-            if (need != null)
-                return new ResponseEntity<Need>(need, HttpStatus.OK);
             else
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException e) {
