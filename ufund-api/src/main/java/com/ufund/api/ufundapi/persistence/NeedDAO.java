@@ -26,7 +26,8 @@ public interface NeedDAO {
      * 
      * @param containsText The text to match against
      * 
-     * @return An array of {@link Need needs} whose nemes contains the given text, may be empty
+     * @return An array of {@link Need needs} whose nemes contains the given text,
+     *         may be empty
      * 
      * @throws IOException if an issue with underlying storage
      */
@@ -38,8 +39,8 @@ public interface NeedDAO {
      * @param name The name of the {@link Need need} to get
      * 
      * @return a {@link Need need} object with the matching name
-     * <br>
-     * null if no {@link Need need} with a matching name is found
+     *         <br>
+     *         null if no {@link Need need} with a matching name is found
      * 
      * @throws IOException if an issue with underlying storage
      */
@@ -50,11 +51,12 @@ public interface NeedDAO {
      * 
      * @param need {@linkplain Need need} object to be created and saved
      *
-     * @return new {@link Need need} if successful, false otherwise 
+     * @return new {@link Need need} if successful, false otherwise
      * 
-     * @throws IOException if an issue with underlying storage
+     * @throws IOException               if an issue with underlying storage
      * 
-     * @throws KeyAlreadyExistsException if a {@link Need need} with the same name already exists
+     * @throws KeyAlreadyExistsException if a {@link Need need} with the same name
+     *                                   already exists
      */
     Need createNeed(Need need) throws IOException, KeyAlreadyExistsException;
 
@@ -64,7 +66,7 @@ public interface NeedDAO {
      * @param {@link Need need} object to be updated and saved
      * 
      * @return updated {@link Need need} if successful, null if
-     * {@link Need need} could not be found
+     *         {@link Need need} could not be found
      * 
      * @throws IOException if underlying storage cannot be accessed
      */
@@ -76,10 +78,12 @@ public interface NeedDAO {
      * @param name The name of the {@link Need need}
      * 
      * @return true if the {@link Need need} was deleted
-     * <br>
-     * false if Need with the given name does not exist
+     *         <br>
+     *         false if Need with the given name does not exist
      * 
      * @throws IOException if underlying storage cannot be accessed
      */
     boolean deleteNeed(String name) throws IOException;
+
+    Need getNeedByType(Need.NeedType needType) throws IOException;
 }
