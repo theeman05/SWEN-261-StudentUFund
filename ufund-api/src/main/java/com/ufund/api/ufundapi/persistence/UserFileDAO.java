@@ -23,7 +23,8 @@ import com.ufund.api.ufundapi.model.User;
 /**
  * Implements the functionality for JSON file-based peristance for Users
  * 
- * {@literal @}Component Spring annotation instantiates a single instance of this
+ * {@literal @}Component Spring annotation instantiates a single instance of
+ * this
  * class and injects the instance into other classes as needed
  * 
  * @author Ethan Hartman
@@ -32,36 +33,40 @@ import com.ufund.api.ufundapi.model.User;
 public class UserFileDAO implements UserDAO {
     private static String SupporterUsernameExistsException = "Supporter with the username '%s' already exists";
 
-    private Map<String, Supporter> supporters;  // Map of supporters, keyed by username
-    private ObjectMapper objectMapper;  // Used to serialize/deserialize Java Objects to/from JSON objects
-    private String filename;    // Filename to read from and write to
+    private Map<String, Supporter> supporters; // Map of supporters, keyed by username
+    private ObjectMapper objectMapper; // Used to serialize/deserialize Java Objects to/from JSON objects
+    private String filename; // Filename to read from and write to
 
     private User curUser; // The current user logged in
-    private Map<String, String> supporterBasket; // The current supporter's basket of needs 
+    private Map<String, String> supporterBasket; // The current supporter's basket of needs
 
     private NeedDAO needDao;
 
     /**
      * Creates a Supporter File Data Access Object
      * 
-     * @param filename Filename to read from and write to
+     * @param filename     Filename to read from and write to
      * 
-     * @param objectMapper Provides JSON Object to/from Java Object serialization and deserialization
+     * @param objectMapper Provides JSON Object to/from Java Object serialization
+     *                     and deserialization
      * 
-     * @param needDao The {@link NeedDAO Need Data Access Object} to perform CRUD operations
+     * @param needDao      The {@link NeedDAO Need Data Access Object} to perform
+     *                     CRUD operations
      * 
      * @throws IOException when file cannot be accessed or read from
      */
     @Autowired
-    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper, NeedDAO needDao) throws IOException {
+    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper, NeedDAO needDao)
+            throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         this.needDao = needDao;
-        load();  // load the supporters from the file
+        load(); // load the supporters from the file
     }
-    
+
     /**
-     * Saves the {@linkplain Supporter supporters} from the map into the file as an array of JSON objects
+     * Saves the {@linkplain Supporter supporters} from the map into the file as an
+     * array of JSON objects
      * 
      * @return true if the {@link Supporter supporters} were written successfully
      * 
@@ -98,7 +103,7 @@ public class UserFileDAO implements UserDAO {
      */
     private void updateCurSupporter() throws IOException {
         Supporter supporter = (Supporter) curUser;
-        synchronized(supporters) {
+        synchronized (supporters) {
             supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
             save(); // may throw an IOException
         }
@@ -115,9 +120,10 @@ public class UserFileDAO implements UserDAO {
      * {@inheritDoc}
      */
     public Supporter createSupporter(Supporter supporter) throws IOException, KeyAlreadyExistsException {
-        synchronized(supporters) {
+        synchronized (supporters) {
             if (supporters.containsKey(supporter.getUsername()) || supporter.isAdmin())
-                throw new KeyAlreadyExistsException(String.format(SupporterUsernameExistsException, supporter.getUsername()));
+                throw new KeyAlreadyExistsException(
+                        String.format(SupporterUsernameExistsException, supporter.getUsername()));
             supporters.put(supporter.getUsername(), supporter);
             save(); // may throw an IOException
             return supporter;
@@ -127,7 +133,7 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public void logoutCurUser(){
+    public void logoutCurUser() {
         supporterBasket = null;
         curUser = null;
     }
@@ -139,13 +145,13 @@ public class UserFileDAO implements UserDAO {
         if (curUser == user)
             return true;
         logoutCurUser();
-        if (!user.isAdmin()){
+        if (!user.isAdmin()) {
             // Ensure the user is in the system.
             if (supporters.containsKey(user.getUsername())) {
                 supporterBasket = new HashMap<>();
                 Supporter supporter = (Supporter) user;
                 boolean needRemoved = false;
-                for (String needKey : supporter.getFundingBasket()){
+                for (String needKey : supporter.getFundingBasket()) {
                     if (needDao.getNeed(needKey) != null)
                         supporterBasket.put(needKey, needKey);
                     else
@@ -155,7 +161,7 @@ public class UserFileDAO implements UserDAO {
                 // If a need was removed, let's update the basket and save
                 if (needRemoved)
                     supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
-            }else
+            } else
                 return false;
         }
         curUser = user;
@@ -165,7 +171,7 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public User getUser(String username) throws IOException{
+    public User getUser(String username) throws IOException {
         if (User.ADMIN.getUsername().equals(username))
             return User.ADMIN;
         return supporters.get(username);
@@ -174,10 +180,11 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public Need addNeedToCurBasket(String needKey) throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public Need addNeedToCurBasket(String needKey)
+            throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
-        
+
         Need locatedNeed = needDao.getNeed(needKey);
         if (locatedNeed == null)
             throw new NeedNotFoundException(needKey);
@@ -185,7 +192,7 @@ public class UserFileDAO implements UserDAO {
         if (supporterBasket.containsKey(needKey))
             throw new NeedAlreadyInCartException(needKey);
 
-        synchronized(supporterBasket){
+        synchronized (supporterBasket) {
             supporterBasket.put(needKey, needKey);
             updateCurSupporter();
             return locatedNeed;
@@ -195,14 +202,15 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public boolean removeNeedFromCurBasket(String needKey) throws IOException, SupporterNotSignedInException{
+    public boolean removeNeedFromCurBasket(String needKey)
+            throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
 
         if (!supporterBasket.containsKey(needKey))
-            return false;
+            throw new NeedNotFoundException(needKey);
 
-        synchronized(supporterBasket){
+        synchronized (supporterBasket) {
             supporterBasket.remove(needKey);
             updateCurSupporter();
             return true;
@@ -212,7 +220,7 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public String[] getCurBasket() throws SupporterNotSignedInException{
+    public String[] getCurBasket() throws SupporterNotSignedInException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
         return supporterBasket.values().toArray(new String[supporterBasket.size()]);
