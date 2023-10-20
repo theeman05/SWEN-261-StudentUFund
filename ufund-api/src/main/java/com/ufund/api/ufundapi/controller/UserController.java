@@ -122,9 +122,9 @@ public class UserController {
      *         is already in the basket<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @PostMapping("/basket")
+    @PostMapping("/basket/add")
     public ResponseEntity<Need> addToBasket(@RequestBody String needKey) {
-        LOG.info("POST /basket/" + needKey);
+        LOG.info("POST /basket/add/" + needKey);
         try {
             return new ResponseEntity<>(userDAO.addNeedToCurBasket(needKey), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
