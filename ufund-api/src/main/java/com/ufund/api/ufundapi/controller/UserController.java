@@ -148,7 +148,7 @@ public class UserController {
      * 
      * @param needName The name of the {@link Need need} to remove from the basket
      * 
-     * @return ResponseEntity with a {@link Need need} and HTTP status of OK if the
+     * @return ResponseEntity with a boolean value of True and HTTP status of OK if
      *         {@link Need need} was removed from the {@link Supporter supporter's
      *         basket} <br>
      *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
