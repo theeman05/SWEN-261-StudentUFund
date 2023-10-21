@@ -92,7 +92,7 @@ public class UserController {
      * 
      * @return ResponseEntity with list of {@link Need need} keys and a status of OK
      *         if supporter is signed in<br>
-     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     *         ResponseEntity with HTTP status of FORBIDDEN otherwise
      */
     @GetMapping("/basket")
     public ResponseEntity<String[]> getCurBasket() {
@@ -101,7 +101,7 @@ public class UserController {
             return new ResponseEntity<String[]>(userDAO.getCurBasket(), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
