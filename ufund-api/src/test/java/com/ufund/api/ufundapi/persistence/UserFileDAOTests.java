@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,13 +26,11 @@ import com.ufund.api.ufundapi.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /**
- * Test the Need File DAO class
+ * Test the User File DAO class
  * 
- * @author Ethan Hartman
+ * @author Bevan Neiberg
  */
 @Tag("Persistence-tier")
 public class UserFileDAOTests {
@@ -210,9 +206,6 @@ public class UserFileDAOTests {
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
 
-        // Invoke
-        // Need need = new Need("testNeed1", 1.5, 1, Need.NeedType.FOOD);
-        // userFileDAO.addNeedToCurBasket(need.getName());
         // Analyze
         assertThrows(NeedNotFoundException.class, () -> {
             userFileDAO.addNeedToCurBasket("testNeed2342");
