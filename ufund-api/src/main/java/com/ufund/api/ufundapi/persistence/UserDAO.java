@@ -93,14 +93,13 @@ public interface UserDAO {
      * 
      * @param needKey The key of the {@link Need need} to remove from the basket
      * 
-     * @return true if successful, false if the {@link Need need} is not in the
-     *         basket
-     * 
      * @throws IOException                   if an issue with underlying storage
      * 
      * @throws SupporterNotSignedInException if no supporter is signed in
+     * 
+     * @throws NeedNotFoundException if the {@link Need need} is not found in the basket
      */
-    boolean removeNeedFromCurBasket(String needKey)
+    void removeNeedFromCurBasket(String needKey)
             throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
     /**

@@ -131,11 +131,7 @@ public class NeedController {
     public ResponseEntity<Need> createNeed(@RequestBody Need need) {
         LOG.info("POST /needs " + need);
         try {
-            Need createdNeed = needDao.createNeed(need);
-            if (createdNeed != null)
-                return new ResponseEntity<Need>(createdNeed, HttpStatus.CREATED);
-            else
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<Need>(needDao.createNeed(need), HttpStatus.CREATED);
         } catch (KeyAlreadyExistsException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);

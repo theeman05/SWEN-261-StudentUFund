@@ -207,7 +207,7 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public boolean removeNeedFromCurBasket(String needKey)
+    public void removeNeedFromCurBasket(String needKey)
             throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
@@ -218,7 +218,6 @@ public class UserFileDAO implements UserDAO {
         synchronized (supporterBasket) {
             supporterBasket.remove(needKey);
             updateCurSupporter();
-            return true;
         }
     }
 
