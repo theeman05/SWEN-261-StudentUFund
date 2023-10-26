@@ -7,16 +7,19 @@ import { AppComponent } from './app.component';
 import { NeedsComponent } from './needs/needs.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { NeedDetailComponent } from './need-detail/need-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NeedsComponent,
     DashboardComponent,
+    NeedDetailComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    AppRoutingModule,
     HttpClientModule,
   ],
   providers: [],
