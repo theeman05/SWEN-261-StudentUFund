@@ -15,6 +15,12 @@ export class NeedService {
     return needs;
   }
 
+  /** GET: get the need from the server */
+  getNeed(name: string): Observable<Need> {
+    const need = NEEDS.find(n => n.name === name)!;
+    return of(need);
+  }
+
   // /** DELETE: delete the need from the server */
   // deleteNeed(id: number): Observable<Need> {
   //   const url = `${this.needsURL}/${id}`;
