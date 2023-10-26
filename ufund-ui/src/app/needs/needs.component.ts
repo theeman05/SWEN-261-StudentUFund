@@ -22,6 +22,6 @@ export class NeedsComponent implements OnInit {
 
   delete(hero: Need): void {
     this.needs = this.needs.filter(h => h !== hero);
-    //this.needService.deleteNeed(hero.name).subscribe();
+    this.needService.deleteNeed(hero.name).subscribe();
   }
 }
