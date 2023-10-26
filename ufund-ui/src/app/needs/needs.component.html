@@ -1,10 +1,13 @@
-<h2> Needs List </h2>
+<h2>My Project Needs</h2>
+
 <ul class="needs">
   <li *ngFor="let need of needs">
-    <button type="button">
-      <span class="badge">{{need.name}}</span>
+    <a routerLink="/detail/{{need.name}}">
+      <span class="badge">{{need.name}}</span> {{need.name}}
       <span class="name">Cost: ${{need.cost}}</span>
       <span class="name">, Quantity: {{need.quantity}}</span>
-    </button>
+    </a>
+    <button type="button" class="delete" title="delete need"
+      (click)="delete(need)">x</button>
   </li>
 </ul>
