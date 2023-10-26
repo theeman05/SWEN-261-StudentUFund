@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Application-wide Styles */
 h1 {
     color: #369;
@@ -42,3 +43,6 @@ h1 {
   * {
     font-family: Arial, Helvetica, sans-serif;
   }
+=======
+/* You can add global styles to this file, and also import other style files */
+>>>>>>> 6c636b4d508941431378f1df66a6b7e09928916b

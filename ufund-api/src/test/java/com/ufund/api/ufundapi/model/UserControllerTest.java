@@ -1,5 +1,5 @@
 package com.ufund.api.ufundapi.model;
 
-public class Project {
-    
+public class UserControllerTest {
+
 }

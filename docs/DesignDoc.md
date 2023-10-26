@@ -21,8 +21,9 @@ geometry: margin=1in
 A local organization that facilitates the funding of student projects. Volunteers can either provide monetary support or direct goods and services for projects of their choice.
 
 ### Purpose
->  _**[Sprint 2 & 4]** Provide a very brief statement about the project and the most
-> important user group and user goals._
+Project Statement:
+A web application which allows users to fund student projects in order to complete the projects.
+The most important user group is the Student, which adds needs to their project. Their goal is to fulfill their project needs and finish the project.
 
 ### Glossary and Acronyms
 > _**[Sprint 2 & 4]** Provide a table of terms and acronyms._
@@ -30,6 +31,7 @@ A local organization that facilitates the funding of student projects. Volunteer
 | Term | Definition |
 |------|------------|
 | SPA | Single Page |
+| MVP | Minimum Viable Product|
 
 
 ## Requirements
@@ -41,7 +43,8 @@ This section describes the features of the application.
 > maybe Epics and critical Stories._
 
 ### Definition of MVP
-> _**[Sprint 2 & 4]** Provide a simple description of the Minimum Viable Product._
+The MVP allows for users to sign into the application, view student projects, add needs from those projects to their fund basket, and view the fund basket, as well as checking out their basket to fund the student projects.
+For students, it allows the creation and managing of needs for project funding.
 
 ### MVP Features
 >  _**[Sprint 4]** Provide a list of top-level Epics and/or Stories of the MVP._
@@ -54,12 +57,14 @@ This section describes the features of the application.
 
 This section describes the application domain.
 
-![Domain Model](domain-model-placeholder.png)
+![Domain Model](domain-model.png)
 
 > _**[Sprint 2 & 4]** Provide a high-level overview of the domain for this application. You
 > can discuss the more important domain entities and their relationship
 > to each other._
-
+Students can create and manage needs. Students can log in as admins.
+Supporters can view needs in student projects and they can also add and remove needs from their funding basket.
+Supporters can check out their fund basket.
 
 ## Architecture and Design
 

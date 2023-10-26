@@ -92,7 +92,7 @@ public class UserController {
      * 
      * @return ResponseEntity with list of {@link Need need} keys and a status of OK
      *         if supporter is signed in<br>
-     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     *         ResponseEntity with HTTP status of FORBIDDEN otherwise
      */
     @GetMapping("/basket")
     public ResponseEntity<String[]> getCurBasket() {
@@ -101,7 +101,7 @@ public class UserController {
             return new ResponseEntity<String[]>(userDAO.getCurBasket(), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -148,7 +148,7 @@ public class UserController {
      * 
      * @param needName The name of the {@link Need need} to remove from the basket
      * 
-     * @return ResponseEntity with a boolean value of True and HTTP status of OK if
+     * @return ResponseEntity with an HTTP status of OK if
      *         {@link Need need} was removed from the {@link Supporter supporter's
      *         basket} <br>
      *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
@@ -158,11 +158,11 @@ public class UserController {
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @PostMapping("/basket/remove")
-    public ResponseEntity<Need> removeFromBasket(@RequestBody String needKey) {
+    public ResponseEntity<Void> removeFromBasket(@RequestBody String needKey) {
         LOG.info("DELETE /basket/remove/" + needKey);
         try {
-            boolean removed = userDAO.removeNeedFromCurBasket(needKey);
-            return new ResponseEntity<>(removed ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+            userDAO.removeNeedFromCurBasket(needKey);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

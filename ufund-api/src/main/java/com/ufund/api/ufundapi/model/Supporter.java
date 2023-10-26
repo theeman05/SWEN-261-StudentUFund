@@ -9,19 +9,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author Ethan Hartman
  */
-public class Supporter extends User{
+public class Supporter extends User {
     static final String STRING_FORMAT = "Supporter [username=%s,isAdmin=%s,fundingBasket=%s]";
 
-    @JsonProperty("funding_basket") private String[] fundingBasket;
+    @JsonProperty("funding_basket")
+    private String[] fundingBasket;
 
     /**
      * Create a user with the given username and funding basket
      * Their funding basket will be empty
-     * @param username The username of the user
      * 
-     * @param fundingBasket The list of {@link Need need} keys in this user's funding basket
+     * @param username      The username of the user
+     * 
+     * @param fundingBasket The list of {@link Need need} keys in this user's
+     *                      funding basket
      */
-    public Supporter(@JsonProperty("username") String username, @JsonProperty("funding_basket") String[] fundingBasket) {
+    public Supporter(@JsonProperty("username") String username,
+            @JsonProperty("funding_basket") String[] fundingBasket) {
         super(username);
         this.fundingBasket = fundingBasket;
     }
@@ -37,7 +41,8 @@ public class Supporter extends User{
     }
 
     /**
-     * Set this supporters funding basket to the given list of {@linkplain Need need} keys.
+     * Set this supporters funding basket to the given list of {@linkplain Need
+     * need} keys.
      * 
      * @param fundingBasket The list of {@link Need need} keys.
      */

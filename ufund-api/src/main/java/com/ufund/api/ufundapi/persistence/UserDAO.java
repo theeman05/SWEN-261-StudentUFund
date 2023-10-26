@@ -93,14 +93,13 @@ public interface UserDAO {
      * 
      * @param needKey The key of the {@link Need need} to remove from the basket
      * 
-     * @return true if successful, false if the {@link Need need} is not in the
-     *         basket
-     * 
      * @throws IOException                   if an issue with underlying storage
      * 
      * @throws SupporterNotSignedInException if no supporter is signed in
+     * 
+     * @throws NeedNotFoundException if the {@link Need need} is not found in the basket
      */
-    boolean removeNeedFromCurBasket(String needKey)
+    void removeNeedFromCurBasket(String needKey)
             throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
     /**
@@ -114,4 +113,24 @@ public interface UserDAO {
      *                                       signed in
      */
     String[] getCurBasket() throws SupporterNotSignedInException;
+
+    /**
+     * Gets the current {@linkplain Supporter supporter's} basket
+     * 
+     * @return The current {@link Supporter supporter's} basket
+     * 
+     * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
+     *                                       signed in
+     */
+
+    User getCurUser() throws SupporterNotSignedInException;
+
+    /**
+     * Gets the current {@linkplain Supporter supporter's} basket
+     * 
+     * @return The current {@link Supporter supporter's} basket
+     * 
+     * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
+     *                                       signed in
+     */
 }
