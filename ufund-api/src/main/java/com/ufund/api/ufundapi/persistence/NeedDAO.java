@@ -84,6 +84,4 @@ public interface NeedDAO {
      * @throws IOException if underlying storage cannot be accessed
      */
     boolean deleteNeed(String name) throws IOException;
-
-    Need getNeedByType(Need.NeedType needType) throws IOException;
 }

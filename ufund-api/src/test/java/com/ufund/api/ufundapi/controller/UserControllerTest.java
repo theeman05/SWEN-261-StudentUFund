@@ -125,7 +125,7 @@ public class UserControllerTest {
     @Test
     public void testAddToBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
         // Setup
-        Need expected_need = new Need("TestNeed", 1, 1, Need.NeedType.CLOTHING);
+        Need expected_need = new Need("TestNeed", 1, 1);
         when(mockUserDAO.addNeedToCurBasket(expected_need.getName())).thenReturn(expected_need);
 
         // Invoke
