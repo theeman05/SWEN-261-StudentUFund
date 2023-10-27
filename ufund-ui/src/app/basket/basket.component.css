@@ -1,0 +1,14 @@
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #e8e8e8;
+  border-radius: 4px;
+  max-width: 300px;
+}
+.flex-container > div{
+  padding: 1rem;
+  margin-top: 10px;
+  background-color: #1e599c79;
+  color: #3d3d3d;
+  border-radius: 4px;
+}
