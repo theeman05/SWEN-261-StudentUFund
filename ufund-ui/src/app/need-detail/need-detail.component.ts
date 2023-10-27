@@ -33,4 +33,10 @@ export class NeedDetailComponent {
   goBack(): void {
     this.location.back();
   }
+
+  updateNeed(): void {
+    if (this.need) {
+      this.needService.updateNeed(this.need).subscribe(() => this.goBack());
+    }
+  }
 }

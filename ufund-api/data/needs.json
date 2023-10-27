@@ -1,1 +1,1 @@
-[{"name":"Test","cost":15.0,"quantity":13,"type":"OTHER"},{"name":"Test2","cost":12.5,"quantity":1,"type":"FOOD"},{"name":"TestDeleteMe","cost":12.5,"quantity":1,"type":"FOOD"}]
+[{"name":"Test","cost":2.0,"quantity":12,"type":"FOOD"},{"name":"Test2","cost":1.099E10,"quantity":1,"type":"OTHER"},{"name":"TestDeleteMe","cost":12.5,"quantity":1,"type":"FOOD"}]
