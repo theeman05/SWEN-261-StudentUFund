@@ -8,6 +8,7 @@ import { NeedsComponent } from './needs/needs.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NeedDetailComponent } from './need-detail/need-detail.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { NeedDetailComponent } from './need-detail/need-detail.component';
     NeedsComponent,
     DashboardComponent,
     NeedDetailComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
