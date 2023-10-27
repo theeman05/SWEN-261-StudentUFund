@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.ufund.api.ufundapi.model.Need.NeedType;
 
 /**
  * Testing Need class functions
@@ -22,7 +21,7 @@ public class NeedTest {
      */
     @BeforeEach
     public void setupNeed() {
-        need = new Need("Test 0", 1.00, 0, NeedType.EDUCATION);
+        need = new Need("Test 0", 1.00, 0);
     }
 
     @Test
@@ -49,19 +48,6 @@ public class NeedTest {
         
         //analyze
         assertEquals(expected ,need.getQuantity());
-    }
-
-    @Test
-    public void setType() {
-        //setup
-        setupNeed();
-        this.need.setType(NeedType.WATER);
-        
-        //invoke
-        NeedType expected = NeedType.WATER;
-        
-        //analyze
-        assertEquals(expected, need.getType());
     }
 
     @Test
@@ -103,19 +89,6 @@ public class NeedTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void getType() {
-        //setup
-        setupNeed();
-        
-        //invoke
-        Need.NeedType expected = Need.NeedType.EDUCATION;
-        Need.NeedType actual = need.getType();
-        
-        //analyze
-        assertEquals(expected, actual);
-    }
-
 
     @Test
     public void needToString() {
@@ -123,7 +96,7 @@ public class NeedTest {
         setupNeed();
         //invoke
         String actual = need.toString();
-        String expected = "Need [name=Test 0,cost=$1.0,quantity=0,type=EDUCATION]";
+        String expected = "Need [name=Test 0,cost=$1.0,quantity=0]";
         
         //analyze
         assertEquals(expected, actual);

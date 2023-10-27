@@ -9,22 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Need {
 
-    /**
-     * Represents the type of need
-     */
-    public enum NeedType {
-        FOOD,
-        WATER,
-        SHELTER,
-        CLOTHING,
-        MEDICAL,
-        TRANSPORTATION,
-        EDUCATION,
-        OTHER
-    }
-
     // Package private for tests
-    static final String STRING_FORMAT = "Need [name=%s,cost=$%s,quantity=%s,type=%s]";
+    static final String STRING_FORMAT = "Need [name=%s,cost=$%s,quantity=%s]";
 
     @JsonProperty("name")
     private String name;
@@ -32,8 +18,6 @@ public class Need {
     private double cost;
     @JsonProperty("quantity")
     private int quantity;
-    @JsonProperty("type")
-    private NeedType type;
 
     /**
      * Create a need with the given name, cost, quantity, and type
@@ -44,11 +28,10 @@ public class Need {
      * @param type The type of the need
      */
     public Need(@JsonProperty("name") String name, @JsonProperty("cost") double cost,
-            @JsonProperty("quantity") int quantity, @JsonProperty("type") NeedType type) {
+            @JsonProperty("quantity") int quantity) {
         this.name = name;
         this.cost = cost;
         this.quantity = quantity;
-        this.type = type;
     }
 
     /**
@@ -68,16 +51,6 @@ public class Need {
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    /**
-     * Sets the type of the need
-     * 
-     * @param type The type of the need
-     */
-
-    public void setType(NeedType type) {
-        this.type = type;
     }
 
     /**
@@ -110,19 +83,10 @@ public class Need {
     }
 
     /**
-     * Retrieves the type of the need
-     * 
-     * @return The type of the need
-     */
-    public NeedType getType() {
-        return type;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, name, cost, quantity, type);
+        return String.format(STRING_FORMAT, name, cost, quantity);
     }
 }
