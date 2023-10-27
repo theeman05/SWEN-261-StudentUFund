@@ -185,7 +185,7 @@ public class UserFileDAOTests {
     public void testAddNeedToCurBasket_success()
             throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
         // Setup
-        Need expected_need = new Need("testNeed1", 1.5, 1, Need.NeedType.FOOD);
+        Need expected_need = new Need("testNeed1", 1.5, 1);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
         when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
@@ -200,7 +200,7 @@ public class UserFileDAOTests {
     public void testAddNeedToCurBasket_NeedAlreadyInCart()
             throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
         // Setup
-        Need need = new Need("testDupeNeed", 1.5, 1, Need.NeedType.FOOD);
+        Need need = new Need("testDupeNeed", 1.5, 1);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
         when(mockNeedDao.getNeed(any())).thenReturn(need);
@@ -238,7 +238,7 @@ public class UserFileDAOTests {
     public void testRemoveNeedFromCurBasket_success()
             throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
         // Setup
-        Need need = new Need("testNeed1", 1.5, 1, Need.NeedType.FOOD);
+        Need need = new Need("testNeed1", 1.5, 1);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
 
