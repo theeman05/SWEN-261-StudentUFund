@@ -181,16 +181,4 @@ public class NeedFileDAO implements NeedDAO {
                 return false;
         }
     }
-
-    // get need by type
-    public Need getNeedByType(Need.NeedType needType) throws IOException {
-        synchronized (needs) {
-            for (Need need : needs.values()) {
-                if (need.getType().equals(needType)) {
-                    return need;
-                }
-            }
-            return null;
-        }
-    }
 }

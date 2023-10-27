@@ -44,9 +44,9 @@ public class NeedFileDAOTest {
     public void setupNeedFileDAO() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testNeeds = new Need[3];
-        testNeeds[0] = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
-        testNeeds[1] = new Need("Test 1", 2, 5, Need.NeedType.EDUCATION);
-        testNeeds[2] = new Need("Test 12", 5, 15, Need.NeedType.TRANSPORTATION);
+        testNeeds[0] = new Need("Test 0", 1.5, 1);
+        testNeeds[1] = new Need("Test 1", 2, 5);
+        testNeeds[2] = new Need("Test 12", 5, 15);
 
         // When the object mapper is supposed to read from the file
         // the mock object mapper will return the need array above
@@ -105,7 +105,7 @@ public class NeedFileDAOTest {
     @Test
     public void testCreateNeed() {
         // Setup
-        Need need = new Need("Test New", 16, 25, Need.NeedType.MEDICAL);
+        Need need = new Need("Test New", 16, 25);
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.createNeed(need),
@@ -117,13 +117,12 @@ public class NeedFileDAOTest {
         assertEquals(actual.getName(), need.getName());
         assertEquals(actual.getCost(), need.getCost());
         assertEquals(actual.getQuantity(), need.getQuantity());
-        assertEquals(actual.getType(), need.getType());
     }
 
     @Test
     public void testCreateNeedExists() {
         // Setup
-        Need need = new Need("Test 0", 16, 25, Need.NeedType.MEDICAL);
+        Need need = new Need("Test 0", 16, 25);
 
         // Invoke
         assertThrows(KeyAlreadyExistsException.class,
@@ -134,7 +133,7 @@ public class NeedFileDAOTest {
     @Test
     public void testUpdateNeed() {
         // Setup
-        Need need = new Need(testNeeds[0].getName(), 16, 25, Need.NeedType.MEDICAL);
+        Need need = new Need(testNeeds[0].getName(), 16, 25);
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.updateNeed(need),
@@ -152,7 +151,7 @@ public class NeedFileDAOTest {
                 .when(mockObjectMapper)
                 .writeValue(any(File.class), any(Need[].class));
 
-        Need need = new Need("Test New", 16, 25, Need.NeedType.MEDICAL);
+        Need need = new Need("Test New", 16, 25);
 
         assertThrows(IOException.class,
                 () -> needFileDAO.createNeed(need),
@@ -182,7 +181,7 @@ public class NeedFileDAOTest {
     @Test
     public void testUpdateNeedNotFound() {
         // Setup
-        Need need = new Need("Not real need", 24, 22222, Need.NeedType.OTHER);
+        Need need = new Need("Not real need", 24, 22222);
 
         // Invoke
         Need result = assertDoesNotThrow(() -> needFileDAO.updateNeed(need),
@@ -211,30 +210,4 @@ public class NeedFileDAOTest {
                 () -> new NeedFileDAO("doesnt_matter.txt", mockObjectMapper),
                 "IOException not thrown");
     }
-
-    // get need by type
-    @Test
-    public void testGetNeedByType() throws IOException {
-        // Setup
-        NeedFileDAO needFileDAO = new NeedFileDAO("doesnt_matter.txt", mockObjectMapper);
-
-        // Invoke
-        Need need = needFileDAO.getNeedByType(Need.NeedType.FOOD);
-
-        // Analyze
-        assertEquals(need, testNeeds[0]);
-    }
-
-    @Test
-    public void testGetNeedByTypeNotFound() throws IOException {
-        // Setup
-        NeedFileDAO needFileDAO = new NeedFileDAO("doesnt_matter.txt", mockObjectMapper);
-
-        // Invoke
-        Need need = needFileDAO.getNeedByType(Need.NeedType.OTHER);
-
-        // Analyze
-        assertNull(need);
-    }
-
 }

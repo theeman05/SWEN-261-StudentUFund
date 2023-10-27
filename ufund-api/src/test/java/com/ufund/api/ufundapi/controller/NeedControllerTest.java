@@ -41,7 +41,7 @@ public class NeedControllerTest {
     @Test
     public void testGetNeed() throws IOException { // getNeed may throw IOException
         // Setup
-        Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
+        Need need = new Need("Test 0", 1.5, 1);
         // When the same id is passed in, our mock Need DAO will return the Need object
         when(mockNeedDAO.getNeed(need.getName())).thenReturn(need);
 
@@ -90,7 +90,7 @@ public class NeedControllerTest {
     @Test
     public void testCreateNeed() throws IOException { // createNeed may throw IOException
         // Setup
-        Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
+        Need need = new Need("Test 0", 1.5, 1);
         // when createNeed is called, return true simulating successful
         // creation and save
         when(mockNeedDAO.createNeed(need)).thenReturn(need);
@@ -106,7 +106,7 @@ public class NeedControllerTest {
     @Test
     public void testCreateNeedFailed() throws IOException { // createNeed may throw IOException
         // Setup
-        Need need = new Need("Test 0", 3, 15, Need.NeedType.SHELTER);
+        Need need = new Need("Test 0", 3, 15);
         // when createNeed is called, return false simulating failed
         // creation and save
         doThrow(new KeyAlreadyExistsException()).when(mockNeedDAO).createNeed(need);
@@ -121,7 +121,7 @@ public class NeedControllerTest {
     @Test
     public void testCreateNeedHandleException() throws IOException { // createNeed may throw IOException
         // Setup
-        Need need = new Need("Test 0", 3, 15, Need.NeedType.SHELTER);
+        Need need = new Need("Test 0", 3, 15);
 
         // When createNeed is called on the Mock Need DAO, throw an IOException
         doThrow(new IOException()).when(mockNeedDAO).createNeed(need);
@@ -136,7 +136,7 @@ public class NeedControllerTest {
     @Test
     public void testUpdateNeed() throws IOException { // updateNeed may throw IOException
         // Setup
-        Need need = new Need("Test 0", 312, 19, Need.NeedType.TRANSPORTATION);
+        Need need = new Need("Test 0", 312, 19);
         // when updateNeed is called, return true simulating successful
         // update and save
         when(mockNeedDAO.updateNeed(need)).thenReturn(need);
@@ -154,7 +154,7 @@ public class NeedControllerTest {
     @Test
     public void testUpdateNeedFailed() throws IOException { // updateNeed may throw IOException
         // Setup
-        Need need = new Need("Not real need", 1, 1, Need.NeedType.OTHER);
+        Need need = new Need("Not real need", 1, 1);
         // when updateNeed is called, return true simulating successful
         // update and save
         when(mockNeedDAO.updateNeed(need)).thenReturn(null);
@@ -169,7 +169,7 @@ public class NeedControllerTest {
     @Test
     public void testUpdateNeedHandleException() throws IOException { // updateNeed may throw IOException
         // Setup
-        Need need = new Need("Not real need", 1, 1, Need.NeedType.OTHER);
+        Need need = new Need("Not real need", 1, 1);
         // When updateNeed is called on the Mock Need DAO, throw an IOException
         doThrow(new IOException()).when(mockNeedDAO).updateNeed(need);
 
@@ -184,8 +184,8 @@ public class NeedControllerTest {
     public void testGetNeeds() throws IOException { // getNeeds may throw IOException
         // Setup
         Need[] needs = new Need[2];
-        needs[0] = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
-        needs[1] = new Need("Test 1", 3, 15, Need.NeedType.EDUCATION);
+        needs[0] = new Need("Test 0", 1.5, 1);
+        needs[1] = new Need("Test 1", 3, 15);
         // When getNeeds is called return the needs created above
         when(mockNeedDAO.getNeeds()).thenReturn(needs);
 
@@ -215,8 +215,8 @@ public class NeedControllerTest {
         // Setup
         String searchString = "la";
         Need[] needs = new Need[2];
-        needs[0] = new Need("Test similar names", 1.5, 1, Need.NeedType.FOOD);
-        needs[1] = new Need("Test krampus lair", 3, 15, Need.NeedType.EDUCATION);
+        needs[0] = new Need("Test similar names", 1.5, 1);
+        needs[1] = new Need("Test krampus lair", 3, 15);
         // When findNeeds is called with the search string, return the two
         /// needs above
         when(mockNeedDAO.findNeeds(searchString)).thenReturn(needs);
@@ -284,64 +284,4 @@ public class NeedControllerTest {
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
-
-    @Test
-    public void testGetNeedByType() throws IOException { // getNeedByType may throw IOException
-        // Setup
-        Need need = new Need("Test 0", 1.5, 1, Need.NeedType.FOOD);
-        // When getNeedByType is called with the type, return the need created above
-        when(mockNeedDAO.getNeedByType(need.getType())).thenReturn(need);
-
-        // Invoke
-        ResponseEntity<Need> response = needController.getNeedByType(need.getType());
-
-        // Analyze
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(need, response.getBody());
-
-    }
-
-    @Test
-    public void testGetNeedByTypeNotFound() throws IOException { // getNeedByType may throw IOException
-        // Setup
-        Need.NeedType needType = Need.NeedType.FOOD;
-        // When getNeedByType is called with the type, return null, simulating no need
-        // found
-        when(mockNeedDAO.getNeedByType(needType)).thenReturn(null);
-
-        // Invoke
-        ResponseEntity<Need> response = needController.getNeedByType(needType);
-
-        // Analyze
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    public void testGetNeedByTypeHandleException() throws IOException { // getNeedByType may throw IOException
-        // Setup
-        Need.NeedType needType = Need.NeedType.FOOD;
-        // When getNeedByType is called on the Mock Need DAO, throw an IOException
-        doThrow(new IOException()).when(mockNeedDAO).getNeedByType(needType);
-
-        // Invoke
-        ResponseEntity<Need> response = needController.getNeedByType(needType);
-
-        // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
-
-    @Test
-    public void testGetNeedByTypeNotFoundHandleException() throws IOException { // getNeedByType may throw IOException
-        // Setup
-        Need.NeedType needType = Need.NeedType.FOOD;
-        // When getNeedByType is called on the Mock Need DAO, throw an IOException
-        doThrow(new IOException()).when(mockNeedDAO).getNeedByType(needType);
-
-        // Invoke
-        ResponseEntity<Need> response = needController.getNeedByType(needType);
-
-        // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
-
 }
