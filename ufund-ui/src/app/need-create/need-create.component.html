@@ -1,0 +1,16 @@
+<div>
+    <h2>Create Need</h2>
+    <div>
+        <label>Need Name: </label>
+        <input #needName />
+    </div>
+    <div>
+        <label>Total Cost: </label>
+        <input #needCost />
+    </div>
+    <div>
+        <label>Quantity: </label>
+        <input #needQuantity />
+    </div>
+    <button type="button" (click)="createNeed(needName.value, needCost.value, needQuantity.value); needName.value = ''; needCost.value = ''; needQuantity.value = ''">Create Need</button>
+</div>

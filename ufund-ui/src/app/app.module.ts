@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NeedDetailComponent } from './need-detail/need-detail.component';
 import { BasketComponent } from './basket/basket.component';
+import { NeedCreateComponent } from './need-create/need-create.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { BasketComponent } from './basket/basket.component';
     DashboardComponent,
     NeedDetailComponent,
     BasketComponent,
+    NeedCreateComponent,
   ],
   imports: [
     BrowserModule,
