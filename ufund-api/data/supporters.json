@@ -1,1 +1,1 @@
-[{"username":"test1", "isAdmin":true, "fundingBasket":"test1"}, {"username":"test2", "isAdmin":false, "fundingBasket":"test2"}]
+[{"username":"test1", "funding_basket":["test1"]}, {"username":"test2", "funding_basket":["test2"]}]

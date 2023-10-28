@@ -1,0 +1,7 @@
+<div>
+    <h2>Login</h2>
+    <label>Username: </label>
+    <input #username>
+    <br>
+    <button type="button" (click)="login(username.value); username.value=''">Login</button>
+</div>
