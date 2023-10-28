@@ -17,8 +17,8 @@ export class LoginComponent {
     if (!username) { return; }
     if (this.userService.loginUser({ username } as User).subscribe())
       if (username == LoginComponent.ADMIN_USERNAME)
-        window.location.href = "/admin";
+        window.location.href = "/admin/needs";
       else
-        window.location.href = "/needs";
+        window.location.href = "/supporter/needs";
   }
 }

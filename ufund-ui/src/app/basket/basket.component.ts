@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Basket } from './basket';
 import { ActivatedRoute } from '@angular/router';
 import { NeedService } from '../need.service';
 
@@ -9,13 +8,8 @@ import { NeedService } from '../need.service';
   styleUrls: ['./basket.component.css']
 })
 export class BasketComponent{
-  // basket: Basket;
-  constructor(
-    private route: ActivatedRoute,
-    private needService: NeedService,
-    private location: Location
 
-  ) {}
+  constructor(private needService: NeedService) {}
 
   checkout(): void {
 

@@ -1,4 +1,4 @@
-<h2>My Project Needs</h2>
+<h2>Project Needs</h2>
 
 <app-need-search></app-need-search>
 
@@ -7,7 +7,5 @@
     <a routerLink="../detail/{{need.name}}">
       <span class="badge">{{need.name}}</span>Total Cost: ${{need.cost}}, Quantity: {{need.quantity}}
     </a>
-    <button type="button" class="delete" title="delete need"
-      (click)="delete(need)">x</button>
   </li>
 </ul>

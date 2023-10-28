@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Need } from '../need';
 import { NeedService } from '../need.service';
 
@@ -7,7 +7,7 @@ import { NeedService } from '../need.service';
   templateUrl: './need-create.component.html',
   styleUrls: ['./need-create.component.css']
 })
-export class NeedCreateComponent{
+export class NeedCreateComponent {
   constructor(
     private needService: NeedService,
   ) {}

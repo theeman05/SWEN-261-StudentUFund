@@ -3,13 +3,13 @@ import { Need } from '../need';
 import { NeedService } from '../need.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: [ './dashboard.component.css' ]
+  selector: 'app-needs-supporter',
+  templateUrl: './needs-supporter.component.html',
+  styleUrls: ['./needs-supporter.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class NeedsSupporterComponent implements OnInit {
   needs: Need[] = [];
-
+  
   constructor(private needService: NeedService) { }
 
   ngOnInit(): void {
@@ -17,7 +17,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getNeeds(): void {
-    this.needService.getNeeds()
-      .subscribe(needs => this.needs = needs.slice(0, 5));
+    this.needService.getNeeds().subscribe(needs => this.needs = needs);
   }
 }

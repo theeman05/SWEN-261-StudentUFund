@@ -1,15 +1,13 @@
 <div *ngIf="need">
 <h2>{{need.name}} Details</h2>
-<div><span>name: </span>{{need.name}}</div>
 <div>
-    <label for="need-cost">Need cost: </label>
+    <label for="need-cost">Cost: </label>
     <input id="need-cost" [(ngModel)]="need.cost" placeholder="Need cost"/>
 </div>
 <div>
-    <label for="need-quantity">Need quantity: </label>
+    <label for="need-quantity">Quantity: </label>
     <input id="need-quantity" [(ngModel)]="need.quantity" placeholder="Need quantity"/>
 </div>
     <button type="button" (click)="goBack()">Go Back</button>
     <button type="button" (click)="updateNeed()" >Update Need</button>
-    <button type="button" (click)="addToBasket()" >Add to Basket</button>
 </div>
