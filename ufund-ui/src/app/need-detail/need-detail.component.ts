@@ -39,4 +39,8 @@ export class NeedDetailComponent {
       this.needService.updateNeed(this.need).subscribe(() => this.goBack());
     }
   }
+
+  addToBasket(): void {
+    
+  }
 }

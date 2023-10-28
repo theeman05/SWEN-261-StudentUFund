@@ -10,6 +10,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NeedDetailComponent } from './need-detail/need-detail.component';
 import { BasketComponent } from './basket/basket.component';
 import { NeedCreateComponent } from './need-create/need-create.component';
+import { NeedDetailSupporterComponent } from './need-detail-supporter/need-detail-supporter.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { NeedCreateComponent } from './need-create/need-create.component';
     NeedDetailComponent,
     BasketComponent,
     NeedCreateComponent,
+    NeedDetailSupporterComponent,
   ],
   imports: [
     BrowserModule,
