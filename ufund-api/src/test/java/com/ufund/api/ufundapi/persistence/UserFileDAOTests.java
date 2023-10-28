@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -280,6 +281,30 @@ public class UserFileDAOTests {
         // Analyze
         assertThrows(SupporterNotSignedInException.class, () -> {
             userFileDAO.getCurBasket();
+        });
+    }
+
+    @Test
+    public void testCheckoutBasket() throws IOException, SupporterNotSignedInException, NeedAlreadyInCartException, NeedNotFoundException {
+        // Setup
+        Need expected_need = new Need("testNeed1", 1.5, 1);
+        when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
+
+        userFileDAO.loginUser(testSupporter[0]);
+        userFileDAO.addNeedToCurBasket(expected_need.getName());
+
+        // Invoke
+        userFileDAO.checkoutCurBasket();
+
+        // Analyze
+        assertEquals(userFileDAO.getCurBasket().length, 0);
+    }
+
+    @Test
+    public void testCheckoutBasket_SupporterNotSignedIn() throws SupporterNotSignedInException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.checkoutCurBasket();
         });
     }
 }
