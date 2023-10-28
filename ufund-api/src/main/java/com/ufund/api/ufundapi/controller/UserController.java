@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -122,9 +123,9 @@ public class UserController {
      *         is already in the basket<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @PostMapping("/basket/add")
+    @PostMapping("/basket")
     public ResponseEntity<Need> addToBasket(@RequestBody String needKey) {
-        LOG.info("POST /basket/add/" + needKey);
+        LOG.info("POST /basket/" + needKey);
         try {
             return new ResponseEntity<>(userDAO.addNeedToCurBasket(needKey), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
@@ -157,9 +158,9 @@ public class UserController {
      *         is not found<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @PostMapping("/basket/remove")
+    @DeleteMapping("/basket")
     public ResponseEntity<Void> removeFromBasket(@RequestBody String needKey) {
-        LOG.info("DELETE /basket/remove/" + needKey);
+        LOG.info("DELETE /basket/" + needKey);
         try {
             userDAO.removeNeedFromCurBasket(needKey);
             return new ResponseEntity<>(HttpStatus.OK);
