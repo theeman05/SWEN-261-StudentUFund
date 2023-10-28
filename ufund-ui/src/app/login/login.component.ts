@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from './auth.service';
+import { UserService } from '../user.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-login',
@@ -7,18 +8,17 @@ import { AuthService } from './auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  credentials = { username: ''};
+  private static ADMIN_USERNAME = "admin";
 
-  constructor(private authService: AuthService) { }
+  constructor(private userService: UserService) { }
 
-  login(): void {
-    this.authService.login(this.credentials).subscribe(
-      response => {
-        console.log('Login successful', response);
-      },
-      error => {
-        console.error('Login failed', error);
-      }
-    );
+  login(username: string): void {
+    username = username.trim();
+    if (!username) { return; }
+    if (this.userService.loginUser({ username } as User).subscribe())
+      if (username == LoginComponent.ADMIN_USERNAME)
+        window.location.href = "/admin";
+      else
+        window.location.href = "/needs";
   }
 }

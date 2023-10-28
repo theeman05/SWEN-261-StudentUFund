@@ -7,11 +7,12 @@ import { NeedsComponent } from './needs/needs.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'detail/:name', component: NeedDetailComponent },
-  { path: 'needs', component: NeedsComponent },
-    { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  // { path: 'dashboard', component: DashboardComponent },
+  // { path: 'detail/:name', component: NeedDetailComponent },
+  // { path: 'needs', component: NeedsComponent },
+  // { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
