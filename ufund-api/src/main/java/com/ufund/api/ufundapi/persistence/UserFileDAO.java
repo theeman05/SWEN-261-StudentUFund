@@ -244,8 +244,26 @@ public class UserFileDAO implements UserDAO {
             throw new SupporterNotSignedInException();
 
         synchronized (supporterBasket) {
+            // Delete the need from the list of needs since it's been funded
+            for (String needKey : supporterBasket.values())
+                needDao.deleteNeed(needKey);
             supporterBasket.clear();
             updateCurSupporter();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Need[] getBasketableNeeds() throws IOException, SupporterNotSignedInException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+
+        ArrayList<Need> basketable = new ArrayList<>();
+        for (Need need : needDao.getNeeds())
+            if (!supporterBasket.containsKey(need.getName()))
+                basketable.add(need);
+
+        return basketable.toArray(new Need[basketable.size()]);
     }
 }
