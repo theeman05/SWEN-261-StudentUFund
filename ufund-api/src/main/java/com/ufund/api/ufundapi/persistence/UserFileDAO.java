@@ -244,6 +244,9 @@ public class UserFileDAO implements UserDAO {
             throw new SupporterNotSignedInException();
 
         synchronized (supporterBasket) {
+            // Delete the need from the list of needs since it's been funded
+            for (String needKey : supporterBasket.values())
+                needDao.deleteNeed(needKey);
             supporterBasket.clear();
             updateCurSupporter();
         }
