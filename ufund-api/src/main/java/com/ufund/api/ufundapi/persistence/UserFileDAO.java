@@ -248,4 +248,19 @@ public class UserFileDAO implements UserDAO {
             updateCurSupporter();
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Need[] getBasketableNeeds() throws IOException, SupporterNotSignedInException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+
+        ArrayList<Need> basketable = new ArrayList<>();
+        for (Need need : needDao.getNeeds())
+            if (!supporterBasket.containsKey(need.getName()))
+                basketable.add(need);
+
+        return basketable.toArray(new Need[basketable.size()]);
+    }
 }

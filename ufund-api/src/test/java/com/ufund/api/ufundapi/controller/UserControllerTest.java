@@ -268,4 +268,37 @@ public class UserControllerTest {
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
+
+    @Test
+    public void testGetBasketable() throws IOException, SupporterNotSignedInException {
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketableNotSignedIn() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).getBasketableNeeds();
+
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketableIOException() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new IOException()).when(mockUserDAO).getBasketableNeeds();
+
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
 }

@@ -103,7 +103,21 @@ public interface UserDAO {
                 throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
         /**
-         * Gets the current Need's keys in the current {@linkplain Supporter
+         * Gets the needs which are available to add to this {@linkplain Supporter
+         * supporter's} basket
+         * 
+         * @return The {@link Need needs} available to add to the {@link Supporter supporter's}
+         *         basket
+         * 
+         * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
+         *                                       signed in
+         * 
+         * @throws IOException if an issue with underlying storage
+         */
+        Need[] getBasketableNeeds() throws SupporterNotSignedInException, IOException;
+
+        /**
+         * Gets the current Needs in the current {@linkplain Supporter
          * supporter's} basket
          * 
          * @return The {@link Need needs} in the current {@link Supporter supporter's}
@@ -111,6 +125,8 @@ public interface UserDAO {
          * 
          * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
          *                                       signed in
+         * 
+         * @throws IOException if an issue with underlying storage
          */
         Need[] getCurBasket() throws SupporterNotSignedInException, IOException;
 

@@ -202,4 +202,26 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Responds to the GET request for getting the {@link Need needs} which are
+     * available to add to the current user's basket
+     * 
+     * @return ResponseEntity with list of {@link Need need} objects and a status of
+     *         OK if supporter is signed in<br>
+     *         ResponseEntity with HTTP status of FORBIDDEN otherwise
+     */
+    @GetMapping("/basketable")
+    public ResponseEntity<Need[]> getBasketableNeeds() {
+        LOG.info("GET /basketable");
+        try {
+            return new ResponseEntity<Need[]>(userDAO.getBasketableNeeds(), HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
