@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 
 import { Need } from '../need';
 import { NeedService } from '../need.service';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-need-detail',
@@ -17,7 +18,8 @@ export class NeedDetailComponent {
   constructor(
     private route: ActivatedRoute,
     private needService: NeedService,
-    private location: Location
+    private location: Location,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -32,5 +34,24 @@ export class NeedDetailComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  updateNeed(): void {
+    if (this.need) {
+      var cost_num = Number(this.need.cost) || -1;
+      var quantity_num = Number(this.need.quantity) || -1;
+      var error_message = "";
+      if (cost_num < 0 || quantity_num < 0) {
+        if (cost_num < 0) {
+          error_message += "A valid cost is required. ";
+        }
+        if (quantity_num < 0) {
+          error_message += "A valid quantity is required. ";
+        }
+        this.errorService.showError(error_message);
+      }else{
+        this.needService.updateNeed(this.need).subscribe(() => this.goBack());
+      }
+    }
   }
 }

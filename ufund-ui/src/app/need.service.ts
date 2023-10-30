@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Need } from './need';
+import { ErrorService, HttpErrors } from './error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,21 +18,11 @@ export class NeedService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private errorService: ErrorService) { }
 
   getNeeds(): Observable<Need[]> {
     return this.http.get<Need[]>(this.needsUrl)
       .pipe(catchError(this.handleError<Need[]>('getNeeds', [])));
-  }
-
-  /** GET need by name. Return `undefined` when need not found */
-  getNeedNo404<Data>(name: String): Observable<Need> {
-    const url = `${this.needsUrl}/?name=${name}`;
-    return this.http.get<Need[]>(url)
-      .pipe(
-        map(needs => needs[0]), // returns a {0|1} element array
-        catchError(this.handleError<Need>(`getNeed name=${name}`))
-      );
   }
 
   /** GET need by name. Will 404 if name not found */
@@ -79,7 +70,27 @@ export class NeedService {
 
       console.error(error); // log to console
 
-      // TODO: better job of transforming error for user consumption
+      var display_message = "";
+      if (error.status != HttpErrors.INTERNAL_SERVER_ERROR) {
+        switch (operation) {
+          case 'getNeed':
+            display_message = "Need not found!";
+            break;
+          case 'addNeed':
+            display_message = "Need with the given name already exists!";
+            break;
+          case 'deleteNeed':
+            display_message = "Need not found!";
+            break;
+          case 'updateNeed':
+            display_message = "Need not found!";
+            break;
+        }
+      } else {
+        display_message = "Server storage limit exceeded!";
+      }
+
+      this.errorService.showError(display_message);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

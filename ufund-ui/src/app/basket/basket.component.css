@@ -1,0 +1,93 @@
+.basket {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: 30em;
+}
+
+.basket li {
+  position: relative;
+  cursor: pointer;
+}
+
+li {
+  color: var(--primary-text-color);
+  text-decoration: none;
+  background-color: var(--secondary-color);
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.6em;
+  border-radius: 4px;
+  display: block;
+  width: 100%;
+}
+
+.basket li:hover {
+  left: .1em;
+}
+
+.basket a {
+  color: var(--primary-text-color);
+  text-decoration: none;
+  background-color: var(--secondary-color);
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.6em;
+  border-radius: 4px;
+  display: block;
+  width: 100%;
+}
+
+.basket a:hover {
+  color: var(--primary-text-color);
+  background-color: var(--highlight-color);
+}
+
+.basket a:active {
+  background-color: #525252;
+  color: #fafafa;
+}
+
+.basket .badge {
+  display: inline-block;
+  font-size: small;
+  color: var(--secondary-color);
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: var(--primary-color);
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  min-width: 16px;
+  text-align: right;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+
+.add-button {
+ padding: .5rem 1.5rem;
+ font-size: 1rem;
+ margin-bottom: 2rem;
+}
+
+.add-button:hover {
+  color: var(--primary-text-color);
+  background-color: var(--highlight-color);
+}
+
+button.delete {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+  background-color: var(--primary-color);
+  color:  var(--secondary-color);
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 1px 10px 3px 10px;
+}
+
+button.delete:hover {
+  background-color: var(--highlight-color);
+  color: var(--primary-text-color);
+}

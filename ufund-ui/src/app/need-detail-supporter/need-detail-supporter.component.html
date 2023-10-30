@@ -1,0 +1,14 @@
+<div *ngIf="need">
+    <h2>{{need.name}} Details</h2>
+    <div>
+        <label for="need-cost">Cost: </label>
+        <span>${{need.cost}}</span>
+    </div>
+    <br>
+    <div>
+        <label for="need-quantity">Quantity: </label>
+        <span>{{need.quantity}}</span>
+    </div>
+        <button type="button" (click)="goBack()">Go Back</button>
+        <button type="button" (click)="addToBasket(need)" >Add to Basket</button>
+</div>

@@ -1,0 +1,11 @@
+p {
+    color: white;
+    font-weight: bold;
+  }
+
+div {
+    background-color: rosybrown;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+}
