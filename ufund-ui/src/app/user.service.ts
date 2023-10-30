@@ -80,12 +80,13 @@ export class UserService {
       } else if (error.status == HttpErrors.FORBIDDEN){
         this.location.back();
       } else if (error.status == HttpErrors.NOT_FOUND){
-        display_message = "Need not found!"; // Idk how this would happen
+        if (operation == 'loginUser'){
+          display_message = "Username not found!";
+        }else{
+          display_message = "Need not found!"; // Idk how this would happen
+        }
       } else {
         switch (operation) {
-          case 'loginUser':
-            display_message = "Username not found!";
-            break;
           case 'addToBasket':
             display_message = "Need already in basket!";
             break;
