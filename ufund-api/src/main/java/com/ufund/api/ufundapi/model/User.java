@@ -15,12 +15,9 @@ public class User {
     @JsonProperty("username") protected String username;
 
     /**
-     * Create a user with the given username and type
-     * Their funding basket will be empty
+     * Create a user with the given username
      * 
      * @param username The username of the user
-     * 
-     * @param type The type of the user
      */
     public User(@JsonProperty("username") String username) {
         this.username = username;
