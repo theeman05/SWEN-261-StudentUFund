@@ -122,17 +122,22 @@ This section describes the web interface flow; this is how the user views and in
 ![Replace with your ViewModel Tier class diagram 1, etc.](model-placeholder.png)
 
 ### Model Tier
-> _**[Sprint 2, 3 & 4]** Provide a summary of this tier of your architecture. This
+> _**[Sprint 3 & 4]** Provide a summary of this tier of your architecture. This
 > section will follow the same instructions that are given for the View
 > Tier above._
+For the model portion, we can see we have Need objects, which have the following private properties, name, cost, quantity. They have getters for those 3 properties, and setters for cost and quantity. Needs are used heavily within the Need File DAO, which is an extension of the Need DAO. Users have the private username property, and a getter for getting that username, and a method, isAdmin to check if the user is an admin. Users are used within the User File DAO, which is an extension of the User DAO.
 
 > _At appropriate places as part of this narrative provide **one** or more updated and **properly labeled**
 > static models (UML class diagrams) with some details such as critical attributes and methods._
 > 
-![Replace with your Model Tier class diagram 1, etc.](model-placeholder.png)
+![Replace with your Model Tier class diagram 1, etc.](architecture-tiers-and-layers.jpeg)
 
 ## OO Design Principles
-> _**[Sprint 2, 3 & 4]** Will eventually address upto **4 key OO Principles** in your final design. Follow guidance in augmenting those completed in previous Sprints as indicated to you by instructor. Be sure to include any diagrams (or clearly refer to ones elsewhere in your Tier sections above) to support your claims._
+Principle 1: Single Responsibility
+We can see single responsibility, as we have our controllers, persistence, and model classes all separated. Moving even deeper, we have a User class, which holds usernames for users, and a Supporter class specifically for supporters, which inherits from the user class and includes a funding basket. We separated the two because an admin is a user but is not a supporter. 
+
+Principle 2: Law of Demeter
+We see the law of Demeter when analyzing the controllers. The two controllers, UserController and NeedController only have access to their specific DAO class, UserDAO or NeedDAO. These controllers are then accessed by their specific Angular service, user service and need service.
 
 > _**[Sprint 3 & 4]** OO Design Principles should span across **all tiers.**_
 
@@ -149,17 +154,20 @@ This section describes the web interface flow; this is how the user views and in
 > and the results of the testing._
 
 ### Acceptance Testing
-> _**[Sprint 2 & 4]** Report on the number of user stories that have passed all their
+> _**[Sprint 4]** Report on the number of user stories that have passed all their
 > acceptance criteria tests, the number that have some acceptance
 > criteria tests failing, and the number of user stories that
 > have not had any testing yet. Highlight the issues found during
 > acceptance testing and if there are any concerns._
+Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
 
 ### Unit Testing and Code Coverage
 > _**[Sprint 4]** Discuss your unit testing strategy. Report on the code coverage
 > achieved from unit testing of the code base. Discuss the team's
 > coverage targets, why you selected those values, and how well your
 > code coverage met your targets._
+Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
+![](jacoco-sprint-2.png)
 
 >_**[Sprint 2 & 4]** **Include images of your code coverage report.** If there are any anomalies, discuss
 > those._
