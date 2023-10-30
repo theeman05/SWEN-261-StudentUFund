@@ -6,17 +6,33 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { NeedsComponent } from './needs/needs.component';
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { NeedDetailComponent } from './need-detail/need-detail.component';
-import { LoginComponent } from './login/login.component';
+import { BasketComponent } from './basket/basket.component';
+import { NeedCreateComponent } from './need-create/need-create.component';
+import { NeedDetailSupporterComponent } from './need-detail-supporter/need-detail-supporter.component';
+import { LogoutComponent } from './logout/logout.component';
+import { NeedsSupporterComponent } from './needs-supporter/needs-supporter.component';
+import { AdminComponent } from './admin/admin.component';
+import { SupporterComponent } from './supporter/supporter.component';
+import { NeedSearchComponent } from './need-search/need-search.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NeedsComponent,
-    DashboardComponent,
     NeedDetailComponent,
-    LoginComponent,
+    BasketComponent,
+    NeedCreateComponent,
+    NeedDetailSupporterComponent,
+    LogoutComponent,
+    NeedsSupporterComponent,
+    AdminComponent,
+    SupporterComponent,
+    NeedSearchComponent,
+    CheckoutComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,

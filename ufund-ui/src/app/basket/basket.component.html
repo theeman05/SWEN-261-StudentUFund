@@ -1,0 +1,16 @@
+<h2>Funding Basket</h2>
+
+<ul class="basket">
+    <li *ngFor="let need of needs">
+        <span class="badge">{{need.name}}</span>
+        Total Cost: ${{need.cost}}, Quantity: {{need.quantity}}
+        <button type="button" class="delete" title="remove need"
+          (click)="remove(need)">x</button>
+    </li>
+</ul>
+
+<br>
+
+<nav>
+    <a routerLink="checkout" (click)="checkout()">Checkout</a>
+</nav>

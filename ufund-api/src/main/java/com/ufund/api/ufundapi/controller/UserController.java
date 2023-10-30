@@ -96,13 +96,16 @@ public class UserController {
      *         ResponseEntity with HTTP status of FORBIDDEN otherwise
      */
     @GetMapping("/basket")
-    public ResponseEntity<String[]> getCurBasket() {
+    public ResponseEntity<Need[]> getCurBasket() {
         LOG.info("GET /basket");
         try {
-            return new ResponseEntity<String[]>(userDAO.getCurBasket(), HttpStatus.OK);
+            return new ResponseEntity<Need[]>(userDAO.getCurBasket(), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -158,8 +161,8 @@ public class UserController {
      *         is not found<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @DeleteMapping("/basket")
-    public ResponseEntity<Void> removeFromBasket(@RequestBody String needKey) {
+    @DeleteMapping("/basket/{needKey}")
+    public ResponseEntity<Void> removeFromBasket(@PathVariable String needKey) {
         LOG.info("DELETE /basket/" + needKey);
         try {
             userDAO.removeNeedFromCurBasket(needKey);
@@ -170,6 +173,52 @@ public class UserController {
         } catch (NeedNotFoundException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Responds to the GET request for checking out the current user's basket
+     * 
+     * @return ResponseEntity with an HTTP status of OK if the basket was checked
+     *         out<br>
+     *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
+     *         signed in<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @GetMapping("/checkout")
+    public ResponseEntity<Void> checkoutBasket() {
+        LOG.info("GET /checkout");
+        try {
+            userDAO.checkoutCurBasket();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Responds to the GET request for getting the {@link Need needs} which are
+     * available to add to the current user's basket
+     * 
+     * @return ResponseEntity with list of {@link Need need} objects and a status of
+     *         OK if supporter is signed in<br>
+     *         ResponseEntity with HTTP status of FORBIDDEN otherwise
+     */
+    @GetMapping("/basketable")
+    public ResponseEntity<Need[]> getBasketableNeeds() {
+        LOG.info("GET /basketable");
+        try {
+            return new ResponseEntity<Need[]>(userDAO.getBasketableNeeds(), HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

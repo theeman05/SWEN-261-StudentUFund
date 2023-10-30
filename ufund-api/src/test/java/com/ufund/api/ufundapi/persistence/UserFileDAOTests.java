@@ -282,4 +282,58 @@ public class UserFileDAOTests {
             userFileDAO.getCurBasket();
         });
     }
+
+    @Test
+    public void testCheckoutBasket() throws IOException, SupporterNotSignedInException, NeedAlreadyInCartException, NeedNotFoundException {
+        // Setup
+        Need expected_need = new Need("testNeed1", 1.5, 1);
+        when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
+
+        userFileDAO.loginUser(testSupporter[0]);
+        userFileDAO.addNeedToCurBasket(expected_need.getName());
+
+        // Invoke
+        userFileDAO.checkoutCurBasket();
+
+        // Analyze
+        assertEquals(userFileDAO.getCurBasket().length, 0);
+    }
+
+    @Test
+    public void testCheckoutBasket_SupporterNotSignedIn() throws SupporterNotSignedInException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.checkoutCurBasket();
+        });
+    }
+
+    @Test
+    public void testGetBasketable() throws SupporterNotSignedInException, IOException, NeedAlreadyInCartException, NeedNotFoundException {
+        // Setup
+        Need[] available_needs = new Need[3];
+        available_needs[0] = new Need("testNeed1", 1.5, 1);
+        available_needs[1] = new Need("testNeed2", 2, 21);
+        available_needs[2] = new Need("testNeed3", 3, 3);
+        when(mockNeedDao.getNeeds()).thenReturn(available_needs);
+        when(mockNeedDao.getNeed(available_needs[0].getName())).thenReturn(available_needs[2]);
+
+        userFileDAO.loginUser(testSupporter[0]);
+        userFileDAO.addNeedToCurBasket(available_needs[0].getName());
+
+        int expected_available_size = 2;
+
+        // Invoke
+        Need[] basketable_needs = userFileDAO.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(expected_available_size, basketable_needs.length);
+    }
+
+    @Test
+    public void testGetBasketable_SupporterNotSignedIn() throws SupporterNotSignedInException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.getBasketableNeeds();
+        });
+    }
 }

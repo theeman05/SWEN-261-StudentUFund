@@ -1,0 +1,8 @@
+label {
+    display: inline;
+}
+
+span {
+    color: var(--secondary-text-color);
+    font-weight: normal;
+}

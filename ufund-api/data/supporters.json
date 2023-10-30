@@ -1,1 +1,1 @@
-[{"username":"test1", "funding_basket":["test1"]}, {"username":"test2", "funding_basket":["test2"]}]
+[{"username":"test2","funding_basket":["test2"],"admin":false},{"username":"Ben","funding_basket":["Water Bottle"],"admin":false}]

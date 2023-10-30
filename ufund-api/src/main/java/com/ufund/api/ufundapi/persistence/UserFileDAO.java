@@ -2,6 +2,7 @@ package com.ufund.api.ufundapi.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -224,9 +225,45 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public String[] getCurBasket() throws SupporterNotSignedInException {
+    public Need[] getCurBasket() throws SupporterNotSignedInException, IOException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
-        return supporterBasket.values().toArray(new String[supporterBasket.size()]);
+        
+        ArrayList<Need> needList = new ArrayList<Need>();
+        for (String needName : supporterBasket.values())
+            needList.add(needDao.getNeed(needName));
+        
+        return needList.toArray(new Need[needList.size()]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void checkoutCurBasket() throws SupporterNotSignedInException, IOException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+
+        synchronized (supporterBasket) {
+            // Delete the need from the list of needs since it's been funded
+            for (String needKey : supporterBasket.values())
+                needDao.deleteNeed(needKey);
+            supporterBasket.clear();
+            updateCurSupporter();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Need[] getBasketableNeeds() throws IOException, SupporterNotSignedInException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+
+        ArrayList<Need> basketable = new ArrayList<>();
+        for (Need need : needDao.getNeeds())
+            if (!supporterBasket.containsKey(need.getName()))
+                basketable.add(need);
+
+        return basketable.toArray(new Need[basketable.size()]);
     }
 }

@@ -99,11 +99,11 @@ public class UserControllerTest {
     @Test
     public void testGetBasket() throws IOException, SupporterNotSignedInException {
         // Setup
-        String[] expected_basket = {"TestNeed1", "TestNeed2"};
+        Need[] expected_basket = {new Need("TestNeed1", 1, 1), new Need("TestNeed2", 2, 2)};
         when(mockUserDAO.getCurBasket()).thenReturn(expected_basket);
 
         // Invoke
-        ResponseEntity<String[]> response = userController.getCurBasket();
+        ResponseEntity<Need[]> response = userController.getCurBasket();
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -116,7 +116,7 @@ public class UserControllerTest {
         doThrow(new SupporterNotSignedInException()).when(mockUserDAO).getCurBasket();
 
         // Invoke
-        ResponseEntity<String[]> response = userController.getCurBasket();
+        ResponseEntity<Need[]> response = userController.getCurBasket();
         
         // Analyze
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -231,6 +231,72 @@ public class UserControllerTest {
 
         // Invoke
         ResponseEntity<Void> response = userController.removeFromBasket(need_name);
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testCheckoutBasket() throws IOException, SupporterNotSignedInException {
+        // Invoke
+        ResponseEntity<Void> response = userController.checkoutBasket();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testCheckoutBasketNotSignedIn() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).checkoutCurBasket();
+
+        // Invoke
+        ResponseEntity<Void> response = userController.checkoutBasket();
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testCheckoutBasketIOException() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new IOException()).when(mockUserDAO).checkoutCurBasket();
+
+        // Invoke
+        ResponseEntity<Void> response = userController.checkoutBasket();
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketable() throws IOException, SupporterNotSignedInException {
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketableNotSignedIn() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).getBasketableNeeds();
+
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketableIOException() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new IOException()).when(mockUserDAO).getBasketableNeeds();
+
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getBasketableNeeds();
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
