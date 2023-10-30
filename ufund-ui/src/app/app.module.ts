@@ -15,6 +15,8 @@ import { NeedsSupporterComponent } from './needs-supporter/needs-supporter.compo
 import { AdminComponent } from './admin/admin.component';
 import { SupporterComponent } from './supporter/supporter.component';
 import { NeedSearchComponent } from './need-search/need-search.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { NeedSearchComponent } from './need-search/need-search.component';
     AdminComponent,
     SupporterComponent,
     NeedSearchComponent,
+    CheckoutComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,

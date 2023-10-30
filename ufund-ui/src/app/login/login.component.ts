@@ -15,10 +15,14 @@ export class LoginComponent {
   login(username: string): void {
     username = username.trim();
     if (!username) { return; }
-    if (this.userService.loginUser({ username } as User).subscribe())
-      if (username == LoginComponent.ADMIN_USERNAME)
-        window.location.href = "/admin/needs";
-      else
-        window.location.href = "/supporter/needs";
+
+    this.userService.loginUser({ username } as User).subscribe(user => {
+      if (user){
+        if (username == LoginComponent.ADMIN_USERNAME)
+          window.location.href = "/admin/needs";
+        else
+          window.location.href = "/supporter/needs";
+      }
+    });
   }
 }

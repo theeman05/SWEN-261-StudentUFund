@@ -15,7 +15,7 @@ export class LogoutComponent implements OnInit{
   }
 
   logout(): void {
-    this.userService.logout().subscribe();
     window.location.href = "/login";
+    this.userService.logout().subscribe();
   }
 }

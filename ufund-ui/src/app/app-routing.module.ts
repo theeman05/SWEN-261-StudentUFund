@@ -11,6 +11,7 @@ import { NeedsSupporterComponent } from './needs-supporter/needs-supporter.compo
 import { AdminComponent } from './admin/admin.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SupporterComponent } from './supporter/supporter.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -29,7 +30,8 @@ const routes: Routes = [
     children: [
       { path: 'needs', component: NeedsSupporterComponent },
       { path: 'basket', component: BasketComponent },
-      { path: 'detail/:name', component: NeedDetailSupporterComponent}
+      { path: 'detail/:name', component: NeedDetailSupporterComponent},
+      { path: 'basket/checkout', component: CheckoutComponent}
     ]
   },
 ];

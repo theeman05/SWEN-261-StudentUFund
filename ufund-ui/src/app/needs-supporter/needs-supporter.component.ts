@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Need } from '../need';
-import { NeedService } from '../need.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-needs-supporter',
@@ -10,13 +10,13 @@ import { NeedService } from '../need.service';
 export class NeedsSupporterComponent implements OnInit {
   needs: Need[] = [];
   
-  constructor(private needService: NeedService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.getNeeds();
   }
 
   getNeeds(): void {
-    this.needService.getNeeds().subscribe(needs => this.needs = needs);
+    this.userService.getBasketableNeeds().subscribe(needs => this.needs = needs);
   }
 }

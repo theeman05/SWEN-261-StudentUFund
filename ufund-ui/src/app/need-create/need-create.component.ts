@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Need } from '../need';
 import { NeedService } from '../need.service';
+import { ErrorService } from '../error.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-need-create',
@@ -10,12 +12,27 @@ import { NeedService } from '../need.service';
 export class NeedCreateComponent {
   constructor(
     private needService: NeedService,
+    private errorService: ErrorService
   ) {}
 
   createNeed(name: string, cost: string, quantity: string): void {
     name = name.trim();
-    if (name && cost && quantity) {
-      this.needService.addNeed({name: name, cost: Number(cost), quantity: Number(quantity)} as Need).subscribe()
+    var error_message = "";
+    var cost_num = Number(cost) || -1;
+    var quantity_num = Number(quantity) || -1;
+    if (name && cost_num >= 0 && quantity_num >= 0) {
+      this.needService.addNeed({name: name, cost: cost_num, quantity: quantity_num} as Need).subscribe(need => {if (need) window.location.href = "admin/needs";})
+    }else{
+      if (!name) {
+        error_message += "Name is required. ";
+      }
+      if (cost_num < 0) {
+        error_message += "A valid cost is required. ";
+      }
+      if (quantity_num < 0) {
+        error_message += "A valid quantity is required. ";
+      }
+      this.errorService.showError(error_message);
     }
   }
 }

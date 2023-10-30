@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NeedService } from '../need.service';
 import { UserService } from '../user.service';
 import { Need } from '../need';
+import { Location } from '@angular/common';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-basket',
@@ -11,16 +11,31 @@ import { Need } from '../need';
 })
 export class BasketComponent implements OnInit{
   needs: Need[] = []
-  constructor(private needService: NeedService, private userService: UserService) {}
+
+  constructor(private userService: UserService, private location : Location, private errorService: ErrorService) {}
+
+  private basketSubscribed(needs: Need[]){
+    if (needs.length == 0){
+      this.location.back();
+      this.errorService.showError("Basket is empty");
+      return;
+    }
+    this.needs = needs;
+  }
+
   ngOnInit(): void {
-    this.userService.getBasket()
+    this.userService.getBasket().subscribe(needs => this.basketSubscribed(needs));
   }
 
   checkout(): void {
-
+    this.userService.checkout().subscribe();
   }
 
   remove(need: Need): void {
-
+    this.needs = this.needs.filter(n => n !== need);
+    this.userService.removeFromBasket(need).subscribe();
+    if (this.needs.length == 0) {
+      this.location.back()
+    }
   }
 }

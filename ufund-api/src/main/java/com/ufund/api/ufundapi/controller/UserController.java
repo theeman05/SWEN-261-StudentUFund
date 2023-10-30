@@ -161,8 +161,8 @@ public class UserController {
      *         is not found<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @DeleteMapping("/basket")
-    public ResponseEntity<Void> removeFromBasket(@RequestBody String needKey) {
+    @DeleteMapping("/basket/{needKey}")
+    public ResponseEntity<Void> removeFromBasket(@PathVariable String needKey) {
         LOG.info("DELETE /basket/" + needKey);
         try {
             userDAO.removeNeedFromCurBasket(needKey);

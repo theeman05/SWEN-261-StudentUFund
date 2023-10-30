@@ -2,10 +2,9 @@
 
 <ul class="basket">
     <li *ngFor="let need of needs">
-        <a routerLink="../detail/{{need.name}}">
-          <span class="badge">{{need.name}}</span>Total Cost: ${{need.cost}}, Quantity: {{need.quantity}}
-        </a>
-        <button type="button" class="delete" title="delete need"
+        <span class="badge">{{need.name}}</span>
+        Total Cost: ${{need.cost}}, Quantity: {{need.quantity}}
+        <button type="button" class="delete" title="remove need"
           (click)="remove(need)">x</button>
     </li>
 </ul>
@@ -13,5 +12,5 @@
 <br>
 
 <nav>
-    <a routerLink="checkout">Checkout</a>
+    <a routerLink="checkout" (click)="checkout()">Checkout</a>
 </nav>
