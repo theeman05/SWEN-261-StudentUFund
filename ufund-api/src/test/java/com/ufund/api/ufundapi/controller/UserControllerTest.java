@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import com.ufund.api.ufundapi.persistence.UserDAO;
-import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.Need;
@@ -123,13 +122,13 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddToBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public void testAddToBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         Need expected_need = new Need("TestNeed", 1, 1);
-        when(mockUserDAO.addNeedToCurBasket(expected_need.getName())).thenReturn(expected_need);
+        when(mockUserDAO.addNeedToCurBasket(expected_need.getName(), 1)).thenReturn(expected_need);
 
         // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(expected_need.getName());
+        ResponseEntity<Need> response = userController.addToBasket(expected_need.getName(), 1);
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -137,52 +136,39 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddToBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public void testAddToBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         String need_name = "TestNeed";
-        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).addNeedToCurBasket(need_name);
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
 
         // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(need_name);
+        ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
 
         // Analyze
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
-    public void testAddToBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public void testAddToBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         String need_name = "TestNeed";
-        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).addNeedToCurBasket(need_name);
+        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
 
         // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(need_name);
+        ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
 
         // Analyze
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    public void testAddToBasketAlreadyInCart() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
-        // Setup
-        String need_name = "TestNeed";
-        doThrow(new NeedAlreadyInCartException(need_name)).when(mockUserDAO).addNeedToCurBasket(need_name);
-
-        // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(need_name);
-
-        // Analyze
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddToBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public void testAddToBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
     // Setup
     String need_name = "TestNeed";
-    doThrow(new IOException()).when(mockUserDAO).addNeedToCurBasket(need_name);
+    doThrow(new IOException()).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
 
     // Invoke
-    ResponseEntity<Need> response = userController.addToBasket(need_name);
+    ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
 
     // Analyze
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
@@ -191,7 +177,7 @@ public class UserControllerTest {
     @Test
     public void testRemoveNeedFromBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Invoke
-        ResponseEntity<Void> response = userController.removeFromBasket(anyString());
+        ResponseEntity<Void> response = userController.removeFromBasket("Chee");
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -201,7 +187,7 @@ public class UserControllerTest {
     public void testRemoveNeedFromBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         String need_name = "TestNeed";
-        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).removeNeedFromCurBasket(need_name);
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 0);
 
         // Invoke
         ResponseEntity<Void> response = userController.removeFromBasket(need_name);
@@ -214,7 +200,7 @@ public class UserControllerTest {
     public void testRemoveNeedFromBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         String need_name = "TestNeed";
-        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).removeNeedFromCurBasket(need_name);
+        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).updateNeedInCurBasket(need_name, 0);
 
         // Invoke
         ResponseEntity<Void> response = userController.removeFromBasket(need_name);
@@ -227,7 +213,7 @@ public class UserControllerTest {
     public void testRemoveNeedFromBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         String need_name = "TestNeed";
-        doThrow(new IOException()).when(mockUserDAO).removeNeedFromCurBasket(need_name);
+        doThrow(new IOException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 0);
 
         // Invoke
         ResponseEntity<Void> response = userController.removeFromBasket(need_name);

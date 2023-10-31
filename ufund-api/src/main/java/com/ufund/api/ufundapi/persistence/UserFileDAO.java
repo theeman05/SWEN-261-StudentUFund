@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 
-import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
