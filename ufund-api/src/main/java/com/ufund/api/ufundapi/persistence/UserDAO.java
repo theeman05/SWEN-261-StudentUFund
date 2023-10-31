@@ -89,18 +89,24 @@ public interface UserDAO {
         Need addNeedToCurBasket(String needKey, int quantity)
                 throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
-        /**
-         * Removes the given {@linkplain Need need} from the current supporter's basket
+        /*
+         * Updates the quantity of the given {@linkplain Need need} in the current
+         * supporter's basket
          * 
-         * @param needKey The key of the {@link Need need} to remove from the basket
+         * if quantity is 0, the need will be removed from the basket
          * 
-         * @throws IOException                   if an issue with underlying storage
+         * @param needKey The key of the {@link Need need} to update in the basket
+         * 
+         * @param newQuantity The new quantity of the {@link Need need} to update in the
+         * basket
+         * 
+         * @throws IOException if an issue with underlying storage
          * 
          * @throws SupporterNotSignedInException if no supporter is signed in
          * 
          * @throws NeedNotFoundException if the {@link Need need} is not found in the basket
          */
-        void removeNeedFromCurBasket(String needKey)
+        void updateNeedInCurBasket(String needKey, int newQuantity)
                 throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
         /**

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -115,6 +116,8 @@ public class UserController {
      * 
      * @param needName The name of the {@link Need need} to add to the basket
      * 
+     * @param quantity The quantity of the {@link Need need} to add to the basket
+     * 
      * @return ResponseEntity with a {@link Need need} and HTTP status of OK if the
      *         {@link Need need} was added to the {@link Supporter supporter's
      *         basket} <br>
@@ -122,25 +125,54 @@ public class UserController {
      *         signed in<br>
      *         ResponseEntity with HTTP status of NOT_FOUND if the {@link Need need}
      *         is not found<br>
-     *         ResponseEntity with HTTP status of CONFLICT if the {@link Need need}
-     *         is already in the basket<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @PostMapping("/basket")
-    public ResponseEntity<Need> addToBasket(@RequestBody String needKey) {
-        LOG.info("POST /basket/" + needKey);
+    public ResponseEntity<Need> addToBasket(@RequestBody String needKey, @RequestBody int quantity) {
+        LOG.info("POST add to basket: " + needKey + ", " + quantity);
         try {
-            return new ResponseEntity<>(userDAO.addNeedToCurBasket(needKey), HttpStatus.OK);
+            return new ResponseEntity<>(userDAO.addNeedToCurBasket(needKey, quantity), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (NeedNotFoundException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (NeedAlreadyInCartException e) {
+        }catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Responds to the PUT request for updating a {@linkplain Need need} in the current user's basket
+     * 
+     * @param needName The name of the {@link Need need} to add to the basket
+     * 
+     * @param quantity The quantity of the {@link Need need} to update the basket to
+     * 
+     * @return ResponseEntity with a {@link Need need} and HTTP status of OK if the
+     *         {@link Need need} was added to the {@link Supporter supporter's
+     *         basket} <br>
+     *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
+     *         signed in<br>
+     *         ResponseEntity with HTTP status of NOT_FOUND if the {@link Need need}
+     *         is not found<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @PutMapping("/basket")
+    public ResponseEntity<Void> updateNeedInBasket(@RequestBody String needKey, @RequestBody int newQuantity) {
+        LOG.info("PUT update need in basket: " + needKey + ", " + newQuantity);
+        try {
+            userDAO.updateNeedInCurBasket(needKey, newQuantity);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (NeedNotFoundException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -165,7 +197,7 @@ public class UserController {
     public ResponseEntity<Void> removeFromBasket(@PathVariable String needKey) {
         LOG.info("DELETE /basket/" + needKey);
         try {
-            userDAO.removeNeedFromCurBasket(needKey);
+            userDAO.updateNeedInCurBasket(needKey, 0);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());

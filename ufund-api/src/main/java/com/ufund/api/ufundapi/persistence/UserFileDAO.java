@@ -233,19 +233,25 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public void removeNeedFromCurBasket(String needKey)
+    public void updateNeedInCurBasket(String needKey, int newQuantity)
             throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
 
-        if (!supporterBasket.containsKey(needKey))
+        Need basketNeed = supporterBasket.get(needKey);
+        if (basketNeed == null)
             throw new NeedNotFoundException(needKey);
 
-        synchronized (supporterBasket) {
+        basketNeed.setQuantity(newQuantity);
+
+        if (basketNeed.getQuantity() <= 0)
             supporterBasket.remove(needKey);
+
+        synchronized (supporterBasket) {
             updateCurSupporter();
         }
     }
+
 
     /**
      * {@inheritDoc}
