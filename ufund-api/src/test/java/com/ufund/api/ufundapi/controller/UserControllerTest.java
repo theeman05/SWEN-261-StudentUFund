@@ -1,7 +1,6 @@
 package com.ufund.api.ufundapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -122,6 +121,18 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testGetBasketIOException() throws IOException, SupporterNotSignedInException {
+        // Setup
+        doThrow(new IOException()).when(mockUserDAO).getCurBasket();
+
+        // Invoke
+        ResponseEntity<Need[]> response = userController.getCurBasket();
+        
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
     public void testAddToBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         Need expected_need = new Need("TestNeed", 1, 1);
@@ -217,6 +228,54 @@ public class UserControllerTest {
 
         // Invoke
         ResponseEntity<Void> response = userController.removeFromBasket(need_name);
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateNeedInBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Invoke
+        ResponseEntity<Void> response = userController.updateNeedInBasket("Chee", 1);
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateNeedInBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        String need_name = "TestNeed";
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+
+        // Invoke
+        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateNeedInBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        String need_name = "TestNeed";
+        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+
+        // Invoke
+        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
+
+        // Analyze
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateNeedInBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        String need_name = "TestNeed";
+        doThrow(new IOException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+
+        // Invoke
+        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
