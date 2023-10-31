@@ -71,8 +71,11 @@ public interface UserDAO {
 
         /**
          * Adds the given {@linkplain Need need} to the current supporter's basket
+         * If the need is present in the basket, the quantity will be updated
          * 
          * @param needKey The key of the {@link Need need} to add to the basket
+         * 
+         * @param quantity The quantity of the {@link Need need} to add to the basket
          * 
          * @return The associated {@link Need need} if successful, null otherwise
          * 
@@ -82,11 +85,9 @@ public interface UserDAO {
          * 
          * @throws NeedNotFoundException         if the {@link Need need} is not found
          * 
-         * @throws NeedAlreadyInCartException    if the {@link Need need} is already in
-         *                                       the basket
          */
-        Need addNeedToCurBasket(String needKey)
-                throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException;
+        Need addNeedToCurBasket(String needKey, int quantity)
+                throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
         /**
          * Removes the given {@linkplain Need need} from the current supporter's basket

@@ -39,7 +39,7 @@ public class UserFileDAO implements UserDAO {
     private String filename; // Filename to read from and write to
 
     private User curUser; // The current user logged in
-    private Map<String, String> supporterBasket; // The current supporter's basket of needs
+    Map<String, Need> supporterBasket; // The current supporter's basket of needs
 
     private NeedDAO needDao;
 
@@ -109,7 +109,7 @@ public class UserFileDAO implements UserDAO {
     private void updateCurSupporter() throws IOException {
         Supporter supporter = (Supporter) curUser;
         synchronized (supporters) {
-            supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
+            supporter.setFundingBasket(supporterBasket.values().toArray(new Need[supporterBasket.size()]));
             save(); // may throw an IOException
         }
     }
@@ -143,6 +143,40 @@ public class UserFileDAO implements UserDAO {
         curUser = null;
     }
 
+
+    /**
+     * Gets the given supporter's funding basket and returns it, while filtering deleted needs, and updated quantities
+     * If a need is found to have more quantity than the cupboard, the quantity is updated to the cupboard's quantity
+     * If a need is no longer in the cupboard, it is removed from the basket
+     * 
+     * @param supporter The supporter to get the basket for
+     * 
+     * @return The supporter's potentially updated basket
+     */
+    private synchronized Need[] getAndUpdateSupporterBasket(Supporter supporter) throws IOException{
+        Need matchedNeed;
+        Need[] updatedBasket;
+        supporterBasket = new HashMap<>();
+        boolean removedNeed = false;
+        for (Need need : supporter.getFundingBasket()) {
+            matchedNeed = needDao.getNeed(need.getName());
+            if (matchedNeed != null){
+                // Set quantity to be based on the avaliable quantity in the cupboard
+                need.setQuantity(Math.min(matchedNeed.getQuantity(), need.getQuantity()));
+                supporterBasket.put(need.getName(), need);
+            }else
+                removedNeed = true;
+        }
+
+        updatedBasket = supporterBasket.values().toArray(new Need[supporterBasket.size()]);
+        if (removedNeed){
+            supporter.setFundingBasket(updatedBasket);
+            save();
+        }
+
+        return updatedBasket;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -152,22 +186,10 @@ public class UserFileDAO implements UserDAO {
         }
         logoutCurUser();
         if (!user.isAdmin()) {
-            // Ensure the user is in the system.
-            if (supporters.containsKey(user.getUsername())) {
-                supporterBasket = new HashMap<>();
-                Supporter supporter = (Supporter) user;
-                boolean needRemoved = false;
-                for (String needKey : supporter.getFundingBasket()) {
-                    if (needDao.getNeed(needKey) != null)
-                        supporterBasket.put(needKey, needKey);
-                    else
-                        needRemoved = true;
-                }
-
-                // If a need was removed, let's update the basket and save
-                if (needRemoved)
-                    supporter.setFundingBasket(supporterBasket.values().toArray(new String[supporterBasket.size()]));
-            } else
+            // If the user is in the system
+            if (supporters.containsKey(user.getUsername())) 
+                getAndUpdateSupporterBasket((Supporter) user);
+            else
                 return false;
         }
         curUser = user;
@@ -186,22 +208,25 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public Need addNeedToCurBasket(String needKey)
-            throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException {
+    public Need addNeedToCurBasket(String needKey, int quantity)
+            throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
 
         Need locatedNeed = needDao.getNeed(needKey);
         if (locatedNeed == null)
             throw new NeedNotFoundException(needKey);
-
-        if (supporterBasket.containsKey(needKey))
-            throw new NeedAlreadyInCartException(needKey);
+        
+        // Create new need if necessary or get the existing need
+        Need newNeed = !supporterBasket.containsKey(needKey) ? new Need(locatedNeed.getName(), locatedNeed.getCost(), 0) : supporterBasket.get(needKey);
+        
+        // Only allow the quantity to be the minimum of the cupboard and the new quantity
+        newNeed.setQuantity(Math.min(locatedNeed.getQuantity(), newNeed.getQuantity() + quantity));
 
         synchronized (supporterBasket) {
-            supporterBasket.put(needKey, needKey);
+            supporterBasket.put(needKey, newNeed);
             updateCurSupporter();
-            return locatedNeed;
+            return newNeed;
         }
     }
 
@@ -228,12 +253,7 @@ public class UserFileDAO implements UserDAO {
     public Need[] getCurBasket() throws SupporterNotSignedInException, IOException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
-        
-        ArrayList<Need> needList = new ArrayList<Need>();
-        for (String needName : supporterBasket.values())
-            needList.add(needDao.getNeed(needName));
-        
-        return needList.toArray(new Need[needList.size()]);
+        return getAndUpdateSupporterBasket((Supporter) curUser);
     }
 
     /**
@@ -244,9 +264,20 @@ public class UserFileDAO implements UserDAO {
             throw new SupporterNotSignedInException();
 
         synchronized (supporterBasket) {
-            // Delete the need from the list of needs since it's been funded
-            for (String needKey : supporterBasket.values())
-                needDao.deleteNeed(needKey);
+            // Update the need from the list of needs since it's been funded
+            Need matchedNeed;
+            for (Need need : supporterBasket.values()){
+                matchedNeed = needDao.getNeed(need.getName());
+                // If we find a matching need, update the quantity. If quantity is 0 or below, delete the need
+                if (matchedNeed != null){
+                    matchedNeed.setQuantity(matchedNeed.getQuantity() - need.getQuantity());
+                    if (matchedNeed.getQuantity() > 0)
+                        needDao.updateNeed(matchedNeed);
+                    else
+                        needDao.deleteNeed(matchedNeed.getName());
+                }
+            }
+            
             supporterBasket.clear();
             updateCurSupporter();
         }
@@ -260,9 +291,17 @@ public class UserFileDAO implements UserDAO {
             throw new SupporterNotSignedInException();
 
         ArrayList<Need> basketable = new ArrayList<>();
-        for (Need need : needDao.getNeeds())
-            if (!supporterBasket.containsKey(need.getName()))
+        Need basketNeed;
+        for (Need need : needDao.getNeeds()){
+            basketNeed = supporterBasket.get(need.getName());
+            if (basketNeed == null)
                 basketable.add(need);
+            else if (need.getQuantity() > basketNeed.getQuantity()) {
+                // If the need is already in the basket, check if the quantity is less than the cupboard quantity
+                // If it is, add an updated need with remaining quantity
+                basketable.add(new Need(need.getName(), need.getCost(), need.getQuantity() - basketNeed.getQuantity()));
+            }
+        }
 
         return basketable.toArray(new Need[basketable.size()]);
     }

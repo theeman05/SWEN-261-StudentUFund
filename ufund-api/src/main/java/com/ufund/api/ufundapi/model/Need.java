@@ -72,6 +72,15 @@ public class Need {
     }
 
     /**
+     * Retrieves the total cost of the need
+     * 
+     * @return The total cost of the need
+     */
+    public double getTotalCost() {
+        return cost * quantity;
+    }
+
+    /**
      * Retrieves the quantity of the need
      * 
      * @return The quantity of the need
