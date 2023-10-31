@@ -20,7 +20,8 @@ export class NeedCreateComponent {
     var error_message = "";
     var cost_num = Number(cost) || -1;
     var quantity_num = Number(quantity) || -1;
-    if (name && cost_num >= 0 && quantity_num >= 0) {
+    quantity_num = Math.floor(quantity_num) == quantity_num ? quantity_num : -1;
+    if (name && cost_num > 0 && quantity_num > 0) {
       this.needService.addNeed({name: name, cost: cost_num, quantity: quantity_num} as Need).subscribe(need => {if (need) window.location.href = "admin/needs";})
     }else{
       if (!name) {

@@ -2,7 +2,7 @@
     <h2>Create Need</h2>
     <div>
         <label class="inputbelow">Need Name: </label>
-        <input class="labelabove" #needName />
+        <input id="needName" class="labelabove" #needName />
     </div>
     <div>
         <label class="inputbelow">Total Cost: ($)</label>
@@ -12,5 +12,5 @@
         <label class="inputbelow">Quantity: </label>
         <input class="labelabove" #needQuantity />
     </div>
-    <button type="button" (click)="createNeed(needName.value, needCost.value, needQuantity.value); needName.value = ''; needCost.value = ''; needQuantity.value = ''">Create Need</button>
+    <button type="button" (click)="createNeed(needName.value, needCost.value, needQuantity.value)">Create Need</button>
 </div>

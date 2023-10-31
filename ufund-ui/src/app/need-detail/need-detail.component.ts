@@ -41,6 +41,7 @@ export class NeedDetailComponent {
       var cost_num = Number(this.need.cost) || -1;
       var quantity_num = Number(this.need.quantity) || -1;
       var error_message = "";
+      quantity_num = Math.floor(quantity_num) == quantity_num ? quantity_num : -1;
       if (cost_num < 0 || quantity_num < 0) {
         if (cost_num < 0) {
           error_message += "A valid cost is required. ";
