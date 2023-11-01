@@ -89,7 +89,6 @@ public class NeedTest {
         assertEquals(expected, actual);
     }
 
-
     @Test
     public void needToString() {
         //setup

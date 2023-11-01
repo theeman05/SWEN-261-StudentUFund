@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { Need } from '../need';
 import { NeedService } from '../need.service';
 import { UserService } from '../user.service';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-need-detail-supporter',
@@ -17,9 +18,9 @@ export class NeedDetailSupporterComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private needService: NeedService,
     private location: Location,
-    private userService: UserService
+    private userService: UserService,
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -28,19 +29,19 @@ export class NeedDetailSupporterComponent {
 
   getNeed(): void {
     const name = String(this.route.snapshot.paramMap.get('name'));
-    this.needService.getNeed(name)
-      .subscribe(need => this.need = need);
+    this.userService.getNeedInCart(name).subscribe(need => this.need = need);
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  addToBasket(need: Need): void {
-    this.userService.addToBasket(need).subscribe(response => {
-      if (response) {
-        this.goBack();
-      }
-    });
+  updateBasket(need: Need): void {
+    if (need.quantity > 0 && need.quantity <= need.stock && need.quantity % 1 == 0) {
+      need.quantity = Number(need.quantity);
+      this.userService.updateBasket(need).subscribe(_ => this.goBack());
+    }else{
+      this.errorService.showError("Please enter a valid quantity.");
+    }
   }
 }

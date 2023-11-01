@@ -1,1 +1,1 @@
-[{"username":"test2","funding_basket":["test2"],"admin":false},{"username":"Ben","funding_basket":["Water Bottle"],"admin":false}]
+[{"username":"test2","funding_basket":[],"admin":false},{"username":"Ben","funding_basket":[{"name":"Water Bottle","cost":25.0,"quantity":5}],"admin":false}]

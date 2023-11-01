@@ -6,3 +6,9 @@ span {
     color: var(--secondary-text-color);
     font-weight: normal;
 }
+
+input {
+    margin-top: 5px;
+    font-size: 1em;
+    padding: .5rem;
+}

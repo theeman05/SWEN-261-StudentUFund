@@ -13,7 +13,7 @@ public class Supporter extends User {
     static final String STRING_FORMAT = "Supporter [username=%s,isAdmin=%s,fundingBasket=%s]";
 
     @JsonProperty("funding_basket")
-    private String[] fundingBasket;
+    private Need[] fundingBasket;
 
     /**
      * Create a user with the given username and funding basket
@@ -21,32 +21,32 @@ public class Supporter extends User {
      * 
      * @param username      The username of the user
      * 
-     * @param fundingBasket The list of {@link Need need} keys in this user's
+     * @param fundingBasket The list of {@link Need needs} in this user's
      *                      funding basket
      */
     public Supporter(@JsonProperty("username") String username,
-            @JsonProperty("funding_basket") String[] fundingBasket) {
+            @JsonProperty("funding_basket") Need[] fundingBasket) {
         super(username);
         this.fundingBasket = fundingBasket;
     }
 
     /**
-     * Get the list of {@link Need need} keys in this user's funding basket
+     * Get the list of {@link Need needs} in this user's funding basket
      * Note: This should probably only be used on initializding a supporter
      * 
-     * @return The list of {@link Need need} keys in this user's funding basket
+     * @return The list of {@link Need needs} in this user's funding basket
      */
-    public String[] getFundingBasket() {
+    public Need[] getFundingBasket() {
         return fundingBasket;
     }
 
     /**
      * Set this supporters funding basket to the given list of {@linkplain Need
-     * need} keys.
+     * needs}.
      * 
-     * @param fundingBasket The list of {@link Need need} keys.
+     * @param fundingBasket The list of {@link Need needs}.
      */
-    public void setFundingBasket(String[] fundingBasket) {
+    public void setFundingBasket(Need[] fundingBasket) {
         this.fundingBasket = fundingBasket;
     }
 

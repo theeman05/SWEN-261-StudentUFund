@@ -18,7 +18,7 @@ public class SupporterTest {
     public void testCreateSupporter() {
         // Setup
         String expected_username = "CoolSupporter";
-        String[] expected_funding_basket = new String[]{"Cheese", "Bread"};
+        Need[] expected_funding_basket = new Need[]{new Need("Cheese", 1, 1), new Need("Bread", 1, 1)};
         boolean expected_isAdmin = false;
 
         // Invoke
@@ -34,8 +34,8 @@ public class SupporterTest {
     public void testSetFundingBasket() {
         // Setup
         String username = "CoolSupporter";
-        String[] original_basket = new String[1];
-        String[] expected_funding_basket = new String[]{"Cheese", "Bread"};
+        Need[] original_basket = new Need[1];
+        Need[] expected_funding_basket = new Need[]{new Need("Cheese", 1, 1), new Need("Bread", 1, 1)};
         Supporter supporter = new Supporter(username, original_basket);
 
         // Invoke
@@ -50,7 +50,7 @@ public class SupporterTest {
         // Setup
         String username = "CoolSupporter";
         boolean isAdmin = false;
-        String[] funding_basket = new String[]{"Cheese", "Bread"};
+        Need[] funding_basket = new Need[]{new Need("Cheese", 1, 1), new Need("Bread", 1, 1)};
         String expected_string = String.format(Supporter.STRING_FORMAT, username, isAdmin, Arrays.toString(funding_basket));
         Supporter supporter = new Supporter(username, funding_basket);
 

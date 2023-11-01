@@ -20,12 +20,11 @@ public class Need {
     private int quantity;
 
     /**
-     * Create a need with the given name, cost, quantity, and type
+     * Create a need with the given name, cost, quantity
      * 
      * @param name The name of the need
-     * @param cost The cost of the need
+     * @param cost The unit cost of the need
      * @param quantity The quantity of the need
-     * @param type The type of the need
      */
     public Need(@JsonProperty("name") String name, @JsonProperty("cost") double cost,
             @JsonProperty("quantity") int quantity) {
@@ -35,9 +34,9 @@ public class Need {
     }
 
     /**
-     * Sets the cost of the need
+     * Sets the unit cost of the need
      * 
-     * @param cost The cost of the need
+     * @param cost The unit cost of the need
      */
 
     public void setCost(double cost) {

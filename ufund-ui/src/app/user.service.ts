@@ -8,6 +8,7 @@ import { Need } from './need';
 import { User } from './user';
 import { ErrorService, HttpErrors } from './error.service';
 import { Location } from '@angular/common';
+import { NeedService } from './need.service';
 
 @Injectable({
   providedIn: 'root'
@@ -50,11 +51,17 @@ export class UserService {
       .pipe(catchError(this.handleError<void>('checkout')));
   }
 
+  /** try to GET need in cart by name */
+  getNeedInCart(name: String): Observable<Need> {
+    const url = `${this.userUrl}/basket/${name}`;
+    return this.http.get<Need>(url).pipe(catchError(this.handleError<Need>(`getBasketNeed name=${name}`)));
+  }
+
   //////// Save methods //////////
 
-  /** POST: add a new need to the basket */
-  addToBasket(need: Need): Observable<Need> {
-    return this.http.post<Need>(`${this.userUrl}/basket`, need.name, this.httpOptions).pipe(catchError(this.handleError<Need>('addToBasket')));
+  /** PUT: update a need in the basket */
+  updateBasket(need: Need): Observable<any> {
+    return this.http.put(`${this.userUrl}/basket`, need, this.httpOptions).pipe(catchError(this.handleError<any>('updateBasket')));
   }
 
   /** DELETE: delete the need from the basket */

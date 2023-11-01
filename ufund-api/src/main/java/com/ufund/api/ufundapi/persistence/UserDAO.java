@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 
+import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
-import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 
@@ -69,37 +69,41 @@ public interface UserDAO {
          */
         User getUser(String username) throws IOException;
 
-        /**
-         * Adds the given {@linkplain Need need} to the current supporter's basket
+        /*
+         * Updates the quantity of the given {@linkplain Need need} in the current
+         * supporter's basket or adds it to the basket with the new quantity.
          * 
-         * @param needKey The key of the {@link Need need} to add to the basket
+         * if quantity is 0, the need will be removed from the basket
          * 
-         * @return The associated {@link Need need} if successful, null otherwise
+         * @param needKey The key of the {@link Need need} to update in the basket
          * 
-         * @throws IOException                   if an issue with underlying storage
+         * @param newQuantity The new quantity of the {@link Need need} to update in the
+         * basket
          * 
-         * @throws SupporterNotSignedInException if no supporter is signed in
-         * 
-         * @throws NeedNotFoundException         if the {@link Need need} is not found
-         * 
-         * @throws NeedAlreadyInCartException    if the {@link Need need} is already in
-         *                                       the basket
-         */
-        Need addNeedToCurBasket(String needKey)
-                throws IOException, SupporterNotSignedInException, NeedNotFoundException, NeedAlreadyInCartException;
-
-        /**
-         * Removes the given {@linkplain Need need} from the current supporter's basket
-         * 
-         * @param needKey The key of the {@link Need need} to remove from the basket
-         * 
-         * @throws IOException                   if an issue with underlying storage
+         * @throws IOException if an issue with underlying storage
          * 
          * @throws SupporterNotSignedInException if no supporter is signed in
          * 
          * @throws NeedNotFoundException if the {@link Need need} is not found in the basket
          */
-        void removeNeedFromCurBasket(String needKey)
+        void updateNeedInCurBasket(String needKey, int newQuantity)
+                throws IOException, SupporterNotSignedInException, NeedNotFoundException;
+
+        /**
+         * Gets the {@linkplain BasketNeed need} with the given name and quantity in the basket.
+         * If the need is not in the basket, the normal need will be returned with a quantity of 0.
+         * 
+         * @param needName The name of the {@link BasketNeed need} to get
+         * 
+         * @return The corresponding {@link BasketNeed need}
+         * 
+         * @throws IOException if an issue with underlying storage
+         * 
+         * @throws SupporterNotSignedInException if no supporter is signed in
+         * 
+         * @throws NeedNotFoundException if the {@link BasketNeed need} is not found in the basket nor the normal needs
+         */
+        public BasketNeed getBasketOrNormalNeed(String needName) 
                 throws IOException, SupporterNotSignedInException, NeedNotFoundException;
 
         /**

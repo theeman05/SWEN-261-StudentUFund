@@ -10,18 +10,6 @@
   cursor: pointer;
 }
 
-li {
-  color: var(--primary-text-color);
-  text-decoration: none;
-  background-color: var(--secondary-color);
-  margin: .5em;
-  padding: .3em 0;
-  height: 1.6em;
-  border-radius: 4px;
-  display: block;
-  width: 100%;
-}
-
 .basket li:hover {
   left: .1em;
 }

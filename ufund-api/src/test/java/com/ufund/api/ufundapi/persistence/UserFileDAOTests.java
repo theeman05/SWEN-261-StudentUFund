@@ -16,9 +16,9 @@ import java.io.IOException;
 import javax.management.openmbean.KeyAlreadyExistsException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ufund.api.ufundapi.exceptions.NeedAlreadyInCartException;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
+import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
@@ -51,7 +51,7 @@ public class UserFileDAOTests {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testSupporter = new Supporter[3];
-        String[] basket = new String[0];
+        Need[] basket = new Need[0];
         testSupporter[0] = new Supporter("testUsername", basket);
         testSupporter[1] = new Supporter("testUsername2", basket);
         testSupporter[2] = new Supporter("testUsername3", basket);
@@ -122,7 +122,11 @@ public class UserFileDAOTests {
     @Test
     public void testLoginUser_success() throws IOException {
         // Setup
+        Need[] basket = new Need[]{new Need("Test1", 1, 5), new Need("Test2", 2, 3)};
         Supporter supporter = testSupporter[0];
+        supporter.setFundingBasket(basket);
+
+        when(mockNeedDao.getNeed(basket[1].getName())).thenReturn(null);
 
         // Invoke
         boolean result1 = userFileDAO.loginUser(supporter);
@@ -158,7 +162,7 @@ public class UserFileDAOTests {
     @Test
     public void testLoginUser_failure() throws IOException {
         // Setup
-        Supporter supporter = new Supporter("testUsername4", new String[0]);
+        Supporter supporter = new Supporter("testUsername4", new Need[0]);
 
         // Invoke
         boolean result1 = userFileDAO.loginUser(supporter);
@@ -183,95 +187,115 @@ public class UserFileDAOTests {
 
     @Test
     public void testAddNeedToCurBasket_success()
-            throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
         // Setup
-        Need expected_need = new Need("testNeed1", 1.5, 1);
+        Need expected_need = new Need("testNeed1", 1.5, 12);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
         when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
 
         // Invoke
-        userFileDAO.addNeedToCurBasket(expected_need.getName());
+        userFileDAO.updateNeedInCurBasket(expected_need.getName(), 1);
+
         // Analyze
         assertEquals(1, userFileDAO.getCurBasket().length);
     }
 
     @Test
-    public void testAddNeedToCurBasket_NeedAlreadyInCart()
-            throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
+    public void testAddExistingNeedToCurBasket_success()
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
         // Setup
-        Need need = new Need("testDupeNeed", 1.5, 1);
+        Need expected_need = new Need("testNeed1", 1.5, 12);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
-        when(mockNeedDao.getNeed(any())).thenReturn(need);
-        userFileDAO.addNeedToCurBasket(need.getName());
+        when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
+        userFileDAO.updateNeedInCurBasket(expected_need.getName(), 1);
+
+        // Invoke
+        userFileDAO.updateNeedInCurBasket(expected_need.getName(), 1);
 
         // Analyze
-        assertThrows(NeedAlreadyInCartException.class, () -> {
-            userFileDAO.addNeedToCurBasket(need.getName());
-        });
+        assertEquals(1, userFileDAO.getCurBasket().length);
     }
+
 
     @Test
     public void testAddNeedToCurBasket_SupporterNotSignedIn()
-            throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
         // Analyze
         assertThrows(SupporterNotSignedInException.class, () -> {
-            userFileDAO.addNeedToCurBasket("");
+            userFileDAO.updateNeedInCurBasket("", 12);
         });
     }
 
     @Test
     public void testAddNeedToCurBasket_NeedNotFound()
-            throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
         // Setup
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
         
         // Analyze
         assertThrows(NeedNotFoundException.class, () -> {
-            userFileDAO.addNeedToCurBasket("Not in basket obviously");
+            userFileDAO.updateNeedInCurBasket("Not in basket obviously", 1);
         });
     }    
 
     @Test
-    public void testRemoveNeedFromCurBasket_success()
-            throws IOException, NeedNotFoundException, NeedAlreadyInCartException, SupporterNotSignedInException {
+    public void testUpdateNeedInCurBasketRemoveQuant_success()
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
         // Setup
-        Need need = new Need("testNeed1", 1.5, 1);
+        Need need = new Need("testNeed1", 1.5, 6);
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
 
         when(mockNeedDao.getNeed(need.getName())).thenReturn(need);
         
         // Invoke
-        userFileDAO.addNeedToCurBasket(need.getName());
-        userFileDAO.removeNeedFromCurBasket(need.getName());
+        userFileDAO.updateNeedInCurBasket(need.getName(), 1);
+        userFileDAO.updateNeedInCurBasket(need.getName(), 0);
 
         // Analyze
         assertEquals(0, userFileDAO.getCurBasket().length);
-
     }
 
     @Test
-    public void testRemoveNeedFromCurBasket_NeedNotFound()
-            throws IOException, SupporterNotSignedInException, NeedAlreadyInCartException, NeedNotFoundException {
+    public void testUpdateNeedInCurBasket_success()
+            throws IOException, NeedNotFoundException, SupporterNotSignedInException {
+        // Setup
+        Need need = new Need("testNeed1", 1.5, 6);
+        Supporter supporter = testSupporter[0];
+        userFileDAO.loginUser(supporter);
+
+        when(mockNeedDao.getNeed(need.getName())).thenReturn(need);
+        
+        // Invoke
+        userFileDAO.updateNeedInCurBasket(need.getName(), 1);
+        userFileDAO.updateNeedInCurBasket(need.getName(), 3);
+
+        // Analyze
+        assertEquals(1, userFileDAO.getCurBasket().length);
+    }
+
+    @Test
+    public void testUpdateNeedInCurBasket_NeedNotFound()
+            throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
         Supporter supporter = testSupporter[0];
         userFileDAO.loginUser(supporter);
 
         // Analyze
         assertThrows(NeedNotFoundException.class, () -> {
-            userFileDAO.removeNeedFromCurBasket("testNeed23412");
+            userFileDAO.updateNeedInCurBasket("testNeed23412", 1);
         });
     }
 
     @Test
-    public void testRemoveNeedFromCurBasket_SupporterNotSignedIn()
-            throws IOException, SupporterNotSignedInException, NeedAlreadyInCartException, NeedNotFoundException {
+    public void testUpdateNeedInCurBasket_SupporterNotSignedIn()
+            throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Analyze
         assertThrows(SupporterNotSignedInException.class, () -> {
-            userFileDAO.removeNeedFromCurBasket("testNeed23412");
+            userFileDAO.updateNeedInCurBasket("testNeed23412", 1);
         });
     }
 
@@ -284,19 +308,41 @@ public class UserFileDAOTests {
     }
 
     @Test
-    public void testCheckoutBasket() throws IOException, SupporterNotSignedInException, NeedAlreadyInCartException, NeedNotFoundException {
+    public void testCheckoutBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
-        Need expected_need = new Need("testNeed1", 1.5, 1);
+        Need expected_need = new Need("testNeed1", 1.5, 5);
         when(mockNeedDao.getNeed(any())).thenReturn(expected_need);
 
         userFileDAO.loginUser(testSupporter[0]);
-        userFileDAO.addNeedToCurBasket(expected_need.getName());
+        userFileDAO.updateNeedInCurBasket(expected_need.getName(), 5);
 
         // Invoke
         userFileDAO.checkoutCurBasket();
 
         // Analyze
         assertEquals(userFileDAO.getCurBasket().length, 0);
+    }
+
+    @Test
+    public void testCheckoutBasketWithNonMatchingNeed() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        Need expected_need = new Need("testNeed1", 1.5, 5);
+        Need non_expected_need = new Need("testNeed2", 3, 8);
+        when(mockNeedDao.getNeed(expected_need.getName())).thenReturn(expected_need);
+        when(mockNeedDao.getNeed(non_expected_need.getName())).thenReturn(non_expected_need);
+        int expected_new_quantity = 1;
+
+        userFileDAO.loginUser(testSupporter[0]);
+        userFileDAO.updateNeedInCurBasket(expected_need.getName(), 4);
+        userFileDAO.updateNeedInCurBasket(non_expected_need.getName(), 5);
+        when(mockNeedDao.getNeed(non_expected_need.getName())).thenReturn(null);
+
+        // Invoke
+        userFileDAO.checkoutCurBasket();
+
+        // Analyze
+        assertEquals(userFileDAO.getCurBasket().length, 0);
+        assertEquals(mockNeedDao.getNeed(expected_need.getName()).getQuantity(), expected_new_quantity);
     }
 
     @Test
@@ -308,25 +354,30 @@ public class UserFileDAOTests {
     }
 
     @Test
-    public void testGetBasketable() throws SupporterNotSignedInException, IOException, NeedAlreadyInCartException, NeedNotFoundException {
+    public void testGetBasketable() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
         // Setup
         Need[] available_needs = new Need[3];
-        available_needs[0] = new Need("testNeed1", 1.5, 1);
+        available_needs[0] = new Need("testNeed1", 1.5, 2);
         available_needs[1] = new Need("testNeed2", 2, 21);
-        available_needs[2] = new Need("testNeed3", 3, 3);
+        available_needs[2] = new Need("testNeed3", 5, 12);
         when(mockNeedDao.getNeeds()).thenReturn(available_needs);
-        when(mockNeedDao.getNeed(available_needs[0].getName())).thenReturn(available_needs[2]);
+        when(mockNeedDao.getNeed(available_needs[0].getName())).thenReturn(available_needs[0]);
+        when(mockNeedDao.getNeed(available_needs[1].getName())).thenReturn(available_needs[1]);
+        when(mockNeedDao.getNeed(available_needs[2].getName())).thenReturn(available_needs[2]);
 
         userFileDAO.loginUser(testSupporter[0]);
-        userFileDAO.addNeedToCurBasket(available_needs[0].getName());
+        userFileDAO.updateNeedInCurBasket(available_needs[1].getName(), 3);
+        userFileDAO.updateNeedInCurBasket(available_needs[2].getName(), 26);
 
         int expected_available_size = 2;
+        int expected_need_2_quantity = 21 - 3;
 
         // Invoke
         Need[] basketable_needs = userFileDAO.getBasketableNeeds();
 
         // Analyze
         assertEquals(expected_available_size, basketable_needs.length);
+        assertEquals(basketable_needs[1].getQuantity(), expected_need_2_quantity);
     }
 
     @Test
@@ -334,6 +385,77 @@ public class UserFileDAOTests {
         // Analyze
         assertThrows(SupporterNotSignedInException.class, () -> {
             userFileDAO.getBasketableNeeds();
+        });
+    }
+
+    @Test
+    public void testGetBasketNeed() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
+        // Setup
+        Need needInBasket = new Need("in", 1, 15);
+        when(mockNeedDao.getNeed(needInBasket.getName())).thenReturn(needInBasket);
+
+        int expected_quantity = 5;
+
+        userFileDAO.loginUser(testSupporter[0]);
+        userFileDAO.updateNeedInCurBasket(needInBasket.getName(), expected_quantity);
+
+        // Invoke
+        BasketNeed basketNeed = userFileDAO.getBasketOrNormalNeed(needInBasket.getName());
+
+        // Analyze
+        assertEquals(needInBasket.getName(), basketNeed.getName());
+        assertEquals(expected_quantity, basketNeed.getQuantity());
+        assertEquals(basketNeed.getStock(), needInBasket.getQuantity());
+    }
+
+    @Test
+    public void testGetBasketNeed2() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
+        // Setup
+        Need needInBasket = new Need("in", 1, 15);
+        when(mockNeedDao.getNeed(needInBasket.getName())).thenReturn(needInBasket);
+
+        int expected_quantity = 0;
+
+        userFileDAO.loginUser(testSupporter[0]);
+
+        // Invoke
+        BasketNeed basketNeed = userFileDAO.getBasketOrNormalNeed(needInBasket.getName());
+
+        // Analyze
+        assertEquals(needInBasket.getName(), basketNeed.getName());
+        assertEquals(expected_quantity, basketNeed.getQuantity());
+        assertEquals(basketNeed.getStock(), needInBasket.getQuantity());
+    }
+
+    @Test
+    public void testGetBasketNeed_SupporterNotSignedInException() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.getBasketOrNormalNeed("");
+        });
+    }
+
+    @Test
+    public void testGetBasketNeed_IOException() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
+        // Setup
+        when(mockNeedDao.getNeed(any())).thenThrow(new IOException());
+        userFileDAO.loginUser(testSupporter[0]);
+
+        // Analyze
+        assertThrows(IOException.class, () -> {
+            userFileDAO.getBasketOrNormalNeed("");
+        });
+    }
+
+    @Test
+    public void testGetBasketNeed_NeedNotFoundException() throws SupporterNotSignedInException, IOException, NeedNotFoundException {
+        // Setup
+        when(mockNeedDao.getNeed(any())).thenReturn(null);
+        userFileDAO.loginUser(testSupporter[0]);
+
+        // Analyze
+        assertThrows(NeedNotFoundException.class, () -> {
+            userFileDAO.getBasketOrNormalNeed("");
         });
     }
 }
