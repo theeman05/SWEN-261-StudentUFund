@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
-
+import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
@@ -110,34 +110,30 @@ public class UserController {
     }
 
     /**
-     * Responds to the POST request for adding a {@linkplain Need need} to the
-     * current user's basket based on the {@link Need need}'s name
+     * Responds to the Get request for getting a {@linkplain Need need} in the current user's basket
      * 
-     * @param needName The name of the {@link Need need} to add to the basket
-     * 
-     * @param quantity The quantity of the {@link Need need} to add to the basket
+     * @param needName The name of the {@link Need need} in the basket
      * 
      * @return ResponseEntity with a {@link Need need} and HTTP status of OK if the
-     *         {@link Need need} was added to the {@link Supporter supporter's
-     *         basket} <br>
+     *         {@link Need need} was found in the system <br>
      *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
      *         signed in<br>
      *         ResponseEntity with HTTP status of NOT_FOUND if the {@link Need need}
      *         is not found<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @PostMapping("/basket")
-    public ResponseEntity<Need> addToBasket(@RequestBody String needKey, @RequestBody int quantity) {
-        LOG.info("POST add to basket: " + needKey + ", " + quantity);
+    @GetMapping("/basket/{needKey}")
+    public ResponseEntity<BasketNeed> getBasketNeed(@PathVariable String needKey){
+        LOG.info("GET /basket/" + needKey);
         try {
-            return new ResponseEntity<>(userDAO.addNeedToCurBasket(needKey, quantity), HttpStatus.OK);
+            return new ResponseEntity<BasketNeed>(userDAO.getBasketOrNormalNeed(needKey), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (NeedNotFoundException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

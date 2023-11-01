@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
@@ -207,44 +208,22 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public Need addNeedToCurBasket(String needKey, int quantity)
-            throws IOException, SupporterNotSignedInException, NeedNotFoundException {
-        if (supporterBasket == null)
-            throw new SupporterNotSignedInException();
-
-        Need locatedNeed = needDao.getNeed(needKey);
-        if (locatedNeed == null)
-            throw new NeedNotFoundException(needKey);
-        
-        // Create new need if necessary or get the existing need
-        Need newNeed = !supporterBasket.containsKey(needKey) ? new Need(locatedNeed.getName(), locatedNeed.getCost(), 0) : supporterBasket.get(needKey);
-        
-        // Only allow the quantity to be the minimum of the cupboard and the new quantity
-        newNeed.setQuantity(Math.min(locatedNeed.getQuantity(), newNeed.getQuantity() + quantity));
-
-        synchronized (supporterBasket) {
-            supporterBasket.put(needKey, newNeed);
-            updateCurSupporter();
-            return newNeed;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void updateNeedInCurBasket(String needKey, int newQuantity)
             throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
-
-        Need basketNeed = supporterBasket.get(needKey);
-        if (basketNeed == null)
+        
+        Need locatedNeed = needDao.getNeed(needKey);
+        if (locatedNeed == null)
             throw new NeedNotFoundException(needKey);
 
+        Need basketNeed = !supporterBasket.containsKey(needKey) ? new Need(locatedNeed.getName(), locatedNeed.getCost(), 0) : supporterBasket.get(needKey);;
         basketNeed.setQuantity(newQuantity);
 
         if (basketNeed.getQuantity() <= 0)
             supporterBasket.remove(needKey);
+        else
+            supporterBasket.put(needKey, basketNeed);
 
         synchronized (supporterBasket) {
             updateCurSupporter();
@@ -286,6 +265,21 @@ public class UserFileDAO implements UserDAO {
             supporterBasket.clear();
             updateCurSupporter();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public BasketNeed getBasketOrNormalNeed(String needName) throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        if (supporterBasket == null)
+            throw new SupporterNotSignedInException();
+
+        Need needMatch = needDao.getNeed(needName);
+        if (needMatch == null)
+            throw new NeedNotFoundException(needName);
+        
+        // If the need is in the basket, the quantity will be how many are in there, otherwise 0
+        return new BasketNeed(needMatch.getName(), needMatch.getCost(), Math.min(supporterBasket.containsKey(needName) ? supporterBasket.get(needName).getQuantity() : 0, needMatch.getQuantity()), needMatch.getQuantity());
     }
 
     /**

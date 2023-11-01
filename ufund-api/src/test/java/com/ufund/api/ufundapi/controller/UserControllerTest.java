@@ -1,6 +1,7 @@
 package com.ufund.api.ufundapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import com.ufund.api.ufundapi.persistence.UserDAO;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
+import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.User;
 
@@ -130,59 +132,6 @@ public class UserControllerTest {
         
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddToBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
-        // Setup
-        Need expected_need = new Need("TestNeed", 1, 1);
-        when(mockUserDAO.addNeedToCurBasket(expected_need.getName(), 1)).thenReturn(expected_need);
-
-        // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(expected_need.getName(), 1);
-
-        // Analyze
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expected_need, response.getBody());
-    }
-
-    @Test
-    public void testAddToBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
-        // Setup
-        String need_name = "TestNeed";
-        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
-
-        // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
-
-        // Analyze
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddToBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
-        // Setup
-        String need_name = "TestNeed";
-        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
-
-        // Invoke
-        ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
-
-        // Analyze
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    public void testAddToBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
-    // Setup
-    String need_name = "TestNeed";
-    doThrow(new IOException()).when(mockUserDAO).addNeedToCurBasket(need_name, 1);
-
-    // Invoke
-    ResponseEntity<Need> response = userController.addToBasket(need_name, 1);
-
-    // Analyze
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -345,5 +294,35 @@ public class UserControllerTest {
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetBasketNeed() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        BasketNeed expected_need = new BasketNeed("TestNeed", 1, 1, 15);
+        when(mockUserDAO.getBasketOrNormalNeed(expected_need.getName())).thenReturn(expected_need);
+
+        // Invoke
+        ResponseEntity<BasketNeed> response = userController.getBasketNeed(expected_need.getName());
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected_need, response.getBody());
+    }
+
+    @Test
+    public void testGetBasketNeed_Failure() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        when(mockUserDAO.getBasketOrNormalNeed(any())).thenThrow(new NeedNotFoundException(""), new IOException(), new SupporterNotSignedInException());
+        
+        // Invoke
+        ResponseEntity<BasketNeed> response1 = userController.getBasketNeed("");
+        ResponseEntity<BasketNeed> response2 = userController.getBasketNeed("");
+        ResponseEntity<BasketNeed> response3 = userController.getBasketNeed("");
+
+        // Analyze
+        assertEquals(HttpStatus.NOT_FOUND, response1.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response2.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, response3.getStatusCode());
     }
 }
