@@ -184,8 +184,11 @@ public class UserControllerTest {
 
     @Test
     public void testUpdateNeedInBasket() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
+        // Setup
+        Need test_need = new Need("TestNeed", 1, 1);
+
         // Invoke
-        ResponseEntity<Void> response = userController.updateNeedInBasket("Chee", 1);
+        ResponseEntity<Void> response = userController.updateNeedInBasket(test_need);
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -194,11 +197,11 @@ public class UserControllerTest {
     @Test
     public void testUpdateNeedInBasketNotSignedIn() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
-        String need_name = "TestNeed";
-        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+        Need test_need = new Need("TestNeed", 1, 1);
+        doThrow(new SupporterNotSignedInException()).when(mockUserDAO).updateNeedInCurBasket(test_need.getName(), test_need.getQuantity());
 
         // Invoke
-        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
+        ResponseEntity<Void> response = userController.updateNeedInBasket(test_need);
 
         // Analyze
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -207,11 +210,11 @@ public class UserControllerTest {
     @Test
     public void testUpdateNeedInBasketNeedNotFound() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
-        String need_name = "TestNeed";
-        doThrow(new NeedNotFoundException(need_name)).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+        Need test_need = new Need("TestNeed", 1, 1);
+        doThrow(new NeedNotFoundException(test_need.getName())).when(mockUserDAO).updateNeedInCurBasket(test_need.getName(), test_need.getQuantity());
 
         // Invoke
-        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
+        ResponseEntity<Void> response = userController.updateNeedInBasket(test_need);
 
         // Analyze
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -220,11 +223,11 @@ public class UserControllerTest {
     @Test
     public void testUpdateNeedInBasketIOException() throws IOException, SupporterNotSignedInException, NeedNotFoundException {
         // Setup
-        String need_name = "TestNeed";
-        doThrow(new IOException()).when(mockUserDAO).updateNeedInCurBasket(need_name, 1);
+        Need test_need = new Need("TestNeed", 1, 1);
+        doThrow(new IOException()).when(mockUserDAO).updateNeedInCurBasket(test_need.getName(), test_need.getQuantity());
 
         // Invoke
-        ResponseEntity<Void> response = userController.updateNeedInBasket(need_name, 1);
+        ResponseEntity<Void> response = userController.updateNeedInBasket(test_need);
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

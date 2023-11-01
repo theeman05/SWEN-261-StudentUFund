@@ -1,14 +1,19 @@
 <div *ngIf="need">
     <h2>{{need.name}} Details</h2>
     <div>
-        <label for="need-cost">Cost: </label>
+        <label for="need-cost">Unit Cost: </label>
         <span>${{need.cost}}</span>
     </div>
     <br>
     <div>
-        <label for="need-quantity">Quantity: </label>
-        <span>{{need.quantity}}</span>
+        <label for="need-stock">Available Stock: </label>
+        <span>{{need.stock}}</span>
     </div>
-        <button type="button" (click)="goBack()">Go Back</button>
-        <button type="button" (click)="addToBasket(need)" >Add to Basket</button>
+    <br>
+    <div>
+        <label for="need-quantity">Desired Quantity: </label>
+        <input id="need-quantity" [(ngModel)]="need.quantity" placeholder="Desired quantity (1 - {{need.stock}})"/>
+    </div>
+    <button type="button" (click)="goBack()">Go Back</button>
+    <button type="button" (click)="updateBasket(need)">Update Basket</button>
 </div>

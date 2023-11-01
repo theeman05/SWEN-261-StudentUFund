@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -156,10 +155,10 @@ public class UserController {
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @PutMapping("/basket")
-    public ResponseEntity<Void> updateNeedInBasket(@RequestBody String needKey, @RequestBody int newQuantity) {
-        LOG.info("PUT update need in basket: " + needKey + ", " + newQuantity);
+    public ResponseEntity<Void> updateNeedInBasket(@RequestBody Need need) {
+        LOG.info("PUT update need in basket: " + need);
         try {
-            userDAO.updateNeedInCurBasket(needKey, newQuantity);
+            userDAO.updateNeedInCurBasket(need.getName(), need.getQuantity());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
