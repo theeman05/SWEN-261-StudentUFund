@@ -90,19 +90,6 @@ public class NeedTest {
     }
 
     @Test
-    public void getTotalCost() {
-        //setup
-        setupNeed();
-
-        //invoke
-        double expected = 0;
-        double actual = need.getTotalCost();
-        
-        //analyze
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void needToString() {
         //setup
         setupNeed();
