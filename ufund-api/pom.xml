@@ -75,6 +75,9 @@
 				<configuration>
 					<destfile>/target/coverage-reports/jacoco-unit.exec</destfile>
 					<datafile>/target/coverage-reports/jacoco-unit.exec</datafile>
+					<excludes>
+						<exclude>**/*com/ufund/api/ufundapi/UfundApiApplication.class</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
