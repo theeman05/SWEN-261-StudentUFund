@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOError;
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
