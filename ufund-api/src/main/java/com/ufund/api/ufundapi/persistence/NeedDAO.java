@@ -22,6 +22,17 @@ public interface NeedDAO {
     Need[] getNeeds() throws IOException;
 
     /**
+     * Retrieves all {@linkplain Need needs}
+     * 
+     * @param supporterUsername The username of the {@link Supporter supporter} whose {@link Need needs} to get
+     * 
+     * @return An array of {@link Need need} objects, may be empty
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    Need[] getNeeds(String supporterUsername) throws IOException;
+
+    /**
      * Finds all {@linkplain Need needs} whose name contains the given text
      * 
      * @param containsText The text to match against

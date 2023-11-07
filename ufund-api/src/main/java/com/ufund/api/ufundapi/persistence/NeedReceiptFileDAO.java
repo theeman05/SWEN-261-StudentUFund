@@ -78,6 +78,16 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         
         return receiptList.toArray(new NeedReceipt[receiptList.size()]);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public NeedReceipt[] getReceipts(String supporterUsername) throws IOException {
+        if (!needReceipts.containsKey(supporterUsername))
+            return new NeedReceipt[0];
+
+        return needReceipts.get(supporterUsername).values().toArray(new NeedReceipt[needReceipts.get(supporterUsername).size()]);
+    }
 
     /**
      * {@inheritDoc}
