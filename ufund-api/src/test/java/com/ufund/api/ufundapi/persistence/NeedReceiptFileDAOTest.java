@@ -39,10 +39,10 @@ public class NeedReceiptFileDAOTest {
         Need testNeed2 = new Need("Test5", 22, 2);
         mockObjectMapper = mock(ObjectMapper.class);
         testReceipts = new NeedReceipt[4];
-        testReceipts[0] = new NeedReceipt("testUsername", testNeed);
-        testReceipts[1] = new NeedReceipt("testUsername2", testNeed);
-        testReceipts[2] = new NeedReceipt("testUsername3", testNeed);
-        testReceipts[3] = new NeedReceipt("testUsername3", testNeed2);
+        testReceipts[0] = new NeedReceipt("testUsername", testNeed.getName(), testNeed.getCost(), testNeed.getQuantity());
+        testReceipts[1] = new NeedReceipt("testUsername2", testNeed.getName(), testNeed.getCost(), testNeed.getQuantity());
+        testReceipts[2] = new NeedReceipt("testUsername3", testNeed.getName(), testNeed.getCost(), testNeed.getQuantity());
+        testReceipts[3] = new NeedReceipt("testUsername3", testNeed2.getName(), testNeed2.getCost() * testNeed2.getQuantity(), testNeed2.getQuantity());
 
         when(mockObjectMapper
                 .readValue(new File("doesnt_matter.txt"), NeedReceipt[].class))

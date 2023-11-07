@@ -110,7 +110,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         if (needReceipt != null)
             needReceipt.fundMore(need.getCost(), need.getQuantity());
         else{
-            needReceipt = new NeedReceipt(supporterUsername, need);
+            needReceipt = new NeedReceipt(supporterUsername, need.getName(), need.getCost(), need.getQuantity());
             needReceipt.setCost(need.getCost() * need.getQuantity());
         }
 

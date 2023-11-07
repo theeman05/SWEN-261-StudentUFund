@@ -20,7 +20,7 @@ public class NeedReceiptTest {
         Need mockNeed = mock(Need.class);
 
         // Invoke
-        NeedReceipt receipt = new NeedReceipt(expectedSupporterName, mockNeed);
+        NeedReceipt receipt = new NeedReceipt(expectedSupporterName, mockNeed.getName(), mockNeed.getCost(), mockNeed.getQuantity());
 
         // Analyze
         assertEquals(expectedSupporterName, receipt.getSupporterUsername());
@@ -32,7 +32,8 @@ public class NeedReceiptTest {
         double cost_per_item = 10.0;
         int expected_quantity = 3;
         double expected_cost = 30.0;
-        NeedReceipt receipt = new NeedReceipt("CoolUser", new Need("Need", cost_per_item, 1));
+
+        NeedReceipt receipt = new NeedReceipt("CoolUser", "Need", cost_per_item, 1);
 
         // Invoke
         receipt.fundMore(cost_per_item, 2);
@@ -46,9 +47,9 @@ public class NeedReceiptTest {
     public void testToString() {
         // Setup
         String supporterUsername = "CoolUser";
-        Need mockNeed = new Need("Need", 1, 1);
-        String expected_string = String.format(NeedReceipt.STRING_FORMAT, supporterUsername, mockNeed.toString());
-        NeedReceipt receipt = new NeedReceipt(supporterUsername, mockNeed);
+        Need need = new Need("Need", 1, 1);
+        String expected_string = String.format(NeedReceipt.STRING_FORMAT, supporterUsername, need.toString());
+        NeedReceipt receipt = new NeedReceipt(supporterUsername, need.getName(), need.getCost(), need.getQuantity());
 
         // Invoke
         String actual_string = receipt.toString();

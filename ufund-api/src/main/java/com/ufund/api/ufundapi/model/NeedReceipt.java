@@ -19,10 +19,16 @@ public class NeedReceipt extends Need {
      * 
      * @param supporterUsername The {@link Supporter supporter}'s username
      * 
+     * @param name The name of the funded {@link Need need}
+     * 
+     * @param totalCost The total cost of the funded {@link Need need}
+     * 
+     * @param quantity The quantity of the funded {@link Need need}
+     * 
      * @param fundedNeed The {@link Need need} which was funded
      */
-    public NeedReceipt(@JsonProperty("supporter_username") String supporterUsername, @JsonProperty("funded_need") Need fundedNeed) {
-        super(fundedNeed.getName(), fundedNeed.getCost(), fundedNeed.getQuantity());
+    public NeedReceipt(@JsonProperty("supporter_username") String supporterUsername, @JsonProperty("name") String name, @JsonProperty("cost") double totalCost, @JsonProperty("quantity") int quantity) {
+        super(name, totalCost, quantity);
         this.supporterUsername = supporterUsername;
     }
 
