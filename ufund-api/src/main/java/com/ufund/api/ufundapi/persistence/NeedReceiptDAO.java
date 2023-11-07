@@ -2,8 +2,6 @@ package com.ufund.api.ufundapi.persistence;
 
 import java.io.IOException;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
-
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.NeedReceipt;
 import com.ufund.api.ufundapi.model.Supporter;
