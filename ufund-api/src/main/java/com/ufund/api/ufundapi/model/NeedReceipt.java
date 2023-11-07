@@ -22,7 +22,7 @@ public class NeedReceipt extends Need {
      * @param fundedNeed The {@link Need need} which was funded
      */
     public NeedReceipt(@JsonProperty("supporter_username") String supporterUsername, @JsonProperty("funded_need") Need fundedNeed) {
-        super(fundedNeed.getName(), fundedNeed.getCost() * fundedNeed.getQuantity(), fundedNeed.getQuantity());
+        super(fundedNeed.getName(), fundedNeed.getCost(), fundedNeed.getQuantity());
         this.supporterUsername = supporterUsername;
     }
 
@@ -34,14 +34,14 @@ public class NeedReceipt extends Need {
     }
 
     /**
-     * Adds the given total cost to the current need cost, and the given quantity to the current need quantity.
+     * Adds the total cost to the current need cost, and the given quantity to the current need quantity.
      * 
-     * @param totalCost The total cost to add to the current need cost.
+     * @param cost The cost to add to the current need cost.
      * 
      * @param quantity The quantity to add to the current need quantity.
      */
-    public void fundMore(double totalCost, int quantity) {
-        this.setCost(getCost() + totalCost);
+    public void fundMore(double cost, int quantity) {
+        this.setCost(getCost() + cost * quantity);
         this.setQuantity(getQuantity() + quantity);
     }
 
