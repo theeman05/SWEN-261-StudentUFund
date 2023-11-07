@@ -43,6 +43,7 @@ public class UserFileDAOTests {
      */
 
     UserFileDAO userFileDAO;
+    NeedReceiptDAO mockNeedReceiptDao;
     NeedDAO mockNeedDao;
     Supporter[] testSupporter;
     ObjectMapper mockObjectMapper;
@@ -58,8 +59,10 @@ public class UserFileDAOTests {
         when(mockObjectMapper
                 .readValue(new File("doesnt_matter.txt"), Supporter[].class))
                 .thenReturn(testSupporter);
+                
         mockNeedDao = mock(NeedDAO.class);
-        userFileDAO = new UserFileDAO("doesnt_matter.txt", mockObjectMapper, mockNeedDao);
+        mockNeedReceiptDao = mock(NeedReceiptDAO.class);
+        userFileDAO = new UserFileDAO("doesnt_matter.txt", mockObjectMapper, mockNeedDao, mockNeedReceiptDao);
     }
 
     @Test
