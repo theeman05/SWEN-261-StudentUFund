@@ -22,6 +22,17 @@ public interface NeedReceiptDAO {
     NeedReceipt[] getReceipts() throws IOException;
 
     /**
+     * Retrieves all {@linkplain NeedReceipt needs} for the given {@linkplain supporter}'s username
+     * 
+     * @param supporterUsername The username of the {@link Supporter supporter} whose {@link Need needs} to get
+     * 
+     * @return An array of {@link Need need} objects, may be empty
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    NeedReceipt[] getReceipts(String supporterUsername) throws IOException;
+
+    /**
      * Retrieves a {@linkplain NeedReceipt needReceipt} with the given name and supporter username
      * 
      * @param needName The name of the {@link NeedReceipt needReceipt} to get
