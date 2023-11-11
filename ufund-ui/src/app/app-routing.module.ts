@@ -12,6 +12,7 @@ import { AdminComponent } from './admin/admin.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SupporterComponent } from './supporter/supporter.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { FundingLeaderboardComponent } from './funding-leaderboard/funding-leaderboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -31,7 +32,8 @@ const routes: Routes = [
       { path: 'needs', component: NeedsSupporterComponent },
       { path: 'basket', component: BasketComponent },
       { path: 'detail/:name', component: NeedDetailSupporterComponent},
-      { path: 'basket/checkout', component: CheckoutComponent}
+      { path: 'basket/checkout', component: CheckoutComponent},
+      { path: 'leaderboard', component: FundingLeaderboardComponent }
     ]
   },
 ];

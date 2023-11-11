@@ -1,0 +1,10 @@
+<h2>Leaderboard</h2>
+<h3>Top funders:</h3>
+<ul class="basket">
+    <li *ngFor="let receipt of receipts">
+        <a>
+            <span class="badge">{{receipt.supporterUsername}}</span>Total Donations: ${{receipt}}
+        </a>
+    </li>
+</ul>
+

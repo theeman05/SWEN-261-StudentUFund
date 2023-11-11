@@ -1,1 +1,1 @@
-[{"username":"test2","funding_basket":[],"admin":false},{"username":"Ben","funding_basket":[],"admin":false}]
+[{"username":"test2","funding_basket":[],"admin":false},{"username":"Ben","funding_basket":[{"name":"Arduino","cost":55.3,"quantity":1}],"admin":false}]

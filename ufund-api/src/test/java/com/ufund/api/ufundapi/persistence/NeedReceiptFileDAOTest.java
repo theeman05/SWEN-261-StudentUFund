@@ -153,15 +153,4 @@ public class NeedReceiptFileDAOTest {
         assertEquals(10, actualReceipt.getCost());
         assertEquals(2, actualReceipt.getQuantity());
     }
-
-    @Test
-    public void testGetSortedReceipts() {
-        NeedReceipt[] sortedReceipts =  needReceiptFileDAO.getSortedReceipts();
-        Arrays.sort(testReceipts);
-
-        String actual = Arrays.toString(sortedReceipts);
-        String expected = Arrays.toString(testReceipts);
-        
-        assertEquals(expected, actual);
-    }
 }

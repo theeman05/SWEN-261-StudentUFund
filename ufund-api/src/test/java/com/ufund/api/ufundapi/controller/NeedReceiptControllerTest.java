@@ -126,4 +126,17 @@ public class NeedReceiptControllerTest {
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
+
+    @Test
+    public void testGetSortedReceipts() throws IOException {
+        // Setup
+        String supporterUsername = "TestUsername";
+        String needName = "TestNeed";
+        Need testNeed = new Need(needName, 5, 1);
+        NeedReceipt testNeedReceipt = new NeedReceipt(supporterUsername, testNeed.getName(), testNeed.getCost(), testNeed.getQuantity());
+        when(mockNeedReceiptDao.getReceipts()).thenReturn(new NeedReceipt[] { testNeedReceipt });
+
+        // Invoke
+        ResponseEntity<NeedReceipt[]> response = needReceiptController.getNeedReceipts();
+    }
 }

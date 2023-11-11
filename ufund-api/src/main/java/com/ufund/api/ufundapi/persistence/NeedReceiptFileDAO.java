@@ -121,14 +121,25 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         return needReceipt;
     }
 
-    public synchronized NeedReceipt[] getSortedReceipts() {
-        NeedReceipt[] receiptList = {};
-        try {
-            receiptList = getReceipts();
-            Arrays.sort(receiptList);
-        } catch (IOException e) {
-            System.out.println(e);
+    /**
+     * {@inheritDoc}
+     */
+    public double getUserFundingSum(String supporterUsername) throws IOException {
+        NeedReceipt[] supporterReceipts = getReceipts(supporterUsername);
+        double sum = 0;
+        for (NeedReceipt receipt: supporterReceipts) {
+            sum += (receipt.getCost() * receipt.getQuantity());
         }
-        return receiptList;
+        return sum;
+    }
+
+    public Map<String, Double> getAllUserFunding() throws IOException {
+        Map<String, Double> userFunding = new HashMap<>();
+
+        for (String username : needReceipts.keySet()) {
+            Double userTotal = getUserFundingSum(username);
+            userFunding.put(username, userTotal);
+        }
+        return userFunding;
     }
 }
