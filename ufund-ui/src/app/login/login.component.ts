@@ -9,10 +9,11 @@ import { User } from '../user';
 })
 export class LoginComponent {
   private static ADMIN_USERNAME = "admin";
-
-  constructor(private userService: UserService) { }
+  userName: string
+  constructor(private userService: UserService) { this.userName = "test" }
 
   login(username: string): void {
+    this.userName = username
     username = username.trim();
     if (!username) { return; }
 
