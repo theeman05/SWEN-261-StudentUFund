@@ -16,14 +16,17 @@ import { NeedService } from './need.service';
 export class UserService {
   private userUrl = 'http://localhost:8080/users';  // URL to web api
 
+  username: string
+
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient, private errorService: ErrorService, private location: Location) { }
+  constructor(private http: HttpClient, private errorService: ErrorService, private location: Location) { this.username = "hehe" }
 
   /** Login a user */
   loginUser(user: User): Observable<User> {
+    this.username = user.username
     return this.http.get<User>(`${this.userUrl}/${user.username}`)
       .pipe(catchError(this.handleError<User>('loginUser')));
   }
@@ -115,5 +118,8 @@ export class UserService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+  getUsername(): string {
+    return this.username
   }
 }
