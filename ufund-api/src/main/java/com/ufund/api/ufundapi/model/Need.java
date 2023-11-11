@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author Ethan Hartman
  */
-public class Need {
+public class Need implements Comparable<Need>{
 
     // Package private for tests
     static final String STRING_FORMAT = "Need [name=%s,cost=$%s,quantity=%s]";
@@ -87,5 +87,17 @@ public class Need {
     @Override
     public String toString() {
         return String.format(STRING_FORMAT, name, cost, quantity);
+    }
+
+    @Override
+    public int compareTo(Need other) {
+        if (this.cost > other.cost) {
+            return 1;
+        } else if (this.cost < other.cost) {
+            return -1;
+        } else {
+            return 0;
+        }
+        // return (int)(other.cost - this.cost);
     }
 }

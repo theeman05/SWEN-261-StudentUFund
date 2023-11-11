@@ -3,6 +3,7 @@ package com.ufund.api.ufundapi.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,5 +119,16 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         save();
 
         return needReceipt;
+    }
+
+    public synchronized NeedReceipt[] getSortedReceipts() {
+        NeedReceipt[] receiptList = {};
+        try {
+            receiptList = getReceipts();
+            Arrays.sort(receiptList);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return receiptList;
     }
 }

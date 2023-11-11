@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufund.api.ufundapi.model.Need;
@@ -151,5 +152,16 @@ public class NeedReceiptFileDAOTest {
         assertEquals(needName, actualReceipt.getName());
         assertEquals(10, actualReceipt.getCost());
         assertEquals(2, actualReceipt.getQuantity());
+    }
+
+    @Test
+    public void testGetSortedReceipts() {
+        NeedReceipt[] sortedReceipts =  needReceiptFileDAO.getSortedReceipts();
+        Arrays.sort(testReceipts);
+
+        String actual = Arrays.toString(sortedReceipts);
+        String expected = Arrays.toString(testReceipts);
+        
+        assertEquals(expected, actual);
     }
 }

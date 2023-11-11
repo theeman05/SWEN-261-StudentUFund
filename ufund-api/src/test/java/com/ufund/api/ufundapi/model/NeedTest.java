@@ -101,4 +101,15 @@ public class NeedTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void needCompareToGT() {
+        //setup
+        Need need2 = new Need("Need2", 2.0, 1);
+        //invoke
+        int result = need.compareTo(need2);
+        int expected = -1;
+        //analyze
+        assertEquals(expected, result);
+    }
+
 }
