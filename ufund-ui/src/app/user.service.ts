@@ -15,18 +15,14 @@ import { NeedService } from './need.service';
 })
 export class UserService {
   private userUrl = 'http://localhost:8080/users';  // URL to web api
-
-  username: string
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient, private errorService: ErrorService, private location: Location) { this.username = "hehe" }
+  constructor(private http: HttpClient, private errorService: ErrorService, private location: Location) {}
 
   /** Login a user */
   loginUser(user: User): Observable<User> {
-    this.username = user.username
     return this.http.get<User>(`${this.userUrl}/${user.username}`)
       .pipe(catchError(this.handleError<User>('loginUser')));
   }
@@ -119,7 +115,9 @@ export class UserService {
       return of(result as T);
     };
   }
-  getUsername(): string {
-    return this.username
+
+  getUsername():Observable<User> {
+    return this.http.get<User>(`${this.userUrl}/curUser`)
+      .pipe(catchError(this.handleError<User>('loginUser')));
   }
 }

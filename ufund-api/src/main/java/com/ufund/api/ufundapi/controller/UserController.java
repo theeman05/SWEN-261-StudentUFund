@@ -74,6 +74,28 @@ public class UserController {
         }
     }
 
+    
+    /**
+     * Responds to the GET request for a curUser with the current user's
+     * username
+     * 
+     * @return ResponseEntity with {@link User user} object and HTTP status of OK if
+     *       user is logged in<br>
+     *       ResponseEntity with HTTP status of FORBIDDEN otherwise
+     */
+    @GetMapping("/curUser")
+    public ResponseEntity<User> getCurUser() {
+        LOG.info("GET /user/curUser");
+        try {
+            User user = userDAO.getCurUser();
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+
     /**
      * Responds to the GET request for logging out
      * Will log out the current user, if there is one

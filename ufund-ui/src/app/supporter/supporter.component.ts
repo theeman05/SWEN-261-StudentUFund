@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 import { UserService } from '../user.service';
 import { LoginComponent } from '../login/login.component';
@@ -9,11 +9,11 @@ import { LoginComponent } from '../login/login.component';
   styleUrls: ['./supporter.component.css']
 })
 export class SupporterComponent {
-  username: string
-  private userService: UserService
+  username: string = ''
 
-  constructor(userService: UserService) {
-    this.userService = userService
-    this.username = ''
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+  this.userService.getUsername().subscribe(user => this.username = user.username)
   }
 }
