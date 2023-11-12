@@ -1,6 +1,7 @@
 package com.ufund.api.ufundapi.controller;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,6 +97,28 @@ public class NeedReceiptController {
         LOG.info("GET /receipts/" + supporterUsername);
         try {
             return new ResponseEntity<>(needReceiptDao.getReceipts(supporterUsername), HttpStatus.OK);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{supporterUsername}/total") 
+    public ResponseEntity<Double> getUserFundingSum(String supporterUsername) {
+        LOG.info("GET /receipts/" + supporterUsername + "/total");
+        try {
+            return new ResponseEntity<Double>(needReceiptDao.getUserFundingSum(supporterUsername), HttpStatus.OK);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/allUsersFunding") 
+    public ResponseEntity<Map<String, Double>> getAllUserFunding(String supporterUsername) {
+        LOG.info("GET /receipts/" + supporterUsername + "/total");
+        try {
+            return new ResponseEntity<Map<String, Double>>(needReceiptDao.getAllUserFunding(), HttpStatus.OK);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
