@@ -1,0 +1,9 @@
+<h2>Funded Needs</h2>
+
+<ul class="receipts">
+  <li *ngFor="let receipt of receipts">
+    <a>
+      <span class="badge">{{receipt.name}}</span>Funded By: {{receipt.supporter_username}}, Total Cost: ${{receipt.cost * receipt.quantity}}, Quantity: {{receipt.quantity}}
+    </a>
+  </li>
+</ul>
