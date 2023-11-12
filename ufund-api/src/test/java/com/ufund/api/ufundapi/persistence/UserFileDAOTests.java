@@ -20,6 +20,7 @@ import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
@@ -52,10 +53,11 @@ public class UserFileDAOTests {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testSupporter = new Supporter[3];
+        NeedMessage[] expected_messages = new NeedMessage[]{new NeedMessage("CoolSupporter", "Cheese", "I like cheese")};
         Need[] basket = new Need[0];
-        testSupporter[0] = new Supporter("testUsername", basket);
-        testSupporter[1] = new Supporter("testUsername2", basket);
-        testSupporter[2] = new Supporter("testUsername3", basket);
+        testSupporter[0] = new Supporter("testUsername", basket, expected_messages);
+        testSupporter[1] = new Supporter("testUsername2", basket, expected_messages);
+        testSupporter[2] = new Supporter("testUsername3", basket, expected_messages);
         when(mockObjectMapper
                 .readValue(new File("doesnt_matter.txt"), Supporter[].class))
                 .thenReturn(testSupporter);
@@ -165,7 +167,7 @@ public class UserFileDAOTests {
     @Test
     public void testLoginUser_failure() throws IOException {
         // Setup
-        Supporter supporter = new Supporter("testUsername4", new Need[0]);
+        Supporter supporter = new Supporter("testUsername4", new Need[0], new NeedMessage[0]);
 
         // Invoke
         boolean result1 = userFileDAO.loginUser(supporter);

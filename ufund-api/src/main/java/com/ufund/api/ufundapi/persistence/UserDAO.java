@@ -6,6 +6,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
@@ -155,11 +156,40 @@ public interface UserDAO {
         User getCurUser() throws SupporterNotSignedInException;
 
         /**
-         * Gets the current {@linkplain Supporter supporter's} basket
+         * Gets the current {@linkplain Supporter supporter's} inbox
          * 
-         * @return The current {@link Supporter supporter's} basket
+         * @return The current {@link Supporter supporter's} inbox
          * 
          * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
          *                                       signed in
+         * 
+         * @throws IOException if an issue with underlying storage
          */
+        NeedMessage[] getCurMessages() throws SupporterNotSignedInException, IOException;
+
+        /**
+         * Sends the given {@linkplain NeedMessage message} to the user with the given username
+         * 
+         * @param message The {@link NeedMessage message} to send
+         * 
+         * @param receiverUsername The username of the receiver
+         * 
+         * @return The {@link NeedMessage message} if successful, null otherwise
+         * 
+         * @throws IOException if an issue with underlying storage
+         */
+        NeedMessage sendOrUpdateMessageToUser(NeedMessage message, String receiverUsername) throws IOException;
+        
+        /**
+         * Gets the {@linkplain NeedMessage message} to the user with the given username and need name
+         * 
+         * @param receiverUsername The username of the receiver
+         * 
+         * @param needName The name of the {@linkplain Need need}.
+         * 
+         * @return The {@link NeedMessage message} if successful, null otherwise
+         * 
+         * @throws IOException if an issue with underlying storage
+         */
+        NeedMessage getMessageToUser(String receiverUsername, String needName) throws IOException;
 }

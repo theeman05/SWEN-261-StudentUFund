@@ -10,10 +10,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Ethan Hartman
  */
 public class Supporter extends User {
-    static final String STRING_FORMAT = "Supporter [username=%s,isAdmin=%s,fundingBasket=%s]";
+    static final String STRING_FORMAT = "Supporter [username=%s,isAdmin=%s,fundingBasket=%s,messages=%s]";
 
     @JsonProperty("funding_basket")
     private Need[] fundingBasket;
+
+    @JsonProperty("messages")
+    private NeedMessage[] messages;
 
     /**
      * Create a user with the given username and funding basket
@@ -25,9 +28,10 @@ public class Supporter extends User {
      *                      funding basket
      */
     public Supporter(@JsonProperty("username") String username,
-            @JsonProperty("funding_basket") Need[] fundingBasket) {
+            @JsonProperty("funding_basket") Need[] fundingBasket, @JsonProperty("messages") NeedMessage[] messages) {
         super(username);
         this.fundingBasket = fundingBasket;
+        this.messages = messages;
     }
 
     /**
@@ -51,10 +55,28 @@ public class Supporter extends User {
     }
 
     /**
+     * Get the list of {@link NeedMessage messages} in this user's inbox
+     * 
+     * @return The list of {@link NeedMessage messages} in this user's inbox
+     */
+    public NeedMessage[] getNeedMessages() {
+        return messages;
+    }
+
+    /**
+     * Set this supporters inbox to the given list of {@linkplain NeedMessage messages}.
+     * 
+     * @param messages The list of {@link NeedMessage messages}.
+     */
+    public void setNeedMessages(NeedMessage[] messages) {
+        this.messages = messages;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return String.format(STRING_FORMAT, username, isAdmin(), Arrays.toString(fundingBasket));
+        return String.format(STRING_FORMAT, username, isAdmin(), Arrays.toString(fundingBasket), Arrays.toString(messages));
     }
 }
