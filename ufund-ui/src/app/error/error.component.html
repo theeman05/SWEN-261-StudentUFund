@@ -1,3 +1,4 @@
+<div class="backdrop" *ngIf="errorMessage"></div> 
 <div class="error-popup" *ngIf="errorMessage">
     <p class="error">Error: {{ errorMessage }}</p>
     <button class="error-dismiss" (click)="clearError()">Dismiss</button>
