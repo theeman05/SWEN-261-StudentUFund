@@ -30,8 +30,18 @@ export class ReceiptService {
     return this.http.get<Receipt[]>(url)
   }
 
-  getSortedNeedReceipts():Observable<Receipt[]> {
+  getSortedNeedReceipts(): Observable<Receipt[]> {
     const url = `${this.receiptsUrl}/sorted`
     return this.http.get<Receipt[]>(url)
+  }
+
+  getUserFundingSum(username: String): Observable<number> {
+    const url = `${this.receiptsUrl}/${username}/total`
+    return this.http.get<number>(url)
+  }
+
+  getAllUserFunding(): Observable<Map<String, number>> {
+    const url = `${this.receiptsUrl}/allUsersFunding`
+    return this.http.get<Map<String, number>>(url)
   }
 }
