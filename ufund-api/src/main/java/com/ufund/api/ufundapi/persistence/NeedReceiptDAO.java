@@ -63,5 +63,5 @@ public interface NeedReceiptDAO {
 
     double getUserFundingSum(String supporterUsername) throws IOException;
 
-    Map<String, Double> getAllUserFunding() throws IOException;
+    Map<String, Double> getSortedUserFunding() throws IOException;
 }

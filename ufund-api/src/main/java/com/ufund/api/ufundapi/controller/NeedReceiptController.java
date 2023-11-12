@@ -115,10 +115,10 @@ public class NeedReceiptController {
     }
 
     @GetMapping("/allUsersFunding") 
-    public ResponseEntity<Map<String, Double>> getAllUserFunding(String supporterUsername) {
-        LOG.info("GET /receipts/" + supporterUsername + "/total");
+    public ResponseEntity<Map<String, Double>> getSortedUserFunding() {
+        LOG.info("GET /receipts/allUsersFunding");
         try {
-            return new ResponseEntity<Map<String, Double>>(needReceiptDao.getAllUserFunding(), HttpStatus.OK);
+            return new ResponseEntity<Map<String, Double>>(needReceiptDao.getSortedUserFunding(), HttpStatus.OK);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

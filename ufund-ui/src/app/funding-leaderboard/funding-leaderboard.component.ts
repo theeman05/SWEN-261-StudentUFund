@@ -3,6 +3,7 @@ import { Receipt } from '../receipt';
 import { UserService } from '../user.service';
 import { ErrorService } from '../error.service';
 import { ReceiptService } from '../receipt.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-funding-leaderboard',
@@ -10,12 +11,17 @@ import { ReceiptService } from '../receipt.service';
   styleUrls: ['./funding-leaderboard.component.css']
 })
 export class FundingLeaderboardComponent implements OnInit{
-  receipts: Receipt[] = []
+  funding: Map<String, number> = new Map
+  usernames: IterableIterator<String> = this.funding.keys() 
 
   constructor(private receiptService: ReceiptService) {}
   
   ngOnInit(): void {
-    this.receiptService.getSortedNeedReceipts()
+    this.getFunding()
+  }
+
+  getFunding() {
+    return this.receiptService.getAllUserFunding()
   }
 
 }

@@ -3,8 +3,10 @@ package com.ufund.api.ufundapi.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -132,13 +134,13 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         return sum;
     }
 
-    public Map<String, Double> getAllUserFunding() throws IOException {
-        Map<String, Double> userFunding = new HashMap<>();
-
+    public Map<String, Double> getSortedUserFunding() throws IOException {
+        Map<String, Double> userFunding = new TreeMap<>();
         for (String username : needReceipts.keySet()) {
             Double userTotal = getUserFundingSum(username);
             userFunding.put(username, userTotal);
         }
+        userFunding = new TreeMap<>(Comparator.comparingDouble(userFunding::get).reversed());
         return userFunding;
     }
 }
