@@ -129,7 +129,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         NeedReceipt[] supporterReceipts = getReceipts(supporterUsername);
         double sum = 0;
         for (NeedReceipt receipt: supporterReceipts) {
-            sum += (receipt.getCost() * receipt.getQuantity());
+            sum += receipt.getCost();
         }
         return sum;
     }
