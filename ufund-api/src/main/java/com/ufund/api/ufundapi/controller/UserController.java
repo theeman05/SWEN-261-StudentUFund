@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,6 +78,30 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a {@linkplain Supporter supporter} with the provided username if there are no users with that username
+     * 
+     * @param useranme - The {@link Supporter supporter} with the given username to create
+     * 
+     * @return ResponseEntity with created {@link Supporter supporter} object and HTTP status
+     *         of CREATED<br>
+     *         ResponseEntity with HTTP status of CONFLICT if {@link Supporter supporter}
+     *         object already exists<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @PostMapping("")
+    public ResponseEntity<Supporter> createSupporter(@RequestBody String username) {
+        LOG.info("POST /users " + username);
+        try {
+            return new ResponseEntity<Supporter>(userDAO.createSupporter(new Supporter(username, new Need[0], new NeedMessage[0])), HttpStatus.CREATED);
+        } catch (KeyAlreadyExistsException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
     /**
      * Responds to the GET request for a curUser with the current user's

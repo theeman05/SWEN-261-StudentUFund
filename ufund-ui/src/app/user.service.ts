@@ -26,6 +26,10 @@ export class UserService {
       .pipe(catchError(this.handleError<User>('loginUser')));
   }
 
+  signupUser(user: User): Observable<User> {
+    return this.http.post<User>(this.userUrl, user.username, this.httpOptions).pipe(catchError(this.handleError<User>('signupUser')));
+  }
+
   /** Logout current user */
   logout(): Observable<Boolean>{
     return this.http.get<Boolean>(`${this.userUrl}/logout`);
@@ -100,6 +104,9 @@ export class UserService {
             break;
           case 'checkout':
             display_message = "Checkout failed!";
+            break;
+          case 'signupUser':
+            display_message = "Username already exists!";
             break;
           default:
             display_message = "Unknown error!";
