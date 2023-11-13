@@ -2,6 +2,7 @@ package com.ufund.api.ufundapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -383,7 +384,7 @@ public class UserControllerTest {
         NeedMessage test_message = new NeedMessage("Sender", "TestNeed", "TestMessage");
 
         // Invoke
-        ResponseEntity<Void> response = userController.sendMessage(test_message, "receiver");
+        ResponseEntity<Void> response = userController.sendMessage(test_message);
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -392,11 +393,11 @@ public class UserControllerTest {
     @Test
     public void testSendMessage_Failure() throws IOException{
         // Setup
-        NeedMessage test_message = new NeedMessage("Sender", "TestNeed", "TestMessage");
-        when(mockUserDAO.sendOrUpdateMessageToUser(test_message, "receiver")).thenThrow(new IOException());
+        NeedMessage test_message = new NeedMessage("admin", "TestNeed", "TestMessage");
+        when(mockUserDAO.sendOrUpdateMessageToUser(any(NeedMessage.class), anyString())).thenThrow(new IOException());
 
         // Invoke
-        ResponseEntity<Void> response = userController.sendMessage(test_message, "receiver");
+        ResponseEntity<Void> response = userController.sendMessage(test_message);
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

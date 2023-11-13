@@ -347,7 +347,7 @@ public class UserFileDAO implements UserDAO {
 
         ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
         for (NeedMessage compareMsg : receiverMessages)
-            if (compareMsg.getNeedName() == message.getNeedName()){
+            if (compareMsg.getNeedName().equals(message.getNeedName())){
                 receiverMessages.remove(compareMsg);
                 break;
             }
@@ -368,7 +368,7 @@ public class UserFileDAO implements UserDAO {
             return null;
         ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
         for (NeedMessage compareMsg : receiverMessages)
-            if (compareMsg.getNeedName() == needName)
+            if (compareMsg.getNeedName().equals(needName))
                 return compareMsg;
         return null;
     }

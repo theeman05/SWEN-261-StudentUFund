@@ -37,6 +37,32 @@ public class NeedMessageTest {
     }
 
     @Test
+    public void testGetSenderUsername() {
+        // Setup
+        String expected = "Sender";
+        setupBasketNeed();
+
+        // Invoke
+        String actual = needMessage.getSenderUsername();
+
+        // Analyze
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetMessage() {
+        // Setup
+        String expected = "Thakns for donating the dog feeet!";
+        setupBasketNeed();
+
+        // Invoke
+        String actual = needMessage.getMessage();
+
+        // Analyze
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testToString() {
         // Setup
         String expected = "NeedMessage [sender_username=Sender,message=Thakns for donating the dog feeet!,need_name=Dog feet]";

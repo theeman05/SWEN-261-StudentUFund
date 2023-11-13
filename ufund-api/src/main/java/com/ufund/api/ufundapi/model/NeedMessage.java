@@ -33,13 +33,25 @@ public class NeedMessage {
     }
 
     /**
-     * @return the name of the {@linkplain Need need}.
+     * @returns the name of the {@linkplain Need need}.
      */
     public String getNeedName() {
         return needName;
     }
 
-    
+    /**
+     * @returns the sender's username.
+     */
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    /**
+     * @returns the message.
+     */
+    public String getMessage() {
+        return message;
+    }
 
     /**
      * {@inheritDoc}

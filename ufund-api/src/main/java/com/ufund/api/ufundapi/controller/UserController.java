@@ -306,10 +306,11 @@ public class UserController {
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @PostMapping("/inbox")
-    public ResponseEntity<Void> sendMessage(@RequestBody NeedMessage message, @RequestBody String receiverUsername) {
+    public ResponseEntity<Void> sendMessage(@RequestBody NeedMessage message) {
         LOG.info("POST /inbox");
         try {
-            userDAO.sendOrUpdateMessageToUser(message, receiverUsername);
+            NeedMessage newMessage = new NeedMessage("admin", message.getNeedName(), message.getMessage());
+            userDAO.sendOrUpdateMessageToUser(newMessage, message.getSenderUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());

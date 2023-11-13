@@ -19,6 +19,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { ErrorComponent } from './error/error.component';
 import { FundingLeaderboardComponent } from './funding-leaderboard/funding-leaderboard.component';
 import { AllFundedComponent } from './all-funded/all-funded.component';
+import { NeedMessagesComponent } from './need-messages/need-messages.component';
+import { FundedDetailComponent } from './funded-detail/funded-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { AllFundedComponent } from './all-funded/all-funded.component';
     ErrorComponent,
     FundingLeaderboardComponent,
     AllFundedComponent,
+    NeedMessagesComponent,
+    FundedDetailComponent,
   ],
   imports: [
     BrowserModule,
