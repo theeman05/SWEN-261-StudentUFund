@@ -42,6 +42,7 @@ public class UserFileDAO implements UserDAO {
     Map<String, Need> supporterBasket; // The current supporter's basket of needs
 
     private NeedDAO needDao;
+    private NeedReceiptDAO needReceiptDao;
 
     /**
      * Creates a Supporter File Data Access Object
@@ -57,11 +58,12 @@ public class UserFileDAO implements UserDAO {
      * @throws IOException when file cannot be accessed or read from
      */
     @Autowired
-    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper, NeedDAO needDao)
+    public UserFileDAO(@Value("${supporters.file}") String filename, ObjectMapper objectMapper, NeedDAO needDao, NeedReceiptDAO needReceiptDao)
             throws IOException {
         this.filename = filename;
         this.objectMapper = objectMapper;
         this.needDao = needDao;
+        this.needReceiptDao = needReceiptDao;
         load(); // load the supporters from the file
     }
 
@@ -255,10 +257,11 @@ public class UserFileDAO implements UserDAO {
                 // If we find a matching need, update the quantity. If quantity is 0 or below, delete the need
                 if (matchedNeed != null){
                     matchedNeed.setQuantity(matchedNeed.getQuantity() - need.getQuantity());
-                    if (matchedNeed.getQuantity() > 0)
+                    if (matchedNeed.getQuantity() > 0){
                         needDao.updateNeed(matchedNeed);
-                    else
+                    }else
                         needDao.deleteNeed(matchedNeed.getName());
+                    needReceiptDao.createOrUpdateReceipt(need, curUser.getUsername());
                 }
             }
             
