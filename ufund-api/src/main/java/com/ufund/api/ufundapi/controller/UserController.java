@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 import com.ufund.api.ufundapi.persistence.UserDAO;
@@ -254,7 +256,7 @@ public class UserController {
     }
 
     /**
-     * Responds to the GET request for getting the {@link Need needs} which are
+     * Responds to the GET request for getting the {@linkplain Need needs} which are
      * available to add to the current user's basket
      * 
      * @return ResponseEntity with list of {@link Need need} objects and a status of
@@ -273,5 +275,85 @@ public class UserController {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Responds to the GET request for getting the {@linkplain NeedMessage message}s the current user has
+     * 
+     * @return ResponseEntity with list of {@link NeedMessage message} objects and a status of
+     *         OK if supporter is signed in<br>
+     *         ResponseEntity with HTTP status of FORBIDDEN otherwise
+     */
+    @GetMapping("/inbox")
+    public ResponseEntity<NeedMessage[]> getInbox() {
+        LOG.info("GET /inbox");
+        try {
+            return new ResponseEntity<NeedMessage[]>(userDAO.getCurMessages(), HttpStatus.OK);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    /**
+     * Responds to the POST request for sending a {@linkplain NeedMessage message} to a user
+     * 
+     * @param message The {@link NeedMessage message} to send
+     * 
+     * @param receiverUsername The username of the user to send the message to
+     * 
+     * @return ResponseEntity with an HTTP status of OK if the message was sent<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @PostMapping("/inbox")
+    public ResponseEntity<Void> sendMessage(@RequestBody NeedMessage message) {
+        LOG.info("POST /inbox");
+        try {
+            NeedMessage newMessage = new NeedMessage("admin", message.getNeedName(), message.getMessage());
+            userDAO.sendOrUpdateMessageToUser(newMessage, message.getSenderUsername());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Responds to the DELETE request for deleting a {@linkplain NeedMessage message} from the current user
+     * 
+     * @param needName The name of the {@link Need need} to send
+     * 
+     * @return ResponseEntity with an HTTP status of OK if the message was sent<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @DeleteMapping("/inbox/{needName}")
+    public ResponseEntity<Void> deleteMessage(@PathVariable String needName) {
+        LOG.info("DELETE /inbox/" + needName);
+        try {
+            userDAO.deleteCurMessage(needName);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SupporterNotSignedInException e) {
+            LOG.log(Level.SEVERE, e.getLocalizedMessage());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    /**
+     * Responds to the GET request for getting a {@linkplain NeedMessage message} to a user
+     * 
+     * @param receiver The username of the user to send the message to
+     * 
+     * @param needName The name of the {@link Need need} to send
+     * 
+     * @return ResponseEntity with an HTTP status of OK if the message was sent<br>
+     *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
+    @GetMapping("/{receiver}/inbox/{needName}")
+    public ResponseEntity<NeedMessage> getMessage(@PathVariable String receiver, @PathVariable String needName) {
+        LOG.info("GET " + receiver + "/inbox/" + needName);
+        return new ResponseEntity<>(userDAO.getMessageToUser(receiver, needName), HttpStatus.OK);
     }
 }

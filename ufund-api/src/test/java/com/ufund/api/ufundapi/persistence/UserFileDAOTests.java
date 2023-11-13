@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,7 @@ import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
@@ -52,10 +54,11 @@ public class UserFileDAOTests {
     public void setUp() throws IOException {
         mockObjectMapper = mock(ObjectMapper.class);
         testSupporter = new Supporter[3];
+        NeedMessage[] expected_messages = new NeedMessage[]{new NeedMessage("CoolSupporter", "Cheese", "I like cheese")};
         Need[] basket = new Need[0];
-        testSupporter[0] = new Supporter("testUsername", basket);
-        testSupporter[1] = new Supporter("testUsername2", basket);
-        testSupporter[2] = new Supporter("testUsername3", basket);
+        testSupporter[0] = new Supporter("testUsername", basket, expected_messages);
+        testSupporter[1] = new Supporter("testUsername2", basket, expected_messages);
+        testSupporter[2] = new Supporter("testUsername3", basket, expected_messages);
         when(mockObjectMapper
                 .readValue(new File("doesnt_matter.txt"), Supporter[].class))
                 .thenReturn(testSupporter);
@@ -165,7 +168,7 @@ public class UserFileDAOTests {
     @Test
     public void testLoginUser_failure() throws IOException {
         // Setup
-        Supporter supporter = new Supporter("testUsername4", new Need[0]);
+        Supporter supporter = new Supporter("testUsername4", new Need[0], new NeedMessage[0]);
 
         // Invoke
         boolean result1 = userFileDAO.loginUser(supporter);
@@ -459,6 +462,160 @@ public class UserFileDAOTests {
         // Analyze
         assertThrows(NeedNotFoundException.class, () -> {
             userFileDAO.getBasketOrNormalNeed("");
+        });
+    }
+
+    @Test
+    public void testSendOrUpdateMessageToUser() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        Supporter supporter = testSupporter[0];
+        userFileDAO.loginUser(testSupporter[1]);
+
+        // Invoke
+        userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername());
+        userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername()); // Test send with same need name again
+
+        // Analyze
+        assertEquals(message, supporter.getNeedMessages()[1]);
+    }
+
+    @Test
+    public void testSendOrUpdateMessageToUser_ReceiverNotFound() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        userFileDAO.loginUser(testSupporter[1]);
+
+        // Invoke
+        NeedMessage response = userFileDAO.sendOrUpdateMessageToUser(message, "NOTREALUSER");
+
+        // Analyze
+        assertNull(response);
+    }
+
+    @Test
+    public void testSendOrUpdateMessageToUser_IOException() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        userFileDAO.loginUser(testSupporter[1]);
+        doThrow(new IOException())
+                .when(mockObjectMapper)
+                .writeValue(any(File.class), any(Supporter[].class));
+
+        // Analyze
+        assertThrows(IOException.class, () -> {
+            userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername());
+        });
+    }
+
+    @Test
+    public void testGetMessageToUser() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        userFileDAO.loginUser(testSupporter[1]);
+        userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername());
+
+        // Invoke
+        NeedMessage response = userFileDAO.getMessageToUser(testSupporter[0].getUsername(), message.getNeedName());
+
+        // Analyze
+        assertEquals(message, response);
+    }
+
+    @Test
+    public void testGetMessageToUser_ReceiverNotFound() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        userFileDAO.loginUser(testSupporter[1]);
+        userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername());
+
+        // Invoke
+        NeedMessage response = userFileDAO.getMessageToUser("NOTREALUSER", message.getNeedName());
+
+        // Analyze
+        assertNull(response);
+    }
+
+    @Test
+    public void testGetMessageToUser_NeedNotFound() throws IOException {
+        // Setup
+        NeedMessage message = new NeedMessage("CheeseBell", "testNeed", "testMessage");
+        userFileDAO.loginUser(testSupporter[1]);
+        userFileDAO.sendOrUpdateMessageToUser(message, testSupporter[0].getUsername());
+
+        // Invoke
+        NeedMessage response = userFileDAO.getMessageToUser(testSupporter[0].getUsername(), "NOTREALNEED");
+
+        // Analyze
+        assertNull(response);
+    }
+
+    @Test
+    public void testGetCurMessages() throws IOException, SupporterNotSignedInException {
+        // Setup
+        NeedMessage expected = testSupporter[1].getNeedMessages()[0];
+        userFileDAO.loginUser(testSupporter[1]);
+
+        // Invoke
+        NeedMessage[] response = userFileDAO.getCurMessages();
+
+        // Analyze
+        assertEquals(expected, response[0]);
+    }
+
+    @Test
+    public void testGetCurMessages_SupporterNotSignedIn() throws IOException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.getCurMessages();
+        });
+    }
+
+    @Test
+    public void testDeleteCurMessage() throws IOException, SupporterNotSignedInException {
+        // Setup
+        NeedMessage expected = testSupporter[1].getNeedMessages()[0];
+        userFileDAO.loginUser(testSupporter[1]);
+
+        // Invoke
+        userFileDAO.deleteCurMessage(expected.getNeedName());
+
+        // Analyze
+        assertEquals(0, userFileDAO.getCurMessages().length);
+    }
+
+    @Test
+    public void testDeleteCurMessage_SupporterNotSignedIn() throws IOException {
+        // Analyze
+        assertThrows(SupporterNotSignedInException.class, () -> {
+            userFileDAO.deleteCurMessage("");
+        });
+    }
+
+    @Test
+    public void testDeleteCurMessage_MessageNotFound() throws IOException, SupporterNotSignedInException {
+        // Setup
+        userFileDAO.loginUser(testSupporter[1]);
+
+        // Invoke
+        userFileDAO.deleteCurMessage("NOTREALNEED");
+
+        // Analyze
+        assertEquals(1, userFileDAO.getCurMessages().length);
+    }
+
+    @Test
+    public void testDeleteCurMessage_IOException() throws IOException, SupporterNotSignedInException {
+        // Setup
+        NeedMessage expected = testSupporter[1].getNeedMessages()[0];
+        userFileDAO.loginUser(testSupporter[1]);
+        doThrow(new IOException())
+                .when(mockObjectMapper)
+                .writeValue(any(File.class), any(Supporter[].class));
+
+        // Analyze
+        assertThrows(IOException.class, () -> {
+            userFileDAO.deleteCurMessage(expected.getNeedName());
         });
     }
 }

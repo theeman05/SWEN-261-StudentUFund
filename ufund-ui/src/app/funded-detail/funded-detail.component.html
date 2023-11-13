@@ -1,0 +1,9 @@
+<div *ngIf="message">
+    <h2>Would you like to write a message to {{receiver_username}} for donating '{{need_name}}'?</h2>
+    <div>
+        <label for="msg">Message:</label>
+        <input id="msg" [(ngModel)]="message.message" placeholder="Type something nice..."/>
+    </div>
+    <button type="button" (click)="goBack()">Go Back</button>
+    <button type="button" (click)="updateMessage()">Send / Update Message</button>
+</div>

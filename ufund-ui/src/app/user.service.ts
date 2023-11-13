@@ -8,7 +8,6 @@ import { Need } from './need';
 import { User } from './user';
 import { ErrorService, HttpErrors } from './error.service';
 import { Location } from '@angular/common';
-import { NeedService } from './need.service';
 
 @Injectable({
   providedIn: 'root'

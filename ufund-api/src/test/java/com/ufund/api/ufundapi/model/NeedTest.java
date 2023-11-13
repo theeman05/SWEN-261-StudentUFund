@@ -102,14 +102,25 @@ public class NeedTest {
     }
 
     @Test
-    public void needCompareToGT() {
+    public void needCompare() {
         //setup
         Need need2 = new Need("Need2", 2.0, 1);
+        Need equalNeed = new Need("EqualNeed", 1.0, 1);
+        Need lesserNeed = new Need("GreaterNeed", .5, 1);
+
+        int expected0 = -1;
+        int expected1 = 0;
+        int expected2 = 1;
+        
         //invoke
-        int result = need.compareTo(need2);
-        int expected = -1;
+        int result0 = need.compareTo(need2);
+        int result1 = need.compareTo(equalNeed);
+        int result2 = need.compareTo(lesserNeed);
+
         //analyze
-        assertEquals(expected, result);
+        assertEquals(expected0, result0);
+        assertEquals(expected1, result1);
+        assertEquals(expected2, result2);
     }
 
 }
