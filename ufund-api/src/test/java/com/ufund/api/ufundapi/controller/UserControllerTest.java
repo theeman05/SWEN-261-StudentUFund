@@ -13,6 +13,7 @@ import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.User;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -353,5 +354,88 @@ public class UserControllerTest {
 
         // Analyze
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+    
+    @Test
+    public void testGetInbox() {
+        // Invoke
+        ResponseEntity<NeedMessage[]> response = userController.getInbox();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetInbox_Failure() throws SupporterNotSignedInException {
+        // Setup
+        when(mockUserDAO.getCurMessages()).thenThrow(new SupporterNotSignedInException());
+
+        // Invoke
+        ResponseEntity<NeedMessage[]> response = userController.getInbox();
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void testSendMessage() {
+        // Setup
+        NeedMessage test_message = new NeedMessage("Sender", "TestNeed", "TestMessage");
+
+        // Invoke
+        ResponseEntity<Void> response = userController.sendMessage(test_message, "receiver");
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testSendMessage_Failure() throws IOException{
+        // Setup
+        NeedMessage test_message = new NeedMessage("Sender", "TestNeed", "TestMessage");
+        when(mockUserDAO.sendOrUpdateMessageToUser(test_message, "receiver")).thenThrow(new IOException());
+
+        // Invoke
+        ResponseEntity<Void> response = userController.sendMessage(test_message, "receiver");
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteMessage() {
+        // Invoke
+        ResponseEntity<Void> response = userController.deleteMessage("TestMessage");
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteMessage_Failure() throws IOException, SupporterNotSignedInException{
+        // Setup
+        doThrow(new IOException(), new SupporterNotSignedInException()).when(mockUserDAO).deleteCurMessage("TestMessage");
+
+        // Invoke
+        ResponseEntity<Void> response = userController.deleteMessage("TestMessage");
+        ResponseEntity<Void> response1 = userController.deleteMessage("TestMessage");
+
+        // Analyze
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, response1.getStatusCode());
+    }
+
+    @Test
+    public void testGetMessage() {
+        // Setup
+        NeedMessage expected_message = new NeedMessage("Sender", "TestNeed", "TestMessage");
+        when(mockUserDAO.getMessageToUser("receiver", "TestNeed")).thenReturn(expected_message);
+
+        // Invoke
+        ResponseEntity<NeedMessage> response = userController.getMessage("receiver", "TestNeed");
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected_message, response.getBody());
     }
 }

@@ -162,10 +162,8 @@ public interface UserDAO {
          * 
          * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
          *                                       signed in
-         * 
-         * @throws IOException if an issue with underlying storage
          */
-        NeedMessage[] getCurMessages() throws SupporterNotSignedInException, IOException;
+        NeedMessage[] getCurMessages() throws SupporterNotSignedInException;
 
         /**
          * Sends the given {@linkplain NeedMessage message} to the user with the given username
@@ -190,4 +188,13 @@ public interface UserDAO {
          * @return The {@link NeedMessage message} if successful, null otherwise
          */
         NeedMessage getMessageToUser(String receiverUsername, String needName);
+
+        /**
+         * Deletes the {@linkplain NeedMessage message} if a user is logged in.
+         * 
+         * @param needName The name of the {@linkplain Need need}.
+         * 
+         * @throws IOException if an issue with underlying storage
+         */
+        void deleteCurMessage(String needName) throws SupporterNotSignedInException, IOException;
 }

@@ -326,6 +326,9 @@ public class UserFileDAO implements UserDAO {
         return supporterMessages.values().toArray(new NeedMessage[supporterMessages.size()]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void deleteCurMessage(String needName) throws SupporterNotSignedInException, IOException {
         if (supporterMessages == null)
             throw new SupporterNotSignedInException();
