@@ -10,6 +10,10 @@
   cursor: pointer;
 }
 
+.receipts li:hover {
+  left: .1em;
+}
+
 .receipts a {
   color: var(--primary-text-color);
   text-decoration: none;
@@ -20,6 +24,16 @@
   border-radius: 4px;
   display: block;
   width: 100%;
+}
+
+.receipts a:hover {
+  color: var(--primary-text-color);
+  background-color: var(--highlight-color);
+}
+
+.receipts a:active {
+  background-color: #525252;
+  color: #fafafa;
 }
 
 .receipts .badge {
