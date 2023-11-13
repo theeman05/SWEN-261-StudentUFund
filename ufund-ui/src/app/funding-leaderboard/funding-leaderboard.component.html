@@ -3,7 +3,7 @@
 <ul class="leaderboard">
     <ol>
         <li *ngFor="let entry of funding">
-            <a>
+            <a routerLink="../funded/{{getFundedName(entry)}}">
                 <span class="badge">{{getFundedName(entry)}}</span>Total Funded: ${{getFundedSum(entry)}}
             </a>
         </li>

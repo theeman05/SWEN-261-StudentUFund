@@ -112,7 +112,7 @@ public class NeedReceiptController {
      *          ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @GetMapping("/{supporterUsername}/total") 
-    public ResponseEntity<Double> getUserFundingSum(String supporterUsername) {
+    public ResponseEntity<Double> getUserFundingSum(@PathVariable String supporterUsername) {
         LOG.info("GET /receipts/" + supporterUsername + "/total");
         try {
             return new ResponseEntity<Double>(needReceiptDao.getUserFundingSum(supporterUsername), HttpStatus.OK);

@@ -21,6 +21,7 @@ import { FundingLeaderboardComponent } from './funding-leaderboard/funding-leade
 import { AllFundedComponent } from './all-funded/all-funded.component';
 import { NeedMessagesComponent } from './need-messages/need-messages.component';
 import { FundedDetailComponent } from './funded-detail/funded-detail.component';
+import { SupporterDetailComponent } from './supporter-detail/supporter-detail.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { FundedDetailComponent } from './funded-detail/funded-detail.component';
     AllFundedComponent,
     NeedMessagesComponent,
     FundedDetailComponent,
+    SupporterDetailComponent,
   ],
   imports: [
     BrowserModule,
