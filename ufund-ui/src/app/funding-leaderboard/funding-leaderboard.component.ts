@@ -3,6 +3,7 @@ import { Receipt } from '../receipt';
 import { UserService } from '../user.service';
 import { ErrorService } from '../error.service';
 import { ReceiptService } from '../receipt.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-funding-leaderboard',
@@ -10,12 +11,22 @@ import { ReceiptService } from '../receipt.service';
   styleUrls: ['./funding-leaderboard.component.css']
 })
 export class FundingLeaderboardComponent implements OnInit{
-  receipts: Receipt[] = []
+  funding: String[] = []
 
   constructor(private receiptService: ReceiptService) {}
   
   ngOnInit(): void {
-    this.receiptService.getSortedNeedReceipts()
+    this.getFunding()
+  }
+
+  getFunding() {
+
+    return this.receiptService.getAllUserFunding().subscribe(funding => this.funding = funding)
+  }
+
+  formatFunded(stringEntry: String): String {
+    var splitVar = stringEntry.split("=")
+    return `${splitVar[0]}, Total funded: $${splitVar[1]}`
   }
 
 }

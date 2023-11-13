@@ -3,8 +3,10 @@ package com.ufund.api.ufundapi.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -123,7 +125,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public double getUserFundingSum(String supporterUsername) throws IOException {
+    public Double getUserFundingSum(String supporterUsername) throws IOException {
         NeedReceipt[] supporterReceipts = getReceipts(supporterUsername);
         double sum = 0;
         for (NeedReceipt receipt: supporterReceipts) {
@@ -132,13 +134,31 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         return sum;
     }
 
-    public Map<String, Double> getAllUserFunding() throws IOException {
-        Map<String, Double> userFunding = new HashMap<>();
-
+    /**
+     * {@inheritDoc}
+     */
+    public String[] getSortedUserFunding() throws IOException {
+        Map<String, Double> userFunding = new TreeMap<>();
         for (String username : needReceipts.keySet()) {
             Double userTotal = getUserFundingSum(username);
             userFunding.put(username, userTotal);
         }
-        return userFunding;
+
+        // Create a new TreeMap with a comparator for sorting by values in descending order
+        TreeMap<String, Double> sortedUserFunding = new TreeMap<>(Comparator.comparingDouble(userFunding::get).reversed());
+        sortedUserFunding.putAll(userFunding);
+
+        ArrayList<String> userFundingList = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : sortedUserFunding.entrySet()) {
+            userFundingList.add(entry.toString());
+        }
+
+        String[] userFundingArray = new String[userFundingList.size()];
+        for (int i = 0; i < userFundingList.size(); i++) {
+            userFundingArray[i] = userFundingList.get(i);
+        }
+
+        return userFundingArray;
     }
 }

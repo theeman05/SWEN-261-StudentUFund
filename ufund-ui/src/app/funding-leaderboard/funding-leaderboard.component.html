@@ -1,9 +1,9 @@
 <h2>Leaderboard</h2>
 <h3>Top funders:</h3>
-<ul class="basket">
-    <li *ngFor="let receipt of receipts">
+<ul class="leaderboard">
+    <li *ngFor="let entry of funding">
         <a>
-            <span class="badge">{{receipt.supporter_username}}</span>Total Donations: ${{receipt}}
+            <span class="badge"></span>Username: {{formatFunded(entry)}}
         </a>
     </li>
 </ul>
