@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author Ethan Hartman
  */
-public class NeedReceipt extends Need {
+public class NeedReceipt extends Need{
     static final String STRING_FORMAT = "Need Receipt [supporter username=%s, %s]";
 
     @JsonProperty("supporter_username") protected String supporterUsername;

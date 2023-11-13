@@ -1,6 +1,7 @@
 package com.ufund.api.ufundapi.persistence;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.NeedReceipt;
@@ -59,4 +60,24 @@ public interface NeedReceiptDAO {
      * @throws IOException if an issue with underlying storage
      */
     NeedReceipt createOrUpdateReceipt(Need funded, String supporterUsernam) throws IOException;
+
+    /**
+     * Gets the total funding of a {@linkplain User user} 
+     * 
+     * @param supporterUsername
+     * 
+     * @return Double value of a {@linkplain User user's} total fundings
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    Double getUserFundingSum(String supporterUsername) throws IOException;
+
+    /**
+     * Gets all of the total fundings of all {@linkplain User users} 
+     * 
+     * @return A {@linkplain Map map} of all of the users(key) and their total fundings(value)
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    String[] getSortedUserFunding() throws IOException;
 }

@@ -1,0 +1,12 @@
+<h2>Leaderboard</h2>
+<h3>Top Funders:</h3>
+<ul class="leaderboard">
+    <ol>
+        <li *ngFor="let entry of funding">
+            <a routerLink="../funded/{{getFundedName(entry)}}">
+                <span class="badge">{{getFundedName(entry)}}</span>Total Funded: ${{getFundedSum(entry)}}
+            </a>
+        </li>
+    </ol>
+</ul>
+

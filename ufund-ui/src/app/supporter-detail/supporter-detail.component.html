@@ -1,0 +1,12 @@
+<div *ngIf="userReceipts">
+    <h2>{{username}}'s Funded Needs</h2>
+    <h3>Total Funded: ${{totalFunded}}</h3>
+    <ul class="receipts">
+        <li *ngFor="let receipt of userReceipts">
+            <a>
+                <span class="badge">{{receipt.name}}</span>Total Cost: ${{receipt.cost}}, Quantity: {{receipt.quantity}}
+            </a>
+        </li>
+    </ul>
+    <button type="button" (click)="goBack()">Go Back</button>
+</div>

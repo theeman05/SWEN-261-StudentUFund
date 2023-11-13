@@ -3,6 +3,7 @@ package com.ufund.api.ufundapi.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
+import com.ufund.api.ufundapi.model.NeedMessage;
 import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
@@ -40,6 +42,7 @@ public class UserFileDAO implements UserDAO {
 
     private User curUser; // The current user logged in
     Map<String, Need> supporterBasket; // The current supporter's basket of needs
+    Map<String, NeedMessage> supporterMessages; // The current supporter's messages
 
     private NeedDAO needDao;
     private NeedReceiptDAO needReceiptDao;
@@ -112,6 +115,7 @@ public class UserFileDAO implements UserDAO {
         Supporter supporter = (Supporter) curUser;
         synchronized (supporters) {
             supporter.setFundingBasket(supporterBasket.values().toArray(new Need[supporterBasket.size()]));
+            supporter.setNeedMessages(supporterMessages.values().toArray(new NeedMessage[supporterMessages.size()]));
             save(); // may throw an IOException
         }
     }
@@ -142,6 +146,7 @@ public class UserFileDAO implements UserDAO {
      */
     public void logoutCurUser() {
         supporterBasket = null;
+        supporterMessages = null;
         curUser = null;
     }
 
@@ -189,9 +194,13 @@ public class UserFileDAO implements UserDAO {
         logoutCurUser();
         if (!user.isAdmin()) {
             // If the user is in the system
-            if (supporters.containsKey(user.getUsername())) 
-                getAndUpdateSupporterBasket((Supporter) user);
-            else
+            if (supporters.containsKey(user.getUsername())) {
+                Supporter supporter = supporters.get(user.getUsername());
+                supporterMessages = new HashMap<>();
+                for (NeedMessage message : supporter.getNeedMessages())
+                    supporterMessages.put(message.getNeedName(), message);
+                getAndUpdateSupporterBasket(supporter);
+            }else
                 return false;
         }
         curUser = user;
@@ -306,5 +315,61 @@ public class UserFileDAO implements UserDAO {
         }
 
         return basketable.toArray(new Need[basketable.size()]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public NeedMessage[] getCurMessages() throws SupporterNotSignedInException {
+        if (supporterMessages == null)
+            throw new SupporterNotSignedInException();
+        return supporterMessages.values().toArray(new NeedMessage[supporterMessages.size()]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void deleteCurMessage(String needName) throws SupporterNotSignedInException, IOException {
+        if (supporterMessages == null)
+            throw new SupporterNotSignedInException();
+        supporterMessages.remove(needName);
+        updateCurSupporter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public NeedMessage sendOrUpdateMessageToUser(NeedMessage message, String receiverUsername)
+            throws IOException {
+        Supporter receiver = (Supporter) supporters.get(receiverUsername);
+        if (receiver == null)
+            return null;
+
+        ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
+        for (NeedMessage compareMsg : receiverMessages)
+            if (compareMsg.getNeedName().equals(message.getNeedName())){
+                receiverMessages.remove(compareMsg);
+                break;
+            }
+        
+        receiverMessages.add(message);
+        receiver.setNeedMessages(receiverMessages.toArray(new NeedMessage[receiverMessages.size()]));
+        save();
+
+        return message;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public NeedMessage getMessageToUser(String receiverUsername, String needName) {
+        Supporter receiver = (Supporter) supporters.get(receiverUsername);
+        if (receiver == null)
+            return null;
+        ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
+        for (NeedMessage compareMsg : receiverMessages)
+            if (compareMsg.getNeedName().equals(needName))
+                return compareMsg;
+        return null;
     }
 }

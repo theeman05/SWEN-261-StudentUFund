@@ -1,0 +1,9 @@
+<h2>Funded Needs</h2>
+
+<ul class="receipts">
+  <li *ngFor="let receipt of receipts">
+    <a routerLink="../funded/{{receipt.supporter_username}}/{{receipt.name}}">
+      <span class="badge">{{receipt.name}}</span>Funded By: {{receipt.supporter_username}}, Total Cost: ${{receipt.cost}}, Quantity: {{receipt.quantity}}
+    </a>
+  </li>
+</ul>

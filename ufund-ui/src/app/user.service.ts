@@ -8,7 +8,6 @@ import { Need } from './need';
 import { User } from './user';
 import { ErrorService, HttpErrors } from './error.service';
 import { Location } from '@angular/common';
-import { NeedService } from './need.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +24,10 @@ export class UserService {
   loginUser(user: User): Observable<User> {
     return this.http.get<User>(`${this.userUrl}/${user.username}`)
       .pipe(catchError(this.handleError<User>('loginUser')));
+  }
+
+  signupUser(user: User): Observable<User> {
+    return this.http.post<User>(this.userUrl, user.username, this.httpOptions).pipe(catchError(this.handleError<User>('signupUser')));
   }
 
   /** Logout current user */
@@ -101,6 +104,9 @@ export class UserService {
             break;
           case 'checkout':
             display_message = "Checkout failed!";
+            break;
+          case 'signupUser':
+            display_message = "Username already exists!";
             break;
           default:
             display_message = "Unknown error!";

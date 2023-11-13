@@ -1,5 +1,3 @@
-// error.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { ErrorService } from '../error.service';
 

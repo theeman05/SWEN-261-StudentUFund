@@ -1,0 +1,11 @@
+<h2>Messages</h2>
+
+<ul class="messages">
+  <li *ngFor="let message of messages">
+    <a>
+      <span class="badge">{{message.sender_username}}</span>Message for funding '{{message.need_name}}': {{message.message}}
+    </a>
+    <button type="button" class="delete" title="delete need"
+      (click)="deleteMessage(message)">x</button>
+  </li>
+</ul>

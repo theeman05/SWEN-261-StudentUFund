@@ -9,8 +9,10 @@ import { User } from '../user';
 })
 export class LoginComponent {
   private static ADMIN_USERNAME = "admin";
-  userName: string
-  constructor(private userService: UserService) { this.userName = "test" }
+  errorMessage: string = '';
+  userName: string = '';
+
+  constructor(private userService: UserService) {}
 
   login(username: string): void {
     this.userName = username
@@ -25,5 +27,16 @@ export class LoginComponent {
           window.location.href = "/supporter/needs";
       }
     });
+  }
+
+  signup(username: string): void {
+    username = username.trim();
+    if (!username) { return; }
+    this.userService.signupUser({ username } as User).subscribe(user => {if (user) this.login(username)});
+  }
+
+  verifyKeyPressed(ev: KeyboardEvent, username: string): void {
+    if (ev.key == "Enter")
+      this.login(username)
   }
 }
