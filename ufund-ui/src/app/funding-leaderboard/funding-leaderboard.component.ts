@@ -20,13 +20,14 @@ export class FundingLeaderboardComponent implements OnInit{
   }
 
   getFunding() {
-
     return this.receiptService.getAllUserFunding().subscribe(funding => this.funding = funding)
   }
 
-  formatFunded(stringEntry: String): String {
-    var splitVar = stringEntry.split("=")
-    return `${splitVar[0]}, Total funded: $${splitVar[1]}`
+  getFundedName(stringEntry: String): String {
+    return stringEntry.split("=")[0]
   }
 
+  getFundedSum(stringEntry: String): String {
+    return stringEntry.split("=")[1]
+  }
 }

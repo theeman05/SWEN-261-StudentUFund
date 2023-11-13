@@ -28,7 +28,8 @@ const routes: Routes = [
       { path: 'create', component: NeedCreateComponent },
       { path: 'detail/:name', component: NeedDetailComponent },
       { path: 'funded-needs', component: AllFundedComponent },
-      { path: 'funded/:to_username/:need_name', component: FundedDetailComponent }
+      { path: 'funded/:to_username/:need_name', component: FundedDetailComponent },
+      { path: 'leaderboard', component: FundingLeaderboardComponent }
     ]
   },
   { path: 'supporter',
