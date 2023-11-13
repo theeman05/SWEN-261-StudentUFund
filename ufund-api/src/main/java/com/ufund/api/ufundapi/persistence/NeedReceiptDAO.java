@@ -61,7 +61,23 @@ public interface NeedReceiptDAO {
      */
     NeedReceipt createOrUpdateReceipt(Need funded, String supporterUsernam) throws IOException;
 
-    double getUserFundingSum(String supporterUsername) throws IOException;
+    /**
+     * Gets the total funding of a {@linkplain User user} 
+     * 
+     * @param supporterUsername
+     * 
+     * @return Double value of a {@linkplain User user's} total fundings
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
+    Double getUserFundingSum(String supporterUsername) throws IOException;
 
+    /**
+     * Gets all of the total fundings of all {@linkplain User users} 
+     * 
+     * @return A {@linkplain Map map} of all of the users(key) and their total fundings(value)
+     * 
+     * @throws IOException if an issue with underlying storage
+     */
     Map<String, Double> getSortedUserFunding() throws IOException;
 }

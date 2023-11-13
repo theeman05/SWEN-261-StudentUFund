@@ -125,7 +125,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public double getUserFundingSum(String supporterUsername) throws IOException {
+    public Double getUserFundingSum(String supporterUsername) throws IOException {
         NeedReceipt[] supporterReceipts = getReceipts(supporterUsername);
         double sum = 0;
         for (NeedReceipt receipt: supporterReceipts) {

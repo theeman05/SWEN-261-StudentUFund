@@ -103,6 +103,14 @@ public class NeedReceiptController {
         }
     }
 
+    /**
+     * Responds to the GET request to retrieve the total of all of the funding a user has done
+     * 
+     * @param supporterUsername
+     * @return ResponseEntity with a Double funding value and HTTP status of OK
+     *          <br>
+     *          ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
     @GetMapping("/{supporterUsername}/total") 
     public ResponseEntity<Double> getUserFundingSum(String supporterUsername) {
         LOG.info("GET /receipts/" + supporterUsername + "/total");
@@ -114,6 +122,14 @@ public class NeedReceiptController {
         }
     }
 
+    /**
+     * Responds to the GET request to retrieve a {@linkplain Map} containing every users total funding amount
+     * 
+     * @param supporterUsername
+     * @return ResponseEntity with a {@linkplain Map} with supporter usernames as keys and funding totals as values
+     *          <br>
+     *          ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
+     */
     @GetMapping("/allUsersFunding") 
     public ResponseEntity<Map<String, Double>> getSortedUserFunding() {
         LOG.info("GET /receipts/allUsersFunding");
