@@ -9,7 +9,8 @@ import { User } from '../user';
 })
 export class LoginComponent {
   private static ADMIN_USERNAME = "admin";
-  userName: string
+  userName: string;
+
   constructor(private userService: UserService) { this.userName = "test" }
 
   login(username: string): void {
@@ -25,5 +26,10 @@ export class LoginComponent {
           window.location.href = "/supporter/needs";
       }
     });
+  }
+
+  verifyKeyPressed(ev: KeyboardEvent, username: string): void {
+    if (ev.key == "Enter")
+      this.login(username)
   }
 }

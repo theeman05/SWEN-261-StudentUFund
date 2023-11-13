@@ -1,7 +1,7 @@
 <div>
     <h2>User Login</h2>
     <label>Username: </label>
-    <input #username>
+    <input #username (keypress)="verifyKeyPressed($event, username.value)">
     <br>
-    <button type="button" (click)="login(username.value); username.value=''">Login</button>
+    <button type="button" (click)="login(username.value)">Login</button>
 </div>
