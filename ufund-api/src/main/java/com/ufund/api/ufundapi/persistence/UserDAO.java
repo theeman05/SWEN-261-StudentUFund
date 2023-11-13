@@ -188,8 +188,6 @@ public interface UserDAO {
          * @param needName The name of the {@linkplain Need need}.
          * 
          * @return The {@link NeedMessage message} if successful, null otherwise
-         * 
-         * @throws IOException if an issue with underlying storage
          */
-        NeedMessage getMessageToUser(String receiverUsername, String needName) throws IOException;
+        NeedMessage getMessageToUser(String receiverUsername, String needName);
 }

@@ -195,8 +195,11 @@ public class UserFileDAO implements UserDAO {
         if (!user.isAdmin()) {
             // If the user is in the system
             if (supporters.containsKey(user.getUsername())) {
+                Supporter supporter = supporters.get(user.getUsername());
                 supporterMessages = new HashMap<>();
-                getAndUpdateSupporterBasket((Supporter) user);
+                for (NeedMessage message : supporter.getNeedMessages())
+                    supporterMessages.put(message.getNeedName(), message);
+                getAndUpdateSupporterBasket(supporter);
             }else
                 return false;
         }
@@ -317,10 +320,17 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public NeedMessage[] getCurMessages() throws SupporterNotSignedInException, IOException {
+    public NeedMessage[] getCurMessages() throws SupporterNotSignedInException {
         if (supporterMessages == null)
             throw new SupporterNotSignedInException();
         return supporterMessages.values().toArray(new NeedMessage[supporterMessages.size()]);
+    }
+
+    public void deleteCurMessage(String needName) throws SupporterNotSignedInException, IOException {
+        if (supporterMessages == null)
+            throw new SupporterNotSignedInException();
+        supporterMessages.remove(needName);
+        updateCurSupporter();
     }
 
     /**
@@ -331,13 +341,17 @@ public class UserFileDAO implements UserDAO {
         Supporter receiver = (Supporter) supporters.get(receiverUsername);
         if (receiver == null)
             return null;
-        ArrayList<NeedMessage> receiverMessages = (ArrayList<NeedMessage>) Arrays.asList(receiver.getNeedMessages());
 
+        ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
         for (NeedMessage compareMsg : receiverMessages)
-            if (compareMsg.getNeedName() == message.getNeedName())
+            if (compareMsg.getNeedName() == message.getNeedName()){
                 receiverMessages.remove(compareMsg);
+                break;
+            }
         
         receiverMessages.add(message);
+        receiver.setNeedMessages(receiverMessages.toArray(new NeedMessage[receiverMessages.size()]));
+        save();
 
         return message;
     }
@@ -345,16 +359,14 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public NeedMessage getMessageToUser(String receiverUsername, String needName)
-            throws IOException {
+    public NeedMessage getMessageToUser(String receiverUsername, String needName) {
         Supporter receiver = (Supporter) supporters.get(receiverUsername);
         if (receiver == null)
             return null;
-        ArrayList<NeedMessage> receiverMessages = (ArrayList<NeedMessage>) Arrays.asList(receiver.getNeedMessages());
+        ArrayList<NeedMessage> receiverMessages = new ArrayList<>(Arrays.asList(receiver.getNeedMessages()));
         for (NeedMessage compareMsg : receiverMessages)
             if (compareMsg.getNeedName() == needName)
                 return compareMsg;
-        
         return null;
     }
 }

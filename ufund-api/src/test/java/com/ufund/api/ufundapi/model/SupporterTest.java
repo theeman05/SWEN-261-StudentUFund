@@ -63,4 +63,19 @@ public class SupporterTest {
         // Analyze
         assertEquals(expected_string, actual_string);
     }
+
+    @Test
+    public void testGetNeedMessages() {
+        // Setup
+        String username = "CoolSupporter";
+        Need[] funding_basket = new Need[]{new Need("Cheese", 1, 1), new Need("Bread", 1, 1)};
+        NeedMessage[] expected_messages = new NeedMessage[]{new NeedMessage("CoolSupporter", "Cheese", "I like cheese")};
+        Supporter supporter = new Supporter(username, funding_basket, expected_messages);
+
+        // Invoke
+        NeedMessage[] actual_messages = supporter.getNeedMessages();
+
+        // Analyze
+        assertEquals(expected_messages, actual_messages);
+    }
 }

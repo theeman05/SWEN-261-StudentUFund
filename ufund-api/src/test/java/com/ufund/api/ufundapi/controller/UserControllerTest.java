@@ -328,4 +328,30 @@ public class UserControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response2.getStatusCode());
         assertEquals(HttpStatus.FORBIDDEN, response3.getStatusCode());
     }
+
+    @Test
+    public void testGetCurUser() throws SupporterNotSignedInException {
+        // Setup
+        User expected_user = new User("TestUser");
+        when(mockUserDAO.getCurUser()).thenReturn(expected_user);
+
+        // Invoke
+        ResponseEntity<User> response = userController.getCurUser();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected_user, response.getBody());
+    }
+
+    @Test
+    public void testGetCurUser_Failure() throws SupporterNotSignedInException {
+        // Setup
+        when(mockUserDAO.getCurUser()).thenThrow(new SupporterNotSignedInException());
+
+        // Invoke
+        ResponseEntity<User> response = userController.getCurUser();
+
+        // Analyze
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
 }
