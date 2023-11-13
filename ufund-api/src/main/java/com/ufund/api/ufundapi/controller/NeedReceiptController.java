@@ -131,10 +131,10 @@ public class NeedReceiptController {
      *          ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @GetMapping("/allUsersFunding") 
-    public ResponseEntity<Map<String, Double>> getSortedUserFunding() {
+    public ResponseEntity<String[]> getSortedUserFunding() {
         LOG.info("GET /receipts/allUsersFunding");
         try {
-            return new ResponseEntity<Map<String, Double>>(needReceiptDao.getSortedUserFunding(), HttpStatus.OK);
+            return new ResponseEntity<String[]>(needReceiptDao.getSortedUserFunding(), HttpStatus.OK);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -126,4 +126,14 @@ public class NeedReceiptControllerTest {
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
+
+    @Test
+    public void testGetUserFundingSum() {
+        
+    }
+
+    @Test
+    public void testGetSortedUserFunding() {
+        
+    }
 }

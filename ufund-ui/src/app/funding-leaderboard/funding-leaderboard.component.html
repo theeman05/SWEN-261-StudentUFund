@@ -1,9 +1,9 @@
 <h2>Leaderboard</h2>
 <h3>Top funders:</h3>
-<ul class="basket">
-    <li *ngFor="let entry of funding | keyvalue">
+<ul class="leaderboard">
+    <li *ngFor="let entry of funding">
         <a>
-            <span class="badge"></span>Username: {{ entry.key }}, Total Donations: ${{ entry.value }}
+            <span class="badge"></span>Username: {{formatFunded(entry)}}
         </a>
     </li>
 </ul>

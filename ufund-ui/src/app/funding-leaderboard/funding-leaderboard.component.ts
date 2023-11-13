@@ -11,9 +11,7 @@ import { map } from 'rxjs';
   styleUrls: ['./funding-leaderboard.component.css']
 })
 export class FundingLeaderboardComponent implements OnInit{
-  funding: Map<String, number> = new Map
-  usernames: IterableIterator<String> = this.funding.keys() 
-  
+  funding: String[] = []
 
   constructor(private receiptService: ReceiptService) {}
   
@@ -22,7 +20,13 @@ export class FundingLeaderboardComponent implements OnInit{
   }
 
   getFunding() {
+
     return this.receiptService.getAllUserFunding().subscribe(funding => this.funding = funding)
+  }
+
+  formatFunded(stringEntry: String): String {
+    var splitVar = stringEntry.split("=")
+    return `${splitVar[0]}, Total funded: $${splitVar[1]}`
   }
 
 }

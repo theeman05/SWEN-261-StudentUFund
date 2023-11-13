@@ -79,5 +79,5 @@ public interface NeedReceiptDAO {
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Map<String, Double> getSortedUserFunding() throws IOException;
+    String[] getSortedUserFunding() throws IOException;
 }

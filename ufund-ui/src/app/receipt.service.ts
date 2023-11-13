@@ -40,8 +40,8 @@ export class ReceiptService {
     return this.http.get<number>(url)
   }
 
-  getAllUserFunding(): Observable<Map<String, number>> {
+  getAllUserFunding(): Observable<String[]> {
     const url = `${this.receiptsUrl}/allUsersFunding`
-    return this.http.get<Map<String, number>>(url)
+    return this.http.get<String[]>(url)
   }
 }

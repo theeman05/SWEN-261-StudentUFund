@@ -134,13 +134,31 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
         return sum;
     }
 
-    public Map<String, Double> getSortedUserFunding() throws IOException {
+    /**
+     * {@inheritDoc}
+     */
+    public String[] getSortedUserFunding() throws IOException {
         Map<String, Double> userFunding = new TreeMap<>();
         for (String username : needReceipts.keySet()) {
             Double userTotal = getUserFundingSum(username);
             userFunding.put(username, userTotal);
         }
-        userFunding = new TreeMap<>(Comparator.comparingDouble(userFunding::get).reversed());
-        return userFunding;
+
+        // Create a new TreeMap with a comparator for sorting by values in descending order
+        TreeMap<String, Double> sortedUserFunding = new TreeMap<>(Comparator.comparingDouble(userFunding::get).reversed());
+        sortedUserFunding.putAll(userFunding);
+
+        ArrayList<String> userFundingList = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : sortedUserFunding.entrySet()) {
+            userFundingList.add(entry.toString());
+        }
+
+        String[] userFundingArray = new String[userFundingList.size()];
+        for (int i = 0; i < userFundingList.size(); i++) {
+            userFundingArray[i] = userFundingList.get(i);
+        }
+
+        return userFundingArray;
     }
 }
