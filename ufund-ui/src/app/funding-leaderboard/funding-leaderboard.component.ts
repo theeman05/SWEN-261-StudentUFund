@@ -13,6 +13,7 @@ import { map } from 'rxjs';
 export class FundingLeaderboardComponent implements OnInit{
   funding: Map<String, number> = new Map
   usernames: IterableIterator<String> = this.funding.keys() 
+  
 
   constructor(private receiptService: ReceiptService) {}
   
@@ -21,7 +22,7 @@ export class FundingLeaderboardComponent implements OnInit{
   }
 
   getFunding() {
-    return this.receiptService.getAllUserFunding()
+    return this.receiptService.getAllUserFunding().subscribe(funding => this.funding = funding)
   }
 
 }
