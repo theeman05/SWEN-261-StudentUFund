@@ -350,7 +350,7 @@ public class UserController {
      * @return ResponseEntity with an HTTP status of OK if the message was sent<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
-    @GetMapping("{receiver}/inbox/{needName}")
+    @GetMapping("/{receiver}/inbox/{needName}")
     public ResponseEntity<NeedMessage> getMessage(@PathVariable String receiver, @PathVariable String needName) {
         LOG.info("GET " + receiver + "/inbox/" + needName);
         return new ResponseEntity<>(userDAO.getMessageToUser(receiver, needName), HttpStatus.OK);
