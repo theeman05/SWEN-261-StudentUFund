@@ -9,12 +9,15 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import javax.management.openmbean.KeyAlreadyExistsException;
+
 import com.ufund.api.ufundapi.persistence.UserDAO;
 import com.ufund.api.ufundapi.exceptions.NeedNotFoundException;
 import com.ufund.api.ufundapi.exceptions.SupporterNotSignedInException;
 import com.ufund.api.ufundapi.model.BasketNeed;
 import com.ufund.api.ufundapi.model.Need;
 import com.ufund.api.ufundapi.model.NeedMessage;
+import com.ufund.api.ufundapi.model.Supporter;
 import com.ufund.api.ufundapi.model.User;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -438,5 +441,34 @@ public class UserControllerTest {
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expected_message, response.getBody());
+    }
+
+    @Test
+    public void testSignup() throws KeyAlreadyExistsException, IOException {
+        //Setup
+        Supporter newSupporter = new Supporter("NewUser", null, null);
+        when(mockUserDAO.createSupporter(any())).thenReturn(newSupporter);
+
+        // Invoke
+        ResponseEntity<Supporter> response = userController.createSupporter(newSupporter.getUsername());
+
+        // Analyze
+        assertEquals(newSupporter, response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    public void testSignup_Exists() throws KeyAlreadyExistsException, IOException {
+        //Setup
+        Supporter newSupporter = new Supporter("NewUser", null, null);
+        when(mockUserDAO.createSupporter(any())).thenThrow(new KeyAlreadyExistsException(), new IOException());
+
+        // Invoke
+        ResponseEntity<Supporter> response = userController.createSupporter(newSupporter.getUsername());
+        ResponseEntity<Supporter> response1 = userController.createSupporter(newSupporter.getUsername());
+
+        // Analyze
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response1.getStatusCode());
     }
 }

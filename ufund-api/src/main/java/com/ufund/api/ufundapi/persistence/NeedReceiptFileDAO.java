@@ -71,7 +71,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public NeedReceipt[] getReceipts() throws IOException {
+    public NeedReceipt[] getReceipts() {
         ArrayList<NeedReceipt> receiptList = new ArrayList<>();
 
         for (Map<String, NeedReceipt> userValue : needReceipts.values())
@@ -84,7 +84,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public NeedReceipt[] getReceipts(String supporterUsername) throws IOException {
+    public NeedReceipt[] getReceipts(String supporterUsername) {
         if (!needReceipts.containsKey(supporterUsername))
             return new NeedReceipt[0];
 
@@ -94,7 +94,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public NeedReceipt getReceipt(String needName, String supporterUsername) throws IOException {
+    public NeedReceipt getReceipt(String needName, String supporterUsername) {
         if (!needReceipts.containsKey(supporterUsername) || !needReceipts.get(supporterUsername).containsKey(needName))
             return null;
 
@@ -125,7 +125,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public Double getUserFundingSum(String supporterUsername) throws IOException {
+    public double getUserFundingSum(String supporterUsername) {
         NeedReceipt[] supporterReceipts = getReceipts(supporterUsername);
         double sum = 0;
         for (NeedReceipt receipt: supporterReceipts) {
@@ -137,7 +137,7 @@ public class NeedReceiptFileDAO implements NeedReceiptDAO {
     /**
      * {@inheritDoc}
      */
-    public String[] getSortedUserFunding() throws IOException {
+    public String[] getSortedUserFunding() {
         Map<String, Double> userFunding = new TreeMap<>();
         for (String username : needReceipts.keySet()) {
             Double userTotal = getUserFundingSum(username);

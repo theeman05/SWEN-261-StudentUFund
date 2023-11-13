@@ -152,4 +152,34 @@ public class NeedReceiptFileDAOTest {
         assertEquals(10, actualReceipt.getCost());
         assertEquals(2, actualReceipt.getQuantity());
     }
+
+    @Test
+    public void testGetUserFundSum() {
+        // Setup
+        String supporterUsername = testReceipts[0].getSupporterUsername();
+        double expected_sum = testReceipts[0].getCost();
+        
+        // Invoke
+        double sum = needReceiptFileDAO.getUserFundingSum(supporterUsername);
+        
+        // Analyze
+        assertEquals(expected_sum, sum);
+    }
+
+    @Test
+    public void testGetSortedUserFunding() {
+        // Setup
+        String[] expected_sorting = new String[]{
+            "testUsername3=49.0",
+            "testUsername=5.0",
+            "testUsername2=5.0"
+        };
+        
+        // Invoke
+        String[] result_sorted = needReceiptFileDAO.getSortedUserFunding();
+        
+        // Analyze
+        for (int i = 0; i < result_sorted.length; i++)
+            assertEquals(expected_sorting[i], result_sorted[i]);
+    }
 }

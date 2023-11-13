@@ -60,11 +60,8 @@ public class NeedReceiptControllerTest {
 
         // Invoke
         ResponseEntity<NeedReceipt> response = needReceiptController.getNeedReceipt(supporterUsername, needName);
-        doThrow(new IOException()).when(mockNeedReceiptDao).getReceipt(needName, supporterUsername);
-        ResponseEntity<NeedReceipt> io_response = needReceiptController.getNeedReceipt(supporterUsername, needName);
-
+        
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, io_response.getStatusCode());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -115,25 +112,31 @@ public class NeedReceiptControllerTest {
     }
 
     @Test
-    public void testGetNeedReceiptsByUsername_Failure() throws IOException {
+    public void testGetUserFundingSum() throws IOException {
         // Setup
-        String supporterUsername = "TestUsername";
-        doThrow(new IOException()).when(mockNeedReceiptDao).getReceipts(supporterUsername);
+        String supporterName = "TEst";
+        double expected_sum = 123;
+        when(mockNeedReceiptDao.getUserFundingSum(supporterName)).thenReturn(expected_sum);
 
         // Invoke
-        ResponseEntity<NeedReceipt[]> response = needReceiptController.getNeedReceipts(supporterUsername);
+        ResponseEntity<Double> response = needReceiptController.getUserFundingSum(supporterName);
 
         // Analyze
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected_sum, response.getBody());
     }
 
     @Test
-    public void testGetUserFundingSum() {
-        
-    }
+    public void testGetSortedUserFunding() throws IOException {
+        // Setup
+        String[] expected_user_funding = new String[]{"John"};
+        when(mockNeedReceiptDao.getSortedUserFunding()).thenReturn(expected_user_funding);
 
-    @Test
-    public void testGetSortedUserFunding() {
-        
+        // Invoke
+        ResponseEntity<String[]> response = needReceiptController.getSortedUserFunding();
+
+        // Analyze
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected_user_funding, response.getBody());
     }
 }

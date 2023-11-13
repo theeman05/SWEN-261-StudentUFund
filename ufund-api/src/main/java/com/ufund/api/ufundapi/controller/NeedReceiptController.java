@@ -55,16 +55,11 @@ public class NeedReceiptController {
     @GetMapping("/{supporterUsername}/{name}")
     public ResponseEntity<NeedReceipt> getNeedReceipt(@PathVariable String supporterUsername, @PathVariable String name) {
         LOG.info("GET /receipts/" + supporterUsername + "/" + name);
-        try {
-            NeedReceipt needReceipt = needReceiptDao.getReceipt(name, supporterUsername);
-            if (needReceipt != null)
-                return new ResponseEntity<>(needReceipt, HttpStatus.OK);
-            else 
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        NeedReceipt needReceipt = needReceiptDao.getReceipt(name, supporterUsername);
+        if (needReceipt != null)
+            return new ResponseEntity<>(needReceipt, HttpStatus.OK);
+        else 
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -95,12 +90,7 @@ public class NeedReceiptController {
     @GetMapping("/{supporterUsername}")
     public ResponseEntity<NeedReceipt[]> getNeedReceipts(@PathVariable String supporterUsername) {
         LOG.info("GET /receipts/" + supporterUsername);
-        try {
-            return new ResponseEntity<>(needReceiptDao.getReceipts(supporterUsername), HttpStatus.OK);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(needReceiptDao.getReceipts(supporterUsername), HttpStatus.OK);
     }
 
     /**
@@ -114,12 +104,7 @@ public class NeedReceiptController {
     @GetMapping("/{supporterUsername}/total") 
     public ResponseEntity<Double> getUserFundingSum(@PathVariable String supporterUsername) {
         LOG.info("GET /receipts/" + supporterUsername + "/total");
-        try {
-            return new ResponseEntity<Double>(needReceiptDao.getUserFundingSum(supporterUsername), HttpStatus.OK);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<Double>(needReceiptDao.getUserFundingSum(supporterUsername), HttpStatus.OK);
     }
 
     /**
@@ -133,11 +118,6 @@ public class NeedReceiptController {
     @GetMapping("/allUsersFunding") 
     public ResponseEntity<String[]> getSortedUserFunding() {
         LOG.info("GET /receipts/allUsersFunding");
-        try {
-            return new ResponseEntity<String[]>(needReceiptDao.getSortedUserFunding(), HttpStatus.OK);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<String[]>(needReceiptDao.getSortedUserFunding(), HttpStatus.OK);
     }
 }

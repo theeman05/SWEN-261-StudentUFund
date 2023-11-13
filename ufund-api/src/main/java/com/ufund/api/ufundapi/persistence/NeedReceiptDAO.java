@@ -28,10 +28,8 @@ public interface NeedReceiptDAO {
      * @param supporterUsername The username of the {@link Supporter supporter} whose {@link Need needs} to get
      * 
      * @return An array of {@link Need need} objects, may be empty
-     * 
-     * @throws IOException if an issue with underlying storage
      */
-    NeedReceipt[] getReceipts(String supporterUsername) throws IOException;
+    NeedReceipt[] getReceipts(String supporterUsername);
 
     /**
      * Retrieves a {@linkplain NeedReceipt needReceipt} with the given name and supporter username
@@ -43,10 +41,8 @@ public interface NeedReceiptDAO {
      * @return a {@link NeedReceipt needReceipt} object with the matching name and supporter
      *         <br>
      *         null if no {@link NeedReceipt needReceipt} with a matching name and supporter is found
-     * 
-     * @throws IOException if an issue with underlying storage
      */
-    NeedReceipt getReceipt(String needName, String supporterUsername) throws IOException;
+    NeedReceipt getReceipt(String needName, String supporterUsername);
 
     /**
      * Creates or updates then saves a {@linkplain NeedReceipt needReceipt}
@@ -70,14 +66,12 @@ public interface NeedReceiptDAO {
      * 
      * @throws IOException if an issue with underlying storage
      */
-    Double getUserFundingSum(String supporterUsername) throws IOException;
+    double getUserFundingSum(String supporterUsername);
 
     /**
      * Gets all of the total fundings of all {@linkplain User users} 
      * 
      * @return A {@linkplain Map map} of all of the users(key) and their total fundings(value)
-     * 
-     * @throws IOException if an issue with underlying storage
      */
-    String[] getSortedUserFunding() throws IOException;
+    String[] getSortedUserFunding();
 }
