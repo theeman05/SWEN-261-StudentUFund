@@ -139,6 +139,10 @@ We can see single responsibility, as we have our controllers, persistence, and m
 Principle 2: Law of Demeter
 We see the law of Demeter when analyzing the controllers. The two controllers, UserController and NeedController only have access to their specific DAO class, UserDAO or NeedDAO. These controllers are then accessed by their specific Angular service, user service and need service.
 
+Principle 3: High Cohesion
+All of our classes are named according to their functionality, similarly, they use other classes which have related functionality.
+For example, if we look at the NeedFileDAO, we can see that this handles all persistence of Need objects
+
 > _**[Sprint 3 & 4]** OO Design Principles should span across **all tiers.**_
 
 ## Static Code Analysis/Future Design Improvements
@@ -161,12 +165,16 @@ We see the law of Demeter when analyzing the controllers. The two controllers, U
 > acceptance testing and if there are any concerns._
 Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
 
+Sprint 3: 30/34 acceptance criteria passing tests, 2 of which were old acceptance criteria which should have been updated, but they weren't, resulting in failed tests. For the last 2, the testing team couldn't figure out how to use the search bar. However, if used correctly, the acceptance criteria do pass.
+
 ### Unit Testing and Code Coverage
 > _**[Sprint 4]** Discuss your unit testing strategy. Report on the code coverage
 > achieved from unit testing of the code base. Discuss the team's
 > coverage targets, why you selected those values, and how well your
 > code coverage met your targets._
 Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
+
+Sprint 3: 100% code coverage, no missing instructions and no missing branches.
 ![](jacoco-sprint-3.png)
 
 >_**[Sprint 2 & 4]** **Include images of your code coverage report.** If there are any anomalies, discuss
