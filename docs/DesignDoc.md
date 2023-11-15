@@ -167,7 +167,7 @@ Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found
 > coverage targets, why you selected those values, and how well your
 > code coverage met your targets._
 Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
-![](jacoco-sprint-2.png)
+![](jacoco-sprint-3.png)
 
 >_**[Sprint 2 & 4]** **Include images of your code coverage report.** If there are any anomalies, discuss
 > those._
