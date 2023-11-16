@@ -41,8 +41,8 @@ export class FundedDetailComponent {
 
   updateMessage(): void {
     if (this.message) {
-      if (this.message.message)
-        this.messagesService.sendMessage(this.message.message, this.need_name, this.receiver_username).subscribe(() => this.goBack());
+      if (this.message.message.trim())
+        this.messagesService.sendMessage(this.message.message.trim(), this.need_name, this.receiver_username).subscribe(() => this.goBack());
       else
         this.errorService.showError("Please enter a message.");
     }
