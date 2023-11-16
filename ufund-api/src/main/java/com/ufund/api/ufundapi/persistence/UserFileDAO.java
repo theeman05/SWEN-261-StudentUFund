@@ -170,6 +170,7 @@ public class UserFileDAO implements UserDAO {
             if (matchedNeed != null){
                 // Set quantity to be based on the avaliable quantity in the cupboard
                 need.setQuantity(Math.min(matchedNeed.getQuantity(), need.getQuantity()));
+                need.setCost(matchedNeed.getCost());
                 supporterBasket.put(need.getName(), need);
             }else
                 removedNeed = true;
