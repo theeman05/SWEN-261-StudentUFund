@@ -255,29 +255,38 @@ public class UserFileDAO implements UserDAO {
     /**
      * {@inheritDoc}
      */
-    public void checkoutCurBasket() throws SupporterNotSignedInException, IOException {
+    public boolean checkoutCurBasket() throws SupporterNotSignedInException, IOException {
         if (supporterBasket == null)
             throw new SupporterNotSignedInException();
 
         synchronized (supporterBasket) {
             // Update the need from the list of needs since it's been funded
             Need matchedNeed;
+            // Verify needs
+            for (Need need : supporterBasket.values()){
+                matchedNeed = needDao.getNeed(need.getName());
+                // If match is null, return false
+                // If Available quantity has changed to be lower than what the user was requesting or cost increased, return false
+                if (matchedNeed == null || matchedNeed.getQuantity() < need.getQuantity() || need.getCost() < matchedNeed.getCost())
+                    return false;
+            }
+
+            // Update needs
             for (Need need : supporterBasket.values()){
                 matchedNeed = needDao.getNeed(need.getName());
                 // If we find a matching need, update the quantity. If quantity is 0 or below, delete the need
-                if (matchedNeed != null){
-                    matchedNeed.setQuantity(matchedNeed.getQuantity() - need.getQuantity());
-                    if (matchedNeed.getQuantity() > 0){
-                        needDao.updateNeed(matchedNeed);
-                    }else
-                        needDao.deleteNeed(matchedNeed.getName());
-                    needReceiptDao.createOrUpdateReceipt(need, curUser.getUsername());
-                }
+                matchedNeed.setQuantity(matchedNeed.getQuantity() - need.getQuantity());
+                if (matchedNeed.getQuantity() > 0)
+                    needDao.updateNeed(matchedNeed);
+                else
+                    needDao.deleteNeed(matchedNeed.getName());
+                needReceiptDao.createOrUpdateReceipt(need, curUser.getUsername());
             }
             
             supporterBasket.clear();
             updateCurSupporter();
         }
+        return true;
     }
 
     /**

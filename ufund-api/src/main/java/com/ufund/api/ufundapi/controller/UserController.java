@@ -260,18 +260,17 @@ public class UserController {
     /**
      * Responds to the GET request for checking out the current user's basket
      * 
-     * @return ResponseEntity with an HTTP status of OK if the basket was checked
+     * @return ResponseEntity with an HTTP status of OK and body of true if the basket was checked
      *         out<br>
      *         ResponseEntity with HTTP status of FORBIDDEN if no supporter is
      *         signed in<br>
      *         ResponseEntity with HTTP status of INTERNAL_SERVER_ERROR otherwise
      */
     @GetMapping("/checkout")
-    public ResponseEntity<Void> checkoutBasket() {
+    public ResponseEntity<Boolean> checkoutBasket() {
         LOG.info("GET /checkout");
         try {
-            userDAO.checkoutCurBasket();
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(userDAO.checkoutCurBasket(), HttpStatus.OK);
         } catch (SupporterNotSignedInException e) {
             LOG.log(Level.SEVERE, e.getLocalizedMessage());
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

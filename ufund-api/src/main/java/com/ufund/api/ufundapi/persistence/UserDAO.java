@@ -140,10 +140,13 @@ public interface UserDAO {
          * 
          * @throws SupporterNotSignedInException if no {@link Supporter supporter's} is
          *                                       signed in
-         * 
+         *
+         * @return true if successful, false if any basket needs costs have changed, or quantities decreased 
+         *         more than what's in the basket while preparing to checkout.
+         *  
          * @throws IOException if an issue with underlying storage
          */
-        void checkoutCurBasket() throws SupporterNotSignedInException, IOException;
+        boolean checkoutCurBasket() throws SupporterNotSignedInException, IOException;
 
         /**
          * Gets the current {@linkplain Supporter supporter's} basket
