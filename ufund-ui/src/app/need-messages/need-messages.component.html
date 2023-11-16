@@ -9,3 +9,5 @@
       (click)="deleteMessage(message)">x</button>
   </li>
 </ul>
+
+<h3 *ngIf="messages.length == 0" >Inbox is empty</h3>

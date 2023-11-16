@@ -1,6 +1,7 @@
 package com.ufund.api.ufundapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -240,11 +241,15 @@ public class UserControllerTest {
 
     @Test
     public void testCheckoutBasket() throws IOException, SupporterNotSignedInException {
+        // Setup
+        when(mockUserDAO.checkoutCurBasket()).thenReturn(true);
+
         // Invoke
-        ResponseEntity<Void> response = userController.checkoutBasket();
+        ResponseEntity<Boolean> response = userController.checkoutBasket();
 
         // Analyze
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody());
     }
 
     @Test
@@ -253,7 +258,7 @@ public class UserControllerTest {
         doThrow(new SupporterNotSignedInException()).when(mockUserDAO).checkoutCurBasket();
 
         // Invoke
-        ResponseEntity<Void> response = userController.checkoutBasket();
+        ResponseEntity<Boolean> response = userController.checkoutBasket();
 
         // Analyze
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -265,7 +270,7 @@ public class UserControllerTest {
         doThrow(new IOException()).when(mockUserDAO).checkoutCurBasket();
 
         // Invoke
-        ResponseEntity<Void> response = userController.checkoutBasket();
+        ResponseEntity<Boolean> response = userController.checkoutBasket();
 
         // Analyze
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

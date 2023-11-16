@@ -48,9 +48,9 @@ export class UserService {
   }
 
   /** GET checkout the current user */
-  checkout(): Observable<void> {
-    return this.http.get<void>(`${this.userUrl}/checkout`)
-      .pipe(catchError(this.handleError<void>('checkout')));
+  checkout(): Observable<Boolean> {
+    return this.http.get<Boolean>(`${this.userUrl}/checkout`)
+      .pipe(catchError(this.handleError<Boolean>('checkout')));
   }
 
   /** try to GET need in cart by name */
