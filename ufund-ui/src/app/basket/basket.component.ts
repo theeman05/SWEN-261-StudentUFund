@@ -28,7 +28,13 @@ export class BasketComponent implements OnInit{
   }
 
   checkout(): void {
-    this.userService.checkout().subscribe();
+    this.userService.checkout().subscribe(success => {if (success) 
+        window.location.href = "/supporter/basket/checkout";
+      else{
+        this.userService.getBasket().subscribe(needs => this.basketSubscribed(needs));
+        this.errorService.showError("At least one Need in your basket has been updated. Your basket has been refreshed. Please try again.");
+      }
+    });
   }
 
   remove(need: Need): void {
