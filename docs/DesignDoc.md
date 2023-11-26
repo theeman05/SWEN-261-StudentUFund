@@ -165,7 +165,8 @@ Principle 3: High Cohesion
 All of our classes are named according to their functionality, similarly, they use other classes which have related functionality.
 For example, if we look at the NeedFileDAO, we can see that this handles all persistence of Need objects
 
-> _**[Sprint 3 & 4]** OO Design Principles should span across **all tiers.**_
+Principle 4: Open/Closed
+The Open/Closed Principle is used in our project such that classes are open for extension but closed for modification. A specific example of this was our use of extending error classes, instead of having to rewrite our files. We wrote our code so that when we need more error handling, we don't need to break other code to add more handling. 
 
 ## Static Code Analysis/Future Design Improvements
 > _**[Sprint 4]** With the results from the Static Code Analysis exercise, 
