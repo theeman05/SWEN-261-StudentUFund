@@ -121,11 +121,13 @@ Conclusion and User Cycle:
 
 As users log out and new users sign in, the application demonstrates its capacity to handle multiple user sessions and maintain the integrity of each user's actions. For example, when new user logs in, they see a fresh perspective of the application, with their funding basket and potential contributions reflected distinctly from previous users.
 
-> _**[Sprint 4]** You must  provide at least **2 sequence diagrams** as is relevant to a particular aspects 
-> of the design that you are describing.  (**For example**, in a shopping experience application you might create a 
-> sequence diagram of a customer searching for an item and adding to their cart.)
-> As these can span multiple tiers, be sure to include an relevant HTTP requests from the client-side to the server-side 
-> to help illustrate the end-to-end flow._
+Sequence Diagram 1: Adding a Need to Funding Basket
+
+![Sequence Diagram 1](sequin_1.png)
+
+Sequence Diagram 2: Searching for a Need
+
+![Sequence Diagram 2](sequin_2.png)
 
 > _**[Sprint 4]** To adequately show your system, you will need to present the **class diagrams** where relevant in your design. Some additional tips:_
  >* _Class diagrams only apply to the **ViewModel** and **Model** Tier_
@@ -140,19 +142,13 @@ As users log out and new users sign in, the application demonstrates its capacit
 
 > _At appropriate places as part of this narrative provide **one** or more updated and **properly labeled**
 > static models (UML class diagrams) with some details such as critical attributes and methods._
-> 
-![Replace with your ViewModel Tier class diagram 1, etc.](model-placeholder.png)
+![ViewModel Tier class diagram](viewmodel_tier.png)
 
 ### Model Tier
-> _**[Sprint 3 & 4]** Provide a summary of this tier of your architecture. This
-> section will follow the same instructions that are given for the View
-> Tier above._
-For the model portion, we can see we have Need objects, which have the following private properties, name, cost, quantity. They have getters for those 3 properties, and setters for cost and quantity. Needs are used heavily within the Need File DAO, which is an extension of the Need DAO. Users have the private username property, and a getter for getting that username, and a method, isAdmin to check if the user is an admin. Users are used within the User File DAO, which is an extension of the User DAO.
-
-> _At appropriate places as part of this narrative provide **one** or more updated and **properly labeled**
-> static models (UML class diagrams) with some details such as critical attributes and methods._
-> 
-![Replace with your Model Tier class diagram 1, etc.](architecture-tiers-and-layers.jpeg)
+For the model tier, we can see we have DAOS, which inherit from their own interfaces. These DAOS are used by the controllers. Each DAO has its own functionality, which is represented by the names of them. For example, the NeedFileDAO handles all persistence of Need objects. We can see it has public methods, createNeed, findNeeds, updateNeed, deleteNeed, and getNeed. This DAO additionally stores a list of the currently active needs in the system.
+The NeedReceiptDAO handles all persistence of NeedReceipt objects. It has public methods, createOrUpdateReceipt, getReceipt, getUserFundingSSum, and getReceipts. This DAO additionally stores a list of the currently active need receipts in the system.
+Lastly, the UserFileDAO handles all persistence of User objects. It has public methods, getUser, getMessageToUser, createSupporter, logoutCurUser, getBasketOrNormalNeed, deleteCurMessage, checkoutCurBasket, sendOrUpdateMessageToUser, loginUser, updateNeedInCurBasket. This DAO additionally stores a list of the currently active users in the system, and the logged in user information.
+![Model Tier class diagram](model_tier.png)
 
 ## OO Design Principles
 Principle 1: Single Responsibility
@@ -169,12 +165,20 @@ Principle 4: Open/Closed
 The Open/Closed Principle is used in our project such that classes are open for extension but closed for modification. A specific example of this was our use of extending error classes, instead of having to rewrite our files. We wrote our code so that when we need more error handling, we don't need to break other code to add more handling. 
 
 ## Static Code Analysis/Future Design Improvements
-> _**[Sprint 4]** With the results from the Static Code Analysis exercise, 
-> **Identify 3-4** areas within your code that have been flagged by the Static Code 
-> Analysis Tool (SonarQube) and provide your analysis and recommendations.  
-> Include any relevant screenshot(s) with each area._
 
-> _**[Sprint 4]** Discuss **future** refactoring and other design improvements your team would explore if the team had additional time._
+SonarQube recommends using fstrings instead of concatenation. For example, we should use LOG.info(“PUT /needs {need}”); Direct concatenation is apparently inefficient. 
+![Using F-Strings](f_string_use.png)
+
+Many of our controller returns include the item type while creating a new ResponseEntity. However, this is no longer used. Instead, we should just use empty diamond operator.
+![Remove Type from Return Diamond Operator](diamond_remove.png)
+
+All tests are public functions. These should be changed to private since they aren’t used elsewhere. 
+![Public Test Methods](public_test_methods.png)
+
+When doing test cases, assertEquals should use expected value, then actual as arguments. For some testing methods, we were doing the opposite.
+![Assert Equals](assert_equals.png)
+
+In the future, if we had more time, there would be numerous things we'd like to accomplish. Firstly, we would have liked making it so that the admin wasn't the only student who could have a project, and add needs to their project. It would have been nice if users could sign up as students, create projects for themselves, post needs, and have those needs be funded. Additionally, our UI was quite simple. It would have been nice to have a more complex UI, with more features, such as better need filtering, and a more complex leaderboard. Lastly, it would have been nice to track the progress of projects and needs so users can ssee how close a project is to being completed.
 
 ## Testing
 > _This section will provide information about the testing performed
