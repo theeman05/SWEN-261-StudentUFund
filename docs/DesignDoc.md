@@ -129,19 +129,9 @@ Sequence Diagram 2: Searching for a Need
 
 ![Sequence Diagram 2](sequin_2.png)
 
-> _**[Sprint 4]** To adequately show your system, you will need to present the **class diagrams** where relevant in your design. Some additional tips:_
- >* _Class diagrams only apply to the **ViewModel** and **Model** Tier_
->* _A single class diagram of the entire system will not be effective. You may start with one, but will be need to break it down into smaller sections to account for requirements of each of the Tier static models below._
- >* _Correct labeling of relationships with proper notation for the relationship type, multiplicities, and navigation information will be important._
- >* _Include other details such as attributes and method signatures that you think are needed to support the level of detail in your discussion._
-
 ### ViewModel Tier
-> _**[Sprint 4]** Provide a summary of this tier of your architecture. This
-> section will follow the same instructions that are given for the View
-> Tier above._
 
-> _At appropriate places as part of this narrative provide **one** or more updated and **properly labeled**
-> static models (UML class diagrams) with some details such as critical attributes and methods._
+The ViewModel tier sits between the Model and the View. It acts as an intermediary that converts the data from the Model into a format that can be easily presented by the View. It also handles user input from the View and communicates with the Model to update data. In our project, the ViewModel acts as the intermediary between the Angular UI and the Spring Boot backend. Our UI implements services for each object that communicate with its specific backend controller. For instance, the front end can call a service method to delete a need in the cupboard. When this is called, it sends an http delete request to the backend where a mapped method is called to delete the need. Similarly, receipt service and user service also use http requests to communicate with their backend controllers. 
 ![ViewModel Tier class diagram](viewmodel_tier.png)
 
 ### Model Tier
@@ -185,24 +175,14 @@ In the future, if we had more time, there would be numerous things we'd like to 
 > and the results of the testing._
 
 ### Acceptance Testing
-> _**[Sprint 4]** Report on the number of user stories that have passed all their
-> acceptance criteria tests, the number that have some acceptance
-> criteria tests failing, and the number of user stories that
-> have not had any testing yet. Highlight the issues found during
-> acceptance testing and if there are any concerns._
+
 Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
 
 Sprint 3: 30/34 acceptance criteria passing tests, 2 of which were old acceptance criteria which should have been updated, but they weren't, resulting in failed tests. For the last 2, the testing team couldn't figure out how to use the search bar. However, if used correctly, the acceptance criteria do pass.
 
 ### Unit Testing and Code Coverage
-> _**[Sprint 4]** Discuss your unit testing strategy. Report on the code coverage
-> achieved from unit testing of the code base. Discuss the team's
-> coverage targets, why you selected those values, and how well your
-> code coverage met your targets._
-Sprint 2: 9/9 user stories passed all acceptance criteria tests. No issues found during acceptance testing.
+Our unit testing strategy is a fundamental aspect of our development process, aimed at ensuring the reliability, functionality, and maintainability of our codebase. Our strategy is to develop a comprehensive suite of unit tests covering critical components, functionalities, and edge cases within our codebase. As of the latest assessment, our code coverage stands at 100%. This aligns well with our target coverage of 100%. We set this target to mitigate risks and ensure that all exceptions are handled.
 
-Sprint 3: 100% code coverage, no missing instructions and no missing branches.
+Our code coverage 
+
 ![](jacoco-sprint-3.png)
-
->_**[Sprint 2 & 4]** **Include images of your code coverage report.** If there are any anomalies, discuss
-> those._
