@@ -26,7 +26,6 @@ A web application which allows users to fund student projects in order to comple
 The most important user group is the Student, which adds needs to their project. Their goal is to fulfill their project needs and finish the project.
 
 ### Glossary and Acronyms
-> _**[Sprint 2 & 4]** Provide a table of terms and acronyms._
 
 | Term | Definition |
 |------|------------|
@@ -47,7 +46,6 @@ The MVP allows for users to sign into the application, view student projects, ad
 For students, it allows the creation and managing of needs for project funding.
 
 ### MVP Features
->  _**[Sprint 4]** Provide a list of top-level Epics and/or Stories of the MVP._
 The MVP is comprised of two top-level epics: the Admin Abilities and the Supporter Abilities, each having their respective user stories
 
 Admin Abilities:
@@ -73,7 +71,6 @@ Supporter Abilities:
   > User Sign Up: As a potential supporter I want to create an account so that I can become a supporter.
 
 ### Enhancements
-> _**[Sprint 4]** Describe what enhancements you have implemented for the project._
 
 Enahncement 1: Supporter leaderboard
   After each user checks out needs, the monetary value of their support is saved and kept updated. A leaderboard is diplayed on the home page to illustrate the ranking of users based on the greatest total contributions.
