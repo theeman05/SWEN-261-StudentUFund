@@ -40,26 +40,26 @@ For students, it allows the creation and managing of needs for project funding.
 The MVP is comprised of two top-level epics: the Admin Abilities and the Supporter Abilities, each having their respective user stories
 
 Admin Abilities:
-  > Managers can view who supports their needs: As an admin I want to view all the past receipts so that I can keep track of past funding.
-  > Funded Need Leaderboard: As an Admin I want to see who has funded the most expensive sum of needs so that there is competition in the application.
-  > Create New Need: AS an Admin I want to submit a request to create a new need (name [has to be unique], cost, quantity, type) SO THAT it is added to the cupboard.
-  > Get a single Need: As an Admin I want to submit a request to get a single need so that I can access the cost, quantity and type.
-  > Update a Need: As an Admin I want to submit a request to modify an item in the cupboard so that I can update needs in the cupboard.
-  > Delete a single Need: As an Admin I want to submit a request to delete a single need SO THAT it is no longer in the cupboard.
-  > Get entire cupboard: As an Admin I want to submit a request to get the cupboard SO THAT I can update needs in the cupboard.
-  > Search for a Need: AS a Developer I WANT to submit a request to get the the needs in the cupboard whose name contains the given text, SO THAT I have access to only that subset of needs.
+  - Managers can view who supports their needs: As an admin I want to view all the past receipts so that I can keep track of past funding.
+  - Funded Need Leaderboard: As an Admin I want to see who has funded the most expensive sum of needs so that there is competition in the application.
+  - Create New Need: AS an Admin I want to submit a request to create a new need (name [has to be unique], cost, quantity, type) SO THAT it is added to the cupboard.
+  - Get a single Need: As an Admin I want to submit a request to get a single need so that I can access the cost, quantity and type.
+  - Update a Need: As an Admin I want to submit a request to modify an item in the cupboard so that I can update needs in the cupboard.
+  - Delete a single Need: As an Admin I want to submit a request to delete a single need SO THAT it is no longer in the cupboard.
+  - Get entire cupboard: As an Admin I want to submit a request to get the cupboard SO THAT I can update needs in the cupboard.
+  - Search for a Need: AS a Developer I WANT to submit a request to get the the needs in the cupboard whose name contains the given text, SO THAT I have access to only that subset of needs.
 
 Supporter Abilities:
-  > Add needs to basket: As a Supporter I want to add need to my funding basket so that I can potentially fund them later.
-  > Remove Needs from basket: As a Supporter I want to remove needs from my funding basket so that if I change my mind, I don’t have to fund that need.
-  > Fund Needs: As a Supporter I want to fund needs so that I can see a Student be successful with their project.
-  > Get a Single Need: AS a Supporter I WANT to submit a request to get a single need SO THAT I can access the cost, quantity and type.
-  > Search for Needs: AS a Supporter I WANT to submit a request to get the the needs in the cupboard whose name contains the given text, SO THAT I have access to only that subset of needs.
-  > Funded Need Leaderboard: As a USER I want to see who has funded the most expensive sum of needs so that there is competition in the application.
-  > Save Funded Needs: As a User I want funded needs to be saved so that they can be tracked.
-  > Support Partial Amount: As a SUPPORTER I want to fund partial needs so that I don’t need to supply whole need quantities.
-  > Display username: As a supporter, I want my screen to display my username so that I can tell that I’m logged in on the right account.
-  > User Sign Up: As a potential supporter I want to create an account so that I can become a supporter.
+  - Add needs to basket: As a Supporter I want to add need to my funding basket so that I can potentially fund them later.
+  - Remove Needs from basket: As a Supporter I want to remove needs from my funding basket so that if I change my mind, I don’t have to fund that need.
+  - Fund Needs: As a Supporter I want to fund needs so that I can see a Student be successful with their project.
+  - Get a Single Need: AS a Supporter I WANT to submit a request to get a single need SO THAT I can access the cost, quantity and type.
+  - Search for Needs: AS a Supporter I WANT to submit a request to get the the needs in the cupboard whose name contains the given text, SO THAT I have access to only that subset of needs.
+  - Funded Need Leaderboard: As a USER I want to see who has funded the most expensive sum of needs so that there is competition in the application.
+  - Save Funded Needs: As a User I want funded needs to be saved so that they can be tracked.
+  - Support Partial Amount: As a SUPPORTER I want to fund partial needs so that I don’t need to supply whole need quantities.
+  - Display username: As a supporter, I want my screen to display my username so that I can tell that I’m logged in on the right account.
+  - User Sign Up: As a potential supporter I want to create an account so that I can become a supporter.
 
 ### Enhancements
 
@@ -89,7 +89,7 @@ This section describes the application architecture.
 The following Tiers/Layers model shows a high-level view of the webapp's architecture. 
 **NOTE**: detailed diagrams are required in later sections of this document. (_When requested, replace this diagram with your **own** rendition and representations of sample classes of your system_.) 
 
-![The Tiers & Layers of the Architecture](architecture-tiers-and-layers.png)
+![The Tiers & Layers of the Architecture](architecture-tiers-and-layers.jpeg)
 
 The web application, is built using the Model–View–ViewModel (MVVM) architecture pattern. 
 
