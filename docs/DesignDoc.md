@@ -185,8 +185,6 @@ When doing test cases, assertEquals should use expected value, then actual as ar
 In the future, if we had more time, there would be numerous things we'd like to accomplish. Firstly, we would have liked making it so that the admin wasn't the only student who could have a project, and add needs to their project. It would have been nice if users could sign up as students, create projects for themselves, post needs, and have those needs be funded. Additionally, our UI was quite simple. It would have been nice to have a more complex UI, with more features, such as better need filtering, and a more complex leaderboard. Lastly, it would have been nice to track the progress of projects and needs so users can ssee how close a project is to being completed.
 
 ## Testing
-> _This section will provide information about the testing performed
-> and the results of the testing._
 
 ### Acceptance Testing
 
