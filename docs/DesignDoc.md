@@ -3,14 +3,9 @@ geometry: margin=1in
 ---
 # PROJECT Design Documentation
 
-> _The following template provides the headings for your Design
-> Documentation.  As you edit each section make sure you remove these
-> commentary 'blockquotes'; the lines that start with a > character
-> and appear in the generated PDF in italics._
-
 ## Team Information
 * Team name: Toasters
-* Team members
+* Team members:
   * Ethan Hartman
   * Albert Abaykhanov
   * Ben Griffin
@@ -36,10 +31,6 @@ The most important user group is the Student, which adds needs to their project.
 ## Requirements
 
 This section describes the features of the application.
-
-> _In this section you do not need to be exhaustive and list every
-> story.  Focus on top-level features from the Vision document and
-> maybe Epics and critical Stories._
 
 ### Definition of MVP
 The MVP allows for users to sign into the application, view student projects, add needs from those projects to their fund basket, and view the fund basket, as well as checking out their basket to fund the student projects.
@@ -85,9 +76,6 @@ This section describes the application domain.
 
 ![Domain Model](domain-model.png)
 
-> _**[Sprint 2 & 4]** Provide a high-level overview of the domain for this application. You
-> can discuss the more important domain entities and their relationship
-> to each other._
 Students can create and manage needs. Students can log in as admins.
 Supporters can view needs in student projects and they can also add and remove needs from their funding basket.
 Supporters can check out their fund basket.
